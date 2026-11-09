@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Space Wheel — Diamond Edition</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css">
+</head>
+<body class="h-screen w-full flex justify-center bg-[#000308] select-none overflow-hidden">
+
+<div class="loading-cover" id="loadingCover">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">লোড হচ্ছে...</div>
+</div>
+
+<div class="back-btn" onclick="goBack()">
+  <i class="fa-solid fa-arrow-left" style="font-size:14px"></i>
+</div>
+
+<div class="fixed inset-0 cosmic-bg pointer-events-none"></div>
+<div class="aurora">
+  <div class="aurora-blob teal"></div>
+  <div class="aurora-blob gold"></div>
+  <div class="aurora-blob rose"></div>
+  <div class="aurora-blob cyan"></div>
+</div>
+<div class="fixed inset-0 stars-overlay pointer-events-none"></div>
+
+<div id="gameRoot" class="relative z-10 w-full max-w-[430px] h-full flex flex-col justify-between overflow-hidden">
+  <div class="px-4 pt-4 pb-1 flex items-center justify-between z-20" style="padding-top:60px">
+    <div class="flex items-center gap-2">
+      <div class="bg-gradient-to-r from-purple-950 to-indigo-950 border border-purple-600/60 px-3 py-1.5 rounded-full text-[11px] font-bold text-indigo-200 shadow-lg">
+        Round <span id="round-number" class="text-yellow-300 glow-text ml-1 font-black">1</span>
+      </div>
+    </div>
+    <div class="top-avatars flex items-center gap-2" id="topAvatars">
+      <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-yellow-500 to-amber-700 flex items-center justify-center border border-yellow-300">
+        <i class="fa-solid fa-trophy text-yellow-100 text-xs"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1 flex items-center justify-center relative">
+    <div class="wheel-stage" id="wheelStage">
+      <div class="wheel-ring"></div>
+      <div class="wheel-spoke" style="--rot:0deg"></div>
+      <div class="wheel-spoke" style="--rot:45deg"></div>
+      <div class="wheel-spoke" style="--rot:90deg"></div>
+      <div class="wheel-spoke" style="--rot:135deg"></div>
+      <div class="center-astronaut">
+        <span style="font-size:8px;font-weight:900;color:#c7d2fe;letter-spacing:.2em;line-height:1">TIME LEFT</span>
+        <span id="timer-display" class="timer-num">23</span>
+        <span style="font-size:7px;font-weight:700;color:#c4b5fd;letter-spacing:.2em">SECONDS</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="console-panel rounded-t-[28px] px-4 pt-3 pb-2 flex flex-col gap-2.5">
+    <div class="flex items-center justify-between gap-2 bg-gradient-to-b from-[#1a0838] to-[#0d0324] p-2 rounded-2xl border border-purple-800/60">
+      <button onclick="selectChip(1)" data-chip="1" class="chip-button selected flex-1 py-2 rounded-xl bg-gradient-to-b from-purple-700 to-purple-900 border-2 border-purple-400 flex flex-col items-center justify-center">
+        <span style="color:#67e8f9;font-size:16px;line-height:1">💎</span>
+        <span style="color:#fff;font-weight:900;font-size:11px;margin-top:2px">1</span>
+      </button>
+      <button onclick="selectChip(5)" data-chip="5" class="chip-button flex-1 py-2 rounded-xl bg-gradient-to-b from-purple-800 to-purple-950 border-2 border-purple-700/80 flex flex-col items-center justify-center">
+        <span style="color:#67e8f9;font-size:16px;line-height:1">💎</span>
+        <span style="color:#fff;font-weight:900;font-size:11px;margin-top:2px">5</span>
+      </button>
+      <button onclick="selectChip(10)" data-chip="10" class="chip-button flex-1 py-2 rounded-xl bg-gradient-to-b from-purple-800 to-purple-950 border-2 border-purple-700/80 flex flex-col items-center justify-center">
+        <span style="color:#67e8f9;font-size:16px;line-height:1">💎</span>
+        <span style="color:#fff;font-weight:900;font-size:11px;margin-top:2px">10</span>
+      </button>
+      <button onclick="selectChip(100)" data-chip="100" class="chip-button flex-1 py-2 rounded-xl bg-gradient-to-b from-purple-800 to-purple-950 border-2 border-purple-700/80 flex flex-col items-center justify-center">
+        <span style="color:#67e8f9;font-size:16px;line-height:1">💎</span>
+        <span style="color:#fff;font-weight:900;font-size:11px;margin-top:2px">100</span>
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2 px-1">
+      <span style="color:#a5b4fc;font-weight:800;font-size:10px;letter-spacing:.15em">RESULT</span>
+      <div id="history-container" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+    </div>
+
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex-1 bg-gradient-to-r from-purple-950 to-indigo-950 border border-purple-600/60 rounded-xl p-2 flex items-center shadow-lg">
+        <img id="user-avatar" src="https://ui-avatars.com/api/?name=U" class="w-8 h-8 rounded-full border-2 border-cyan-400 object-cover mr-2" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+        <div class="flex flex-col">
+          <span style="font-size:8px;color:#c4b5fd;font-weight:700;letter-spacing:.1em">DIAMOND</span>
+          <div class="flex items-center mt-0.5">
+            <span style="color:#67e8f9;font-size:12px;margin-right:4px">💎</span>
+            <span id="user-balance" class="text-white font-black text-sm leading-none glow-text">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 bg-gradient-to-r from-purple-950 to-indigo-950 border border-purple-600/60 rounded-xl p-2">
+        <div class="text-center">
+          <span style="color:#a5b4fc;font-size:8px;text-transform:uppercase;font-weight:700;letter-spacing:.1em">Today Win</span>
+          <div class="flex items-center justify-center mt-0.5">
+            <span style="color:#67e8f9;font-size:12px;margin-right:4px">💎</span>
+            <span id="today-win" class="text-emerald-400 font-black text-sm leading-none">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-r from-indigo-700 to-purple-800 border border-indigo-400/50 rounded-xl px-3 py-2 flex flex-col items-center justify-center">
+        <span style="font-size:8px;color:#c7d2fe;font-weight:700;letter-spacing:.1em">PHASE</span>
+        <span id="phase-status" class="text-xs font-black text-white mt-0.5">BET</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div id="result-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+  <div class="modal-card w-full max-w-[340px] rounded-3xl p-5 flex flex-col items-center text-center relative overflow-hidden">
+    <div class="flex items-center justify-between w-full mb-3 border-b border-purple-500/30 pb-2">
+      <span style="color:#c4b5fd;font-weight:700;font-size:13px">Round <span id="modal-round">1</span>'s Result</span>
+      <span id="modal-countdown" style="background:linear-gradient(90deg,#db2777,#9333ea);color:#fff;font-size:11px;font-weight:900;padding:2px 10px;border-radius:999px">(5)</span>
+    </div>
+    <div class="w-28 h-28 rounded-3xl bg-gradient-to-br from-purple-600 to-indigo-900 border-2 border-yellow-400 flex flex-col items-center justify-center my-2">
+      <div id="modal-item-icon" style="width:72px;height:56px;font-size:20px;font-weight:900;background:linear-gradient(135deg,#a16207,#fbbf24);color:#1a0800;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden">10</div>
+      <span id="modal-item-multiplier" style="color:#fde047;font-weight:900;font-size:14px;margin-top:6px">x10</span>
+    </div>
+    <div class="w-full bg-gradient-to-b from-purple-950/90 to-purple-900/60 rounded-xl p-3 my-2 border border-purple-800/60 flex flex-col gap-1.5 text-xs font-bold">
+      <div class="flex justify-between items-center">
+        <span style="color:#c4b5fd">Your Reward:</span>
+        <span id="modal-reward" style="color:#67e8f9;font-weight:900;font-size:14px">💎 0</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span style="color:#c4b5fd">Your Cost:</span>
+        <span id="modal-cost" style="color:#c7d2fe;font-weight:700">💎 0</span>
+      </div>
+    </div>
+    <div class="w-full text-left mt-1">
+      <span style="color:#facc15;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:8px">Win List — Top 3</span>
+      <div id="win-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ডেমো ব্যাকএন্ড (Firebase ছাড়া) — পরে আসল Firebase ফেরত আনলে এখানকার অংশ আগের মতো হবে -->
+<script src="../shared/core/firebase-init.js"></script>
+<script src="../demo/seed.js"></script>
+<script src="../shared/core/sync.js"></script>
+<script src="../shared/core/sync-routes.js"></script>
+<script src="../shared/storage.js"></script>
+<script src="../shared/core/economy.js"></script>
+<script src="../shared/core/db-storage.js"></script>
+<script src="../shared/core/auth.js"></script>
+<script src="../shared/broadcast/broadcast-core.js"></script>
+
+<!-- গেমের ছোট ছোট ফাইল -->
+<script src="game-config.js"></script>
+<script src="game-fit.js"></script>
+<script src="game-colors.js"></script>
+<script src="game-demo.js"></script>
+<script src="game-data.js"></script>
+<script src="game-ui.js"></script>
+<script src="game-main.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+/* login/login-v2.css — নতুন লগইন ডিজাইন (Emerald + Gold) + ২ সেকেন্ডের Splash
+   login.css-এর পরে লোড হয়; শুধু লগইন ভিউ আর রং বদলায়, বাকি ভিউ (Profile/Phone) আগের মতো */
+body{--c1:#9b6bff;--c1-rgb:155,107,255;--c2:#e8c872;--c2-rgb:232,200,114;--bg0:#0a0618;--bg0-rgb:10,6,24;
+  background:radial-gradient(1100px 800px at 15% 5%,#2a0f5c 0%,transparent 58%),radial-gradient(900px 700px at 90% 95%,#3a2a12 0%,transparent 60%),#05030d;}
+.screen{background:radial-gradient(110% 70% at 50% -8%,rgba(var(--c1-rgb),.2) 0%,transparent 58%),radial-gradient(90% 55% at 50% 112%,rgba(var(--c2-rgb),.16) 0%,transparent 62%),linear-gradient(170deg,#0d0820 0%,#07040f 55%,#0f0a06 100%);
+  animation-delay:1.7s}
+.screen::before{background:linear-gradient(150deg,rgba(var(--c2-rgb),.85) 0%,rgba(255,255,255,.05) 28%,rgba(255,255,255,.02) 60%,rgba(var(--c1-rgb),.8) 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.frame-glow{opacity:.38}
+
+/* ───── Splash (পুরো স্ক্রিন) ───── */
+.splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden;
+  background:radial-gradient(70% 55% at 50% 42%,#2b1263 0%,#0a0618 60%,#040210 100%);
+  animation:spOut 2.45s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes spOut{0%,80%{opacity:1;visibility:visible;transform:none}100%{opacity:0;visibility:hidden;transform:scale(1.06)}}
+.sp-glow{position:absolute;width:420px;height:420px;border-radius:50%;left:50%;top:42%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(var(--c2-rgb),.35),rgba(var(--c1-rgb),.12) 45%,transparent 70%);filter:blur(20px);animation:spGlow 2s ease-out both}
+@keyframes spGlow{from{opacity:0;transform:translate(-50%,-50%) scale(.4)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.sp-rings{position:absolute;left:50%;top:42%;width:0;height:0}
+.sp-rings i{position:absolute;left:0;top:0;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:1.5px solid rgba(var(--c2-rgb),.55);opacity:0;animation:spRing 1.9s ease-out infinite}
+.sp-rings i:nth-child(2){animation-delay:.45s;border-color:rgba(var(--c1-rgb),.6)}
+.sp-rings i:nth-child(3){animation-delay:.9s}
+@keyframes spRing{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(3.2)}}
+.sp-logo{position:relative;margin-top:-70px;animation:spLogo 1s cubic-bezier(.2,1.2,.3,1) .1s both}
+@keyframes spLogo{from{opacity:0;transform:scale(.4) rotate(-14deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+.lg-mark-xl{width:124px;height:124px;filter:drop-shadow(0 12px 28px rgba(var(--c1-rgb),.45))}
+.sp-name{display:flex;gap:6px;margin-top:26px;font-family:'Bricolage Grotesque','Figtree',sans-serif;font-weight:800;font-size:54px;letter-spacing:.06em;line-height:1}
+.sp-name span{background:linear-gradient(180deg,#fff4d6,#e8c872 55%,#a9802f);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:0;animation:spLet .7s cubic-bezier(.2,.9,.3,1) both}
+.sp-name span:nth-child(1){animation-delay:.55s}.sp-name span:nth-child(2){animation-delay:.68s}.sp-name span:nth-child(3){animation-delay:.81s}
+@keyframes spLet{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.sp-tag{margin-top:14px;font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.62);animation:spLet .8s ease 1.05s both}
+
+/* লোগো-চিহ্ন */
+.lg-mark{display:block}
+.lg-mark .w{transform-origin:32px 32px;animation:lgWave 2.4s ease-in-out infinite}
+.lg-mark .w2{animation-delay:.35s}
+@keyframes lgWave{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ───── লগইন ভিউ ───── */
+.lg-in{opacity:0;animation:lgIn .9s cubic-bezier(.2,.85,.25,1) both;animation-delay:calc(1.75s + var(--d,0s))}
+@keyframes lgIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+#view-login{justify-content:space-between;gap:6px}
+.lg-brand{display:flex;align-items:center;gap:10px}
+.lg-mark-sm{width:36px;height:36px}
+.lg-word{font-family:'Bricolage Grotesque','Figtree',sans-serif;font-weight:800;font-size:22px;letter-spacing:.08em;background:linear-gradient(180deg,#fff4d6,#e8c872 60%,#a9802f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lg-hero{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;justify-content:center;min-height:0}
+.lg-orb{position:relative;width:190px;height:190px;display:grid;place-items:center;margin-bottom:10px;flex:none}
+.lg-orb .r{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(var(--c1-rgb),.5);animation:lgRing 3.6s ease-out infinite}
+.lg-orb .r2{animation-delay:1.2s;border-color:rgba(var(--c2-rgb),.5)}.lg-orb .r3{animation-delay:2.4s}
+@keyframes lgRing{0%{transform:scale(.45);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+.lg-core{position:relative;z-index:2;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,rgba(var(--c1-rgb),.35),rgba(10,6,24,.9) 70%);box-shadow:0 0 50px rgba(var(--c1-rgb),.35),inset 0 0 0 1.5px rgba(var(--c2-rgb),.55);animation:lgFloat 5s ease-in-out infinite}
+.lg-mark-lg{width:70px;height:70px}
+@keyframes lgFloat{50%{transform:translateY(-7px)}}
+.lg-orb .sat{position:absolute;z-index:3;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:14px;color:#0b0620;background:linear-gradient(135deg,#fff3cf,#e8c872);box-shadow:0 6px 16px rgba(0,0,0,.45);animation:lgOrbit 9s linear infinite}
+.lg-orb .s2{background:linear-gradient(135deg,#e3d2ff,#9b6bff);animation-delay:-2.25s}
+.lg-orb .s3{background:linear-gradient(135deg,#ffc2d4,#ff5f8a);animation-delay:-4.5s}
+.lg-orb .s4{background:linear-gradient(135deg,#c9e9ff,#4aa8ff);animation-delay:-6.75s}
+@keyframes lgOrbit{from{transform:rotate(0) translateX(88px) rotate(0)}to{transform:rotate(360deg) translateX(88px) rotate(-360deg)}}
+.lg-h{font-family:'Bricolage Grotesque','Figtree',sans-serif;font-weight:800;font-size:clamp(30px,9vw,38px);line-height:1.05;letter-spacing:-.01em;color:#fff;margin-top:8px}
+.lg-h em{font-style:normal;background:linear-gradient(90deg,#d9c4ff,#e8c872);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lg-p{margin-top:10px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.66);max-width:270px}
+
+.lg-sheet{padding:18px 16px 14px;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 50px -20px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+#view-login .lg-btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:52px;margin:0;border:0;border-radius:16px;font-family:inherit;font-size:15px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:transform .18s,box-shadow .2s,background .2s}
+#view-login .lg-btn + .lg-btn{margin-top:10px}
+#view-login .lg-btn::before,#view-login .lg-btn::after{display:none}
+#view-login .lg-btn:hover{transform:translateY(-2px)}
+#view-login .lg-btn:active{transform:scale(.97)}
+#view-login .lg-btn i{font-size:18px;background:none;-webkit-text-fill-color:currentColor}
+#view-login .lg-google{background:#fff;color:#1a1230;box-shadow:0 8px 22px -8px rgba(255,255,255,.35)}
+#view-login .lg-google i{background:conic-gradient(from -45deg,#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#view-login .lg-fb{background:linear-gradient(135deg,#2f8bff,#1561e6);color:#fff;box-shadow:0 8px 22px -8px rgba(30,110,255,.6)}
+#view-login .lg-or{display:flex;align-items:center;gap:12px;margin:14px 2px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+#view-login .lg-or::before,#view-login .lg-or::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22))}
+#view-login .lg-or::after{transform:scaleX(-1)}
+.lg-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#view-login .lg-alt{margin:0!important;height:48px;background:rgba(255,255,255,.05);color:#fff;border:1.5px solid rgba(var(--c2-rgb),.45);box-shadow:none}
+#view-login .lg-alt i{color:var(--c2)}
+#view-login .lg-alt:hover{background:rgba(var(--c2-rgb),.12);box-shadow:0 0 0 3px rgba(var(--c2-rgb),.12)}
+.lg-terms{margin-top:14px;text-align:center;font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.5)}
+.lg-terms a{color:var(--c2);text-decoration:none}
+@media (max-height:760px){.lg-orb{width:150px;height:150px}.lg-core{width:84px;height:84px}.lg-mark-lg{width:56px;height:56px}@keyframes lgOrbit{from{transform:rotate(0) translateX(70px) rotate(0)}to{transform:rotate(360deg) translateX(70px) rotate(-360deg)}}.lg-p{display:none}#view-login .lg-btn{height:48px}}
+@media (max-height:640px){.lg-orb{display:none}}
+@media (prefers-reduced-motion:reduce){.splash{animation-duration:1.2s}.lg-orb .sat,.lg-orb .r,.lg-core,.lg-mark .w{animation:none}}
+
+/* ── Premium touches: সোনালি হেয়ারলাইন, আলোর ঝলক, গাঢ় নেভি Facebook ── */
+.lg-sheet{border:1px solid rgba(232,200,114,.28);box-shadow:0 24px 60px -22px rgba(0,0,0,.9),0 0 40px -12px rgba(155,107,255,.35),inset 0 1px 0 rgba(255,238,190,.35)}
+#view-login .lg-fb{background:linear-gradient(135deg,#2a3f8f,#1b2a66);box-shadow:0 8px 22px -8px rgba(60,90,220,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+#view-login .lg-google{background:linear-gradient(180deg,#ffffff,#f1ecfb)}
+#view-login .lg-btn::after{display:block!important;content:'';position:absolute;top:-40%;bottom:-40%;left:-60%;width:40%;z-index:2;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:lgShine 4.5s ease-in-out infinite}
+#view-login .lg-alt::after{display:none!important}
+#view-login .lg-fb::after{animation-delay:1.4s}
+@keyframes lgShine{0%,60%{left:-60%}100%{left:130%}}
+#view-login .lg-alt{border-color:rgba(232,200,114,.5);background:linear-gradient(180deg,rgba(232,200,114,.1),rgba(255,255,255,.02))}
+.lg-orb .r{border-color:rgba(155,107,255,.55)}.lg-orb .r2{border-color:rgba(232,200,114,.55)}
+
+/* ═══════════ সাদা (Pearl White) থিম + আসল-বাটনের মতো ৩D বাটন ═══════════
+   লগইন ভিউ আর Splash সাদা; Phone/Profile ভিউ আগের মতো গাঢ় থাকে */
+body{background:radial-gradient(900px 700px at 12% 0%,#e9e0ff 0%,transparent 60%),radial-gradient(800px 700px at 95% 100%,#fff0cf 0%,transparent 60%),#f7f4fc}
+#fx{opacity:.25}
+.blob{mix-blend-mode:normal;opacity:.28}
+.frame-glow{opacity:.22}
+#view-login{background:radial-gradient(120% 60% at 50% -5%,#efe7ff 0%,transparent 60%),radial-gradient(90% 50% at 50% 108%,#fff1d2 0%,transparent 62%),linear-gradient(180deg,#ffffff 0%,#f8f5ff 100%);border-radius:inherit;color:#1c1238}
+.lg-word{background:linear-gradient(180deg,#c9a24a,#8a5f12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lg-h{color:#1c1238}
+.lg-h em{background:linear-gradient(90deg,#6a3fe0,#b4862b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lg-p{color:#5d5478}
+.lg-core{background:radial-gradient(circle at 35% 25%,#ffffff,#efe8ff 75%);box-shadow:0 14px 34px -8px rgba(106,63,224,.35),inset 0 0 0 1.5px rgba(201,162,74,.7)}
+.lg-orb .r{border-color:rgba(106,63,224,.35)}.lg-orb .r2{border-color:rgba(201,162,74,.5)}
+.lg-orb .sat{box-shadow:0 8px 16px -4px rgba(60,40,120,.35),inset 0 1px 0 rgba(255,255,255,.7)}
+.lg-sheet{background:#ffffff;border:1px solid #ece6f7;box-shadow:0 24px 50px -20px rgba(70,40,140,.28),0 2px 0 #fff inset;backdrop-filter:none}
+.lg-terms{color:#8a8199}.lg-terms a{color:#6a3fe0;font-weight:600}
+#view-login .lg-or{color:#9a91ad}
+#view-login .lg-or::before,#view-login .lg-or::after{background:linear-gradient(90deg,transparent,#d9d1ea)}
+
+/* ৩D বাটন: উপরে আলোর ছটা, নিচে মোটা কিনারা, চাপলে বসে যায় */
+#view-login .lg-btn{height:54px;border-radius:16px;transition:transform .12s,box-shadow .12s,filter .2s;text-shadow:none}
+#view-login .lg-btn::before{display:block!important;content:'';position:absolute;left:0;right:0;top:0;height:50%;z-index:1;pointer-events:none;border-radius:16px 16px 40% 40%/16px 16px 12px 12px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.05))}
+#view-login .lg-btn::after{display:none!important}
+#view-login .lg-btn i,#view-login .lg-btn span{position:relative;z-index:3}
+#view-login .lg-btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+#view-login .lg-btn:active{transform:translateY(4px)}
+#view-login .lg-google{background:linear-gradient(180deg,#ffffff,#ececf3);color:#222036;border:1px solid #d5d2e0;box-shadow:0 5px 0 #c4bfd6,0 12px 18px -6px rgba(40,30,80,.3),inset 0 1px 0 #fff}
+#view-login .lg-google:active{box-shadow:0 1px 0 #c4bfd6,0 4px 8px -4px rgba(40,30,80,.3),inset 0 1px 0 #fff}
+#view-login .lg-fb{background:linear-gradient(180deg,#4d8dff,#1a5ee0);color:#fff;border:1px solid #1747b0;box-shadow:0 5px 0 #0f3a96,0 12px 18px -6px rgba(20,70,200,.5),inset 0 1px 0 rgba(255,255,255,.45)}
+#view-login .lg-fb:active{box-shadow:0 1px 0 #0f3a96,0 4px 8px -4px rgba(20,70,200,.5),inset 0 1px 0 rgba(255,255,255,.45)}
+#view-login .lg-alt{height:50px;color:#fff;border:1px solid transparent;margin:0!important}
+#view-login .lg-alt i{color:inherit}
+#view-login #phoneBtn{background:linear-gradient(180deg,#a782ff,#6a3fe0);border-color:#5230b8;box-shadow:0 5px 0 #3d2288,0 12px 18px -6px rgba(90,50,210,.5),inset 0 1px 0 rgba(255,255,255,.45)}
+#view-login #phoneBtn:active{box-shadow:0 1px 0 #3d2288,0 4px 8px -4px rgba(90,50,210,.5),inset 0 1px 0 rgba(255,255,255,.45)}
+#view-login #guestBtn{background:linear-gradient(180deg,#ffe9a8,#e2b44c);color:#4a3205;border-color:#b98a22;box-shadow:0 5px 0 #a47a1c,0 12px 18px -6px rgba(180,130,20,.5),inset 0 1px 0 rgba(255,255,255,.6)}
+#view-login #guestBtn:active{box-shadow:0 1px 0 #a47a1c,0 4px 8px -4px rgba(180,130,20,.5),inset 0 1px 0 rgba(255,255,255,.6)}
+.lg-two{gap:12px;margin-bottom:6px}
+#view-login .lg-btn + .lg-btn{margin-top:14px}
+
+/* Splash সাদা */
+.splash{background:radial-gradient(70% 55% at 50% 42%,#ffffff 0%,#f1eaff 62%,#e7dcff 100%)}
+.sp-glow{background:radial-gradient(circle,rgba(201,162,74,.35),rgba(106,63,224,.16) 45%,transparent 70%)}
+.sp-rings i{border-color:rgba(201,162,74,.6)}.sp-rings i:nth-child(2){border-color:rgba(106,63,224,.45)}
+.sp-name span{background:linear-gradient(180deg,#d4ad55,#8a5f12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sp-tag{color:#6d6385}
+.lg-mark-xl{filter:drop-shadow(0 14px 24px rgba(70,40,160,.35))}
+
+/* ── কার্টুন ক্যারেক্টার (লগইনের মাঝখানে) ── */
+.lg-toon{width:210px;height:192px;margin-bottom:4px;flex:none}
+.lg-toon svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 10px 14px rgba(70,40,160,.25))}
+.lg-toon .t-body{transform-origin:120px 180px;animation:tBob 2.6s ease-in-out infinite}
+@keyframes tBob{0%,100%{transform:translateY(0) scale(1,1)}45%{transform:translateY(-9px) scale(.985,1.015)}55%{transform:translateY(-9px)}80%{transform:translateY(0) scale(1.02,.98)}}
+.lg-toon .t-shadow{transform-origin:120px 196px;animation:tShadow 2.6s ease-in-out infinite}
+@keyframes tShadow{45%,55%{transform:scale(.82);opacity:.1}}
+.lg-toon .t-eyes{transform-origin:120px 104px;animation:tBlink 4.2s infinite}
+@keyframes tBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+.lg-toon .t-wave{transform-origin:64px 122px;animation:tWave 1s ease-in-out infinite alternate}
+@keyframes tWave{from{transform:rotate(-14deg)}to{transform:rotate(16deg)}}
+.lg-toon .t-mouth{transform-origin:120px 130px;animation:tTalk 1.3s ease-in-out infinite}
+@keyframes tTalk{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.72)}}
+.lg-toon .t-wv path{animation:tWv 1.3s ease-in-out infinite}.lg-toon .t-wv path+path{animation-delay:.25s}
+@keyframes tWv{0%,100%{opacity:0}50%{opacity:1}}
+.lg-toon .t-sp path{transform-box:fill-box;transform-origin:center;animation:tTw 2s ease-in-out infinite}
+.lg-toon .t-sp .s2{animation-delay:.6s}.lg-toon .t-sp .s3{animation-delay:1.2s}
+@keyframes tTw{0%,100%{transform:scale(.55) rotate(0);opacity:.6}50%{transform:scale(1.15) rotate(25deg);opacity:1}}
+@media (max-height:760px){.lg-toon{width:168px;height:154px}}
+@media (max-height:640px){.lg-toon{display:none}}
+@media (prefers-reduced-motion:reduce){.lg-toon *{animation:none!important}}
+
+/* ═══════════ Voice Club দৃশ্য (কার্টুন) ═══════════ */
+.lg-scene{width:100%;aspect-ratio:340/210;border-radius:24px;overflow:hidden;border:2.5px solid #2a1a5e;box-shadow:0 5px 0 #1c1040,0 16px 26px -10px rgba(60,30,140,.55);flex:none;margin-bottom:8px;max-height:210px}
+.lg-scene svg{display:block;width:100%;height:100%}
+.lg-scene .bn{transform-box:fill-box;transform-origin:50% 100%;animation:scBn 1.1s ease-in-out infinite}
+@keyframes scBn{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-6px) scale(.97,1.04)}}
+.lg-scene .mouth{transform-box:fill-box;transform-origin:50% 50%;animation:scTalk .5s ease-in-out infinite alternate}
+@keyframes scTalk{from{transform:scaleY(1)}to{transform:scaleY(.35)}}
+.lg-scene .eyes{transform-box:fill-box;transform-origin:50% 50%;animation:scBlink 4s infinite}
+@keyframes scBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.lg-scene .arm{transform-box:fill-box;transform-origin:100% 100%;animation:scArm .6s ease-in-out infinite alternate}
+@keyframes scArm{from{transform:rotate(-10deg)}to{transform:rotate(14deg)}}
+.lg-scene .seat{fill:none;stroke:#ffe27a;stroke-width:2;opacity:.9;transform-box:fill-box;transform-origin:center;animation:scSeat 1.4s ease-out infinite}
+@keyframes scSeat{0%{transform:scale(.7);opacity:.95}100%{transform:scale(1.35);opacity:0}}
+.lg-scene .eq{fill:url(#scEq);transform-box:fill-box;transform-origin:50% 100%;animation:scEq 1.1s ease-in-out infinite}
+@keyframes scEq{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+.lg-scene .beam{transform-box:view-box;transform-origin:50% 0;animation:scBeam 5s ease-in-out infinite alternate}
+.lg-scene .b2{animation-direction:alternate-reverse}
+@keyframes scBeam{from{transform:rotate(-7deg);opacity:.25}to{transform:rotate(7deg);opacity:.6}}
+.lg-scene .ball{transform-box:fill-box;transform-origin:50% 0;animation:scSwing 3s ease-in-out infinite alternate}
+@keyframes scSwing{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+.lg-scene .stars circle,.lg-scene .tw path{animation:scTw 2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.lg-scene .stars circle:nth-child(2n){animation-delay:.7s}.lg-scene .stars circle:nth-child(3n){animation-delay:1.3s}.lg-scene .tw path+path{animation-delay:.9s}
+@keyframes scTw{0%,100%{opacity:.25;transform:scale(.6)}50%{opacity:1;transform:scale(1.15)}}
+.lg-scene .up text,.lg-scene .up path{animation:scUp 3.4s ease-in infinite;transform-box:fill-box;transform-origin:center;opacity:0}
+.lg-scene .n2,.lg-scene .h2{animation-delay:.9s}.lg-scene .n3{animation-delay:1.7s}.lg-scene .n4{animation-delay:2.4s}
+@keyframes scUp{0%{opacity:0;transform:translateY(8px) scale(.7)}20%{opacity:1}100%{opacity:0;transform:translateY(-34px) scale(1.1) rotate(12deg)}}
+.lg-scene .swv path{animation:scWv 1s ease-in-out infinite}.lg-scene .swv path+path{animation-delay:.25s}
+@keyframes scWv{0%,100%{opacity:.1}50%{opacity:1}}
+.lg-scene .live{animation:scLive 1.2s ease-in-out infinite}
+@keyframes scLive{50%{opacity:.25}}
+@media (max-height:760px){.lg-scene{max-height:170px;width:auto;margin-left:auto;margin-right:auto}}
+@media (max-height:640px){.lg-scene{display:none}}
+@media (prefers-reduced-motion:reduce){.lg-scene *{animation:none!important;opacity:1}}
+
+/* ═══════════ আরও আসল বাটন (hardware-style) ═══════════ */
+#view-login .lg-btn{height:58px;border-radius:18px;padding:0 16px 0 58px;font-size:15.5px;letter-spacing:.015em}
+#view-login .lg-btn::before{height:55%;border-radius:18px 18px 50% 50%/18px 18px 14px 14px;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.08))}
+#view-login .lg-btn i{position:absolute;left:11px;top:50%;margin-top:-17px;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;font-size:17px;z-index:3}
+#view-login .lg-btn span{flex:1;text-align:center;padding-right:42px}
+#view-login .lg-btn:active{transform:translateY(6px)}
+#view-login .lg-google{background:linear-gradient(180deg,#ffffff 0%,#f4f3f8 45%,#dedbe9 100%);color:#26233a;text-shadow:0 1px 0 #fff;border:1px solid #cbc7da;box-shadow:0 7px 0 #b3aecb,0 16px 20px -6px rgba(40,30,90,.4),inset 0 -3px 5px rgba(120,110,160,.25),inset 0 1px 0 #fff}
+#view-login .lg-google:active{box-shadow:0 1px 0 #b3aecb,0 4px 8px -4px rgba(40,30,90,.4),inset 0 -2px 4px rgba(120,110,160,.25),inset 0 1px 0 #fff}
+#view-login .lg-google i{background:#fff;box-shadow:inset 0 2px 4px rgba(60,50,110,.3),0 1px 0 #fff}
+#view-login .lg-google i{background:conic-gradient(from -45deg,#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;position:absolute}
+#view-login .lg-google::selection{background:transparent}
+#view-login .lg-fb{background:linear-gradient(180deg,#6aa2ff 0%,#2f6df0 45%,#1649c4 100%);text-shadow:0 -1px 0 rgba(0,0,40,.45);border:1px solid #123b9c;box-shadow:0 7px 0 #0c2f80,0 16px 20px -6px rgba(20,70,210,.55),inset 0 -3px 6px rgba(0,20,100,.4),inset 0 1px 0 rgba(255,255,255,.55)}
+#view-login .lg-fb:active{box-shadow:0 1px 0 #0c2f80,0 4px 8px -4px rgba(20,70,210,.55),inset 0 -2px 5px rgba(0,20,100,.4),inset 0 1px 0 rgba(255,255,255,.55)}
+#view-login .lg-fb i{background:rgba(0,20,100,.35);box-shadow:inset 0 2px 4px rgba(0,0,50,.5),0 1px 0 rgba(255,255,255,.25)}
+#view-login .lg-alt{height:56px;padding:0 10px 0 50px;text-shadow:0 -1px 0 rgba(0,0,0,.35)}
+#view-login .lg-alt i{left:9px;width:30px;height:30px;margin-top:-15px;font-size:14px}
+#view-login .lg-alt span{padding-right:30px}
+#view-login #phoneBtn{background:linear-gradient(180deg,#b79aff 0%,#7a4df0 45%,#4f27c2 100%);border-color:#3d1f96;box-shadow:0 7px 0 #2f1773,0 16px 20px -6px rgba(90,50,210,.55),inset 0 -3px 6px rgba(30,0,100,.4),inset 0 1px 0 rgba(255,255,255,.55)}
+#view-login #phoneBtn:active{box-shadow:0 1px 0 #2f1773,0 4px 8px -4px rgba(90,50,210,.55),inset 0 -2px 5px rgba(30,0,100,.4),inset 0 1px 0 rgba(255,255,255,.55)}
+#view-login #phoneBtn i{background:rgba(30,0,100,.35);box-shadow:inset 0 2px 4px rgba(20,0,70,.5)}
+#view-login #guestBtn{background:linear-gradient(180deg,#fff0b8 0%,#f2c451 45%,#d3961c 100%);color:#4a3205;text-shadow:0 1px 0 rgba(255,255,255,.55);border-color:#a8781a;box-shadow:0 7px 0 #8f6412,0 16px 20px -6px rgba(180,130,20,.55),inset 0 -3px 6px rgba(120,70,0,.3),inset 0 1px 0 rgba(255,255,255,.7)}
+#view-login #guestBtn:active{box-shadow:0 1px 0 #8f6412,0 4px 8px -4px rgba(180,130,20,.55),inset 0 -2px 5px rgba(120,70,0,.3),inset 0 1px 0 rgba(255,255,255,.7)}
+#view-login #guestBtn i{background:rgba(120,70,0,.2);box-shadow:inset 0 2px 4px rgba(90,50,0,.4)}
+.lg-two{gap:14px;margin-bottom:10px}
+#view-login .lg-btn + .lg-btn{margin-top:16px}
+.lg-sheet{padding:18px 16px 12px}
+
+.lg-brand{margin-bottom:12px}
+.lg-hero{padding-top:2px}

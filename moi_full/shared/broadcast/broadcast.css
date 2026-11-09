@@ -1,0 +1,79 @@
+/* shared/broadcast.css — সব রুমের উপরে ভেসে যাওয়া "WIN / Lucky Box / Gift" পপআপ
+   ঝাপসা-কাচের মতো স্বচ্ছ, সোনালি ধারের ব্যানার; স্ক্রিনের উপরের দিকে */
+#bcLayer{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 22px);z-index:8000;pointer-events:none;display:flex;justify-content:center;overflow:visible}
+.bc{--t1:rgba(126,82,230,.66);--t2:rgba(46,24,118,.66);--glow:rgba(255,206,90,.38);--edge:rgba(255,230,150,.75);
+  position:absolute;top:0;width:min(97vw,470px);height:56px;border-radius:30px;pointer-events:auto;cursor:pointer;
+  background:linear-gradient(100deg,var(--t1) 0%,var(--t2) 100%);border:1.5px solid var(--edge);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:0 8px 24px rgba(0,0,0,.36),0 0 22px var(--glow),inset 0 1px 0 rgba(255,255,255,.4),inset 0 -8px 14px rgba(0,0,0,.18);
+  transform:translateX(125%);opacity:0;-webkit-tap-highlight-color:transparent;font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif}
+.bc.in{animation:bcIn .6s cubic-bezier(.2,.9,.25,1.1) forwards}
+.bc.out{animation:bcOut .45s cubic-bezier(.55,0,.85,.4) forwards}
+@keyframes bcIn{0%{transform:translateX(125%) scale(.95);opacity:0}100%{transform:none;opacity:1}}
+@keyframes bcOut{0%{transform:none;opacity:1}100%{transform:translateX(-125%) scale(.95);opacity:0}}
+.bc:active{filter:brightness(1.12)}
+.bc-in{position:relative;height:100%;border-radius:28px;display:flex;align-items:center;gap:9px;padding:0 14px 0 64px;overflow:hidden;color:#fff}
+/* রঙ: গিফট = বেগুনি, লাকি বক্স = সবুজ, গেম = নীল, বড় জয় = লাল */
+.bc-gift{--t1:rgba(138,92,238,.68);--t2:rgba(48,24,124,.68)}
+.bc-green{--t1:rgba(40,168,98,.66);--t2:rgba(10,84,52,.7);--glow:rgba(110,235,150,.4);--edge:rgba(210,255,190,.75)}
+.bc-game{--t1:rgba(58,112,236,.68);--t2:rgba(16,38,134,.7);--glow:rgba(120,170,255,.45);--edge:rgba(190,215,255,.8)}
+.bc-game.red{--t1:rgba(232,52,76,.7);--t2:rgba(112,12,32,.72);--glow:rgba(255,100,100,.55);--edge:rgba(255,205,160,.85)}
+/* ঝিলিক + উপরের হালকা আলো + কোণের ঝলমলে তারা */
+.bc-in::after{content:"";position:absolute;top:0;bottom:0;width:54px;left:-80px;transform:skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.34),transparent);animation:bcShine 2.2s ease-in-out .5s infinite;pointer-events:none}
+@keyframes bcShine{0%{left:-80px}60%,100%{left:115%}}
+.bc-in::before{content:"";position:absolute;inset:0;border-radius:28px;background:radial-gradient(90px 60px at 34px 50%,rgba(255,255,255,.22),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 52%);pointer-events:none}
+.bc .sp{position:absolute;color:#fff6c2;font-style:normal;font-size:9px;text-shadow:0 0 6px #ffd54a;animation:bcTw 1.6s ease-in-out infinite;pointer-events:none}
+.bc .sp:nth-of-type(1){top:6px;left:74px;animation-delay:0s}.bc .sp:nth-of-type(2){bottom:5px;left:150px;animation-delay:.5s;font-size:7px}
+.bc .sp:nth-of-type(3){top:7px;right:96px;animation-delay:.9s;font-size:7px}.bc .sp:nth-of-type(4){display:none}
+@keyframes bcTw{0%,100%{opacity:.1;transform:scale(.6)}50%{opacity:1;transform:scale(1.2)}}
+/* মানুষের ছবি */
+.bc-av{position:absolute;left:5px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;padding:2.5px;z-index:3;
+  background:conic-gradient(#fff3b8,#e8b730,#8a5a07,#f7d559,#fff3b8);box-shadow:0 0 0 1.5px rgba(0,0,0,.25),0 0 14px rgba(255,214,90,.7)}
+.bc-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:#2a1d55}
+/* নাম + ছোট লেখা */
+.bc-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px;line-height:1.1}
+.bc-name{font-size:13.5px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,.55)}
+.bc-sub{font-size:11px;font-weight:600;color:#ffe9a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+/* WIN লেখা + চাকা */
+.bc-win{flex:0 0 auto;font:italic 900 22px/1 Poppins,system-ui,sans-serif;background:linear-gradient(180deg,#fff7c2 0%,#ffd23a 52%,#d98300 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.6px #7a4300;filter:drop-shadow(0 2px 0 rgba(90,40,0,.8)) drop-shadow(0 0 8px rgba(255,200,40,.55))}
+.bc-logo{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:2px solid #f7d559;position:relative;box-shadow:0 0 10px rgba(255,214,90,.8);
+  background:conic-gradient(#ff3b6b 0 12.5%,#ffb300 0 25%,#27c24c 0 37.5%,#2f7bff 0 50%,#a24bff 0 62.5%,#ff7a2f 0 75%,#00c2d1 0 87.5%,#ff3b6b 0 100%);animation:bcSpin 6s linear infinite}
+.bc-logo::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;transform:rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#fff,#7fd0ff 55%,#2a7bff);border:1px solid #fff}
+@keyframes bcSpin{to{transform:rotate(360deg)}}
+/* ডায়মন্ড সংখ্যার পিল — অ্যাপের আসল ডায়মন্ড আইকন (Font Awesome gem) */
+.bc-amtbox{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:5px 12px 5px 8px;border-radius:20px;
+  background:linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,.26));border:1.5px solid rgba(255,226,140,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 2px 8px rgba(0,0,0,.25)}
+.bc-gem{flex:0 0 auto;width:21px;height:21px;fill:url(#bcGemG);filter:drop-shadow(0 0 5px rgba(110,210,255,.95)) drop-shadow(0 1px 0 rgba(0,40,100,.65))}
+.bc-amt{font:900 17px/1 Poppins,system-ui,sans-serif;color:#ffe27a;letter-spacing:.2px;text-shadow:0 1px 0 rgba(90,45,0,.85),0 0 8px rgba(255,205,60,.5);white-space:nowrap}
+/* লাকি বক্সের প্যাকেট */
+.bc-pkt{flex:0 0 auto;width:24px;height:31px;border-radius:6px;background:linear-gradient(160deg,#ff6a6a,#c4151f 60%,#8c0c14);border:1.5px solid #ffd76a;position:relative;box-shadow:0 3px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.35)}
+.bc-pkt::after{content:"★";position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c2,#ffd23a 60%,#c47a00);color:#8a4b00;font:900 8px/13px sans-serif;text-align:center}
+/* গিফট: প্রাপকের ছোট ছবি, গিফটের ছবি, ×সংখ্যা */
+.bc-to{flex:0 0 auto;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,226,140,.85);background:#2a1d55;box-shadow:0 0 8px rgba(255,214,90,.45)}
+.bc-gico{flex:0 0 auto;width:46px;height:46px;display:grid;place-items:center;font-size:25px;overflow:hidden}
+.bc-gico svg{width:100%!important;height:100%!important}
+.bc-x{font:italic 900 15px/1 Poppins,sans-serif;color:#ffe27a;margin-left:-3px}
+.bc-qty{font:italic 900 27px/1 Poppins,system-ui,sans-serif;background:linear-gradient(180deg,#fff7c2,#ffd23a 55%,#e08a00);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.6px #7a4300;filter:drop-shadow(0 2px 0 rgba(60,20,90,.7));margin-right:2px}
+/* রুমে যাওয়ার নিশ্চিতকরণ বক্স */
+.bc-dlg{position:fixed;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(8,6,22,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:bcFade .2s ease}
+@keyframes bcFade{from{opacity:0}to{opacity:1}}
+.bc-card{width:min(88vw,320px);border-radius:26px;padding:22px 18px 16px;text-align:center;color:#fff;font-family:Poppins,system-ui,sans-serif;
+  background:linear-gradient(170deg,rgba(60,38,120,.97),rgba(24,14,58,.98));border:1.5px solid rgba(247,197,49,.65);box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 30px rgba(247,197,49,.25);animation:bcPop .32s cubic-bezier(.2,.9,.3,1.25)}
+@keyframes bcPop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.bc-card .av{width:70px;height:70px;border-radius:50%;margin:0 auto 10px;padding:3px;background:conic-gradient(#fff3b8,#e8b730,#8a5a07,#f7d559,#fff3b8);box-shadow:0 0 22px rgba(255,214,90,.6)}
+.bc-card .av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.bc-card h3{margin:0 0 4px;font-size:16px;font-weight:800;color:#ffe27a}
+.bc-card p{margin:0 0 4px;font-size:13px;line-height:1.45;color:#e9e3ff}
+.bc-card .room{display:inline-block;margin:6px 0 14px;padding:6px 12px;border-radius:14px;background:rgba(255,255,255,.1);font-size:12.5px;font-weight:700;color:#fff}
+.bc-btns{display:flex;gap:10px}
+.bc-btns button{flex:1;height:44px;border:0;border-radius:22px;font:800 14px Poppins,system-ui,sans-serif;cursor:pointer}
+.bc-btns .ok{background:linear-gradient(180deg,#ffe27a,#f2a900);color:#4a2b00;box-shadow:0 4px 14px rgba(242,169,0,.45)}
+.bc-btns .no{background:rgba(255,255,255,.12);color:#fff}
+
+/* গেম ব্যানারে নাম কাটা না পড়ে — WIN/চাকা/সংখ্যা একটু ছোট */
+.bc-game .bc-in{gap:7px}
+.bc-game .bc-win{font-size:19px}
+.bc-game .bc-logo{width:26px;height:26px}
+.bc-game .bc-amtbox{padding:5px 10px 5px 7px;gap:5px}
+.bc-game .bc-amt{font-size:15.5px}
+.bc-game .bc-gem{width:19px;height:19px}

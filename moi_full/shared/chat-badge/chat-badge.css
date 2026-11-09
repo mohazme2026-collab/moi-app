@@ -1,0 +1,20 @@
+/* shared/chat-badge.css — চ্যাট বাটনের উপরে ছোট লাল সংখ্যা + নতুন মেসেজ/অনুরোধের টোস্ট */
+.nb,.md-btn{position:relative}
+.cbadge{display:block;font-style:normal;position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;box-sizing:border-box;
+  background:linear-gradient(135deg,#ff4d6d,#ff2e57);color:#fff;font:800 11px/18px system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center;
+  box-shadow:0 0 0 2px rgba(255,255,255,.95),0 2px 8px rgba(255,46,87,.45);pointer-events:none;z-index:3;letter-spacing:0}
+.cbadge[hidden]{display:none}
+.nb .cbadge,.nav .nb .cbadge{display:block;top:3px;right:10px}
+.md-btn .cbadge{top:-2px;right:-2px;box-shadow:0 0 0 2px #1b1233,0 2px 8px rgba(255,46,87,.5)}
+.cb-toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translate(-50%,-140%);z-index:2147483000;
+  width:min(92vw,380px);display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:16px;cursor:pointer;
+  background:rgba(24,18,40,.94);color:#fff;font:600 13px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.08);transition:transform .35s cubic-bezier(.2,.9,.3,1.2)}
+.cb-toast.show{transform:translate(-50%,0)}
+.cb-toast .cb-ic{width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-size:16px;background:rgba(255,255,255,.12);overflow:hidden}
+.cb-toast .cb-ic img{width:100%;height:100%;object-fit:cover}
+.cb-toast .cb-tx{min-width:0;flex:1}
+.cb-toast .cb-tx b{display:block;font-size:13px}
+.cb-toast .cb-tx span{display:block;opacity:.8;font-weight:500;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* চ্যাট বাটন সক্রিয় (লেখা দেখা যাচ্ছে) থাকলে সংখ্যা লেখার উপরে না বসে, কোণায় উঠে যায় */
+.nb.on .cbadge,.nb.active .cbadge,.nav .nb.on .cbadge{top:-6px;right:-4px}

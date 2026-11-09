@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>MOI — Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Playfair+Display:wght@700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sub.css">
+<link rel="stylesheet" href="myprofile.css">
+<link rel="stylesheet" href="../follow/follow.css">
+</head>
+<body>
+<div class="pf-cover">
+  <div class="cv-track" id="cvTrack"></div>
+  <div class="cv-fade"></div>
+  <header class="cv-top">
+    <button class="rbtn" id="bBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="vis">Today's visitors: <span id="visN">0</span></span>
+    <button class="rbtn pen" id="bEdit" aria-label="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.500 6.500l4 4"/></svg><i class="red"></i></button>
+  </header>
+  <div class="cv-dots" id="cvDots"></div>
+  <div class="cv-av"><img id="pfAv" alt=""></div>
+</div>
+
+<main class="pf-body">
+  <section>
+    <div class="nm-row">
+      <h1 id="pfName">&nbsp;</h1>
+      <span class="gbadge" id="pfG"></span>
+      <span class="ctry" id="pfCtry"></span>
+      <span class="onl">On-line</span>
+      <button class="homeb" id="bRoom" aria-label="My room"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 3L2.500 11.500h2.700V20h5v-5.500h3.600V20h5v-8.500h2.700z"/></svg></button>
+    </div>
+    <div class="id-row"><span class="id-pill"><svg class="idb" viewBox="0 0 32 28"><defs><linearGradient id="idg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2a6fe0"/></linearGradient></defs><path d="M16 1.500l6 3 7 .5 1.500 6-3 5.500-3 7-4.500 3.500-4.500-3.500-3-7-3-5.500L2 5l7-.5z" fill="url(#idg)" stroke="#d9f1ff" stroke-width="1.200" stroke-linejoin="round"/><text x="16" y="17" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-size="9.500" font-weight="800" fill="#fff">ID</text></svg><b id="pfId">——</b></span><span id="pfLv" class="pf-lv"></span><button class="cpy" id="bCopy" aria-label="Copy ID"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.500" y="8.500" width="11" height="11" rx="2.500"/><path d="M15.500 8.500V6.500a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></svg></button></div>
+    <div class="lv-row" id="lvRow"></div>
+  </section>
+
+  <section class="fbox">
+    <button class="fst" data-k="following"><span>Following</span><b id="nFollowing">0</b></button>
+    <i class="sep"></i>
+    <button class="fst" data-k="follower"><span>Follower</span><b id="nFollower">0</b></button>
+  </section>
+
+  <section class="card badges"><div class="hd"><h3 class="ttl"><i>❨</i>Badges<i>❩</i></h3></div><div class="empty"></div></section>
+
+  <section class="card">
+    <div class="hd"><h3 class="ttl"><i>❨</i>CP<i>❩</i></h3></div>
+    <div class="cpcard">
+      <div class="cpu"><div class="av"><img id="cpMe" alt=""></div><small id="cpMeN"></small></div>
+      <div class="cph"><svg viewBox="0 0 64 58"><defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b8e"/><stop offset="1" stop-color="#a30f3d"/></linearGradient></defs><path d="M32 54C10 38 4 27 4 18 4 10 10 4 18 4c6 0 11 3 14 8 3-5 8-8 14-8 8 0 14 6 14 14 0 9-6 20-28 36z" fill="url(#hg)" stroke="#ffd0dc" stroke-width="2"/></svg><b id="cpLv">Lv.0</b><small id="cpTx">Invite CP</small></div>
+      <div class="cpu" id="cpOther"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="hd"><h3 class="ttl"><i>❨</i>Special<i>❩</i></h3></div>
+    <div class="slots" id="slots"></div>
+  </section>
+
+  <section class="card">
+    <div class="hd"><h3 class="ttl"><i>❨</i>Supporters<i>❩</i></h3><button class="more" id="bAll">View All <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <div class="tiles" id="tiles"></div>
+  </section>
+</main>
+
+<button class="fab" id="bMsg" aria-label="Messages"><svg viewBox="0 0 24 24" fill="#fff"><path d="M21.500 3.200L2.800 10.600c-.9.350-.85 1.650.07 1.900l4.900 1.400 1.900 5.700c.3.900 1.500 1.050 2 .25l2.600-3.700 4.700 3.500c.7.500 1.700.1 1.900-.8l2.700-14.200c.2-1-.8-1.800-1.700-1.450zM8.700 13l9.300-5.800-7.200 7.100z"/></svg></button>
+<div class="toast" id="toast"></div>
+
+<script src="../../shared/core/firebase-init.js"></script>
+<script src="../../demo/seed.js"></script>
+<script src="../../shared/core/sync.js"></script>
+<script src="../../shared/core/sync-routes.js"></script>
+<script src="../../shared/storage.js"></script>
+<script src="../../shared/core/economy.js"></script>
+<script src="../../shared/core/db-storage.js"></script>
+<script src="../../shared/core/auth.js"></script>
+<script src="countries.js"></script>
+<script src="../../shared/level/level-badge.js"></script>
+<script src="art.js"></script>
+<script src="../../demo/profile-demo.js"></script>
+<script src="../follow/follow.js"></script>
+<script src="myprofile.js"></script>
+</body>
+</html>

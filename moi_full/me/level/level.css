@@ -1,0 +1,98 @@
+/* me/level/level.css — Level পেজ (Wealth Privilege): সাদা উপরের বার, সোনালি কার্ড, বক্স, গিফট লাইন, Go To upgrade */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:#000;color:#fff;overflow:hidden}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* উপরের সাদা বার */
+.lv-top{position:fixed;left:0;right:0;top:0;z-index:5;height:calc(82px + env(safe-area-inset-top,0px));padding:calc(env(safe-area-inset-top,0px) + 38px) 18px 0;background:#fff;display:flex;align-items:center;gap:0}
+.lv-back{width:40px;height:30px;display:grid;place-items:center;color:#7a3b6a;margin-right:14px}
+.lv-back svg{width:30px;height:16px}
+.lv-t1{font-size:19px;font-weight:400;color:#7a3b6a;white-space:nowrap}
+.lv-t2{margin-left:auto;margin-right:42px;font-size:14px;color:#9a9aa4;white-space:nowrap}
+
+/* পেজ: নিচে গেলে স্ক্রল হয় */
+.lv-page{position:absolute;left:0;right:0;top:calc(82px + env(safe-area-inset-top,0px));bottom:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+  background:radial-gradient(90% 40% at 50% 0%,rgba(120,88,58,.55),transparent 70%),linear-gradient(180deg,#3b2d21 0%,#16100b 38%,#000 70%);
+  padding:20px 0 calc(24px + env(safe-area-inset-bottom,0px))}
+
+/* কার্ড */
+.lv-cards{position:relative;display:flex;gap:8px;overflow-x:auto;padding:0 5.5%;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.lv-cards::-webkit-scrollbar{display:none}
+.lv-card{position:relative;flex:0 0 100%;scroll-snap-align:center;height:156px;border-radius:22px;overflow:hidden;
+  background:linear-gradient(135deg,#c8a16a 0%,#d9bb86 48%,#b98f58 100%);border:1px solid rgba(255,235,190,.35);box-shadow:0 10px 26px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3)}
+.lv-card .wm{position:absolute;left:34%;top:14%;font-size:62px;font-weight:800;letter-spacing:8px;color:rgba(255,255,255,.1);pointer-events:none}
+.lv-card .lvn{position:absolute;left:5%;top:14px;font-size:56px;font-weight:700;line-height:1.25;color:#fff;text-shadow:0 2px 8px rgba(120,70,10,.25)}
+.lv-card .lvn small{font-size:56px;font-weight:700}
+.lv-card .av{position:absolute;right:5%;top:12px;width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid #fff;background:#8b6a3a;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.lv-card .bar{position:absolute;left:4.5%;right:4.5%;bottom:14px;height:34px;display:flex;align-items:center;gap:6px}
+.lv-card .track{flex:1;height:9px;border-radius:5px;background:#5a3f24;overflow:hidden}
+.lv-card .fill{height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,#ffd21a,#ffc800)}
+
+/* লেভেল ব্যাজ (ঢালের মতো আকার) */
+.lvb{position:relative;flex:0 0 auto;width:32px;height:34px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 16%,100% 68%,50% 100%,0 68%,0 16%);background:linear-gradient(180deg,#fff0b0,#d9a22a)}
+.lvb i{position:absolute;inset:2.5px;clip-path:polygon(50% 0,100% 16%,100% 68%,50% 100%,0 68%,0 16%);background:var(--bc,#2a7be0)}
+.lvb b{position:relative;z-index:1;font-size:13px;font-weight:800;color:#fff;margin-top:-3px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+
+/* Consumption / To upgrade */
+.lv-stats{display:flex;gap:14px;padding:16px 6px 0}
+.lv-stat{flex:1;padding:12px 8px 14px;border-radius:20px;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.05)}
+.lv-stat h3{font-size:22px;font-weight:600;color:#ffcf1f;line-height:1.3}
+.lv-stat p{margin-top:12px;font-size:14px;color:rgba(255,255,255,.88);display:flex;align-items:center;justify-content:center;gap:6px}
+.coin{display:inline-block;width:17px;height:17px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b0,#f6c445 55%,#d99a10);border:1.5px solid #fff0b0}
+
+/* বক্স + মাথার ট্যাব */
+.lv-box{position:relative;margin:18px 10px 0;border-radius:24px}
+.lv-tab{position:relative;margin:0 auto;width:64%;padding:8px 6px 10px;text-align:center;font-size:17px;font-weight:500;background:linear-gradient(180deg,#6b5c46,#554835);border-radius:0 0 18px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.lv-icons{background:rgba(92,76,58,.42);padding-bottom:12px}
+.lv-ic-grid{display:flex;flex-wrap:wrap;justify-content:center;padding:6px 4px 0}
+.lv-ic{width:16.66%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0}
+.ic-slot{width:36px;height:38px}
+.lv-ic span{font-size:13.5px;color:rgba(255,255,255,.9)}
+
+/* গিফট লাইন */
+.lv-gifts{position:relative;margin:38px 14px 0;height:72px}
+.lv-line{position:absolute;left:0;right:0;top:25px;height:7px;border-radius:4px;background:#ffcf00}
+.lv-gift{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;width:60px}
+.lv-gift.g10{left:-14px}
+.lv-gift.g30{left:50%;transform:translateX(-50%)}
+.lv-gift.g40{right:-14px}
+.gift-slot{width:34px;height:34px}
+.lv-gift em{margin-top:14px;font-size:14px;font-style:italic;font-weight:500;color:rgba(255,255,255,.92)}
+
+/* Growth Package */
+.lv-pkg{margin-top:42px;background:#000;border:1px solid rgba(255,255,255,.3);padding-bottom:14px}
+.lv-pkg-row{display:flex;gap:12px;padding:12px 14px 0}
+.pkg-item{position:relative;width:84px;height:84px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#1b1810,#0a0905);border:1.5px solid #6b5420;box-shadow:0 0 12px rgba(220,170,60,.25),inset 0 0 14px rgba(220,170,60,.12)}
+.pkg-slot{position:absolute;left:50%;top:6px;transform:translateX(-50%);width:50px;height:50px}
+.pkg-item span{position:absolute;left:0;right:0;bottom:5px;text-align:center;font-size:12px;line-height:1.2;color:#fff;padding:0 3px}
+
+/* Go To upgrade */
+.lv-go{display:block;width:calc(100% - 28px);margin:30px 14px 0;height:58px;border-radius:30px;font-size:19px;font-weight:500;color:#8a6a10;
+  background:linear-gradient(180deg,#ffe74a,#ffc800);box-shadow:0 6px 22px rgba(255,200,0,.35),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .15s}
+.lv-go:active{transform:scale(.96)}
+.lv-end{height:34px}
+
+/* ছোট বার্তা */
+.lv-toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,16px);padding:10px 16px;border-radius:14px;background:rgba(20,16,40,.95);color:#fff;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.lv-toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* শুধু কার্ড + নিচে স্থির Go বাটন */
+.lv-cards{margin-top:22px}
+.lv-page{bottom:0;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+.lv-go{position:fixed;left:14px;right:14px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:auto;margin:0;z-index:5}
+
+/* উপরের বার: সাদা নয় — পেছনের মতোই, শুধু Back */
+.lv-top{background:transparent}
+.lv-back{color:#fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.lv-cards{margin-top:6px}
+/* বারের ভেতরে সাদা লেখা */
+.lv-card .bar{height:38px;gap:4px}
+.lv-card .track{position:relative;height:24px;border-radius:12px;background:#5a3f24;box-shadow:inset 0 2px 5px rgba(0,0,0,.45)}
+.lv-card .fill{border-radius:12px;background:linear-gradient(180deg,#ffe35a,#ffb800);box-shadow:0 0 10px rgba(255,200,0,.5)}
+.lv-card .track span{position:absolute;top:0;bottom:0;display:flex;align-items:center;font:700 11.5px Poppins,"Hind Siliguri",sans-serif;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.85);white-space:nowrap}
+.lv-card .tl{left:9px}.lv-card .tr{right:9px}
+
+/* পেছনের গ্রেডিয়েন্ট পুরো পেজে (উপরের বারসহ), যাতে একই রং */
+body{background:radial-gradient(90% 40% at 50% 0%,rgba(120,88,58,.55),transparent 70%),linear-gradient(180deg,#3b2d21 0%,#16100b 38%,#000 70%) fixed}
+.lv-page{background:none}

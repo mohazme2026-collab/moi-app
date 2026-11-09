@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>MOI — Edit</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sub.css">
+<link rel="stylesheet" href="edit.css">
+</head>
+<body>
+<header class="ed-top"><button class="rbtn" id="bBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><h1>Edit</h1><button class="ed-save" id="bSave" disabled>Save</button></header>
+<main class="ed">
+  <div class="lb">Avatar</div>
+  <div class="ed-av" id="avBtn"><img id="avImg" alt=""></div>
+
+  <div class="lb">Photo Wall (<span id="wallN">0</span>/8)</div>
+  <div class="wall" id="wall"></div>
+
+  <div class="fld" id="fName"><div class="k">Nickname</div><input id="nameIn" maxlength="30" autocomplete="off" placeholder="Nickname"></div>
+  <div class="fld" id="fBirth"><div class="k">Birthday</div><div class="v" id="vBirth"></div><svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+  <div class="fld" id="fGender"><div class="k">Gender</div><div class="v" id="vGender"></div><svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+  <div class="fld" id="fCountry"><div class="k">Country</div><div class="v" id="vCountry"></div><svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+  <div class="fld" id="fBio"><div class="k">Bio</div><div class="v" id="vBio"></div><svg class="ch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></div>
+</main>
+
+<div class="bd" id="bd"></div>
+<div class="sh" id="shPhoto"><div class="grp"><button id="pCam">Camera</button><button id="pGal">Gallery</button></div><button class="cancel" id="pCancel">Cancel</button></div>
+<div class="gd" id="gdGender"><button data-g="Male"><span class="sy m">♂</span>Male</button><button data-g="Female"><span class="sy f">♀</span>Female</button><button data-g="Privacy"><span class="sy p">⚥</span>Privacy</button></div>
+<div class="sh" id="shBirth"><div class="bp"><div class="dn"><button id="bDone">Done</button></div><div class="wheels"><div class="wcol" id="wM"></div><div class="wcol" id="wD"></div><div class="wcol" id="wY"></div></div></div></div>
+
+<section class="pg" id="pgCountry">
+  <div class="pg-top"><button class="rbtn" id="cBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Country/Region</h2><span style="width:40px"></span></div>
+  <div class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.500-3.500"/></svg><input id="cQ" placeholder="Enter an address or area code" autocomplete="off"><button class="cl" id="cX" hidden>×</button></div>
+  <div class="cl-list" id="cList"></div>
+</section>
+<section class="pg" id="pgBio">
+  <div class="pg-top"><button class="rbtn" id="bioBack" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Bio</h2><button class="sv" id="bioSave">Save</button></div>
+  <div class="bio-box"><textarea id="bioIn" maxlength="120" placeholder="Add a short bio to introduce yourself to your friends."></textarea></div>
+  <div class="bio-cnt"><span id="bioN">0</span>/120</div>
+</section>
+
+<input type="file" id="fGal" accept="image/*" hidden>
+<input type="file" id="fCam" accept="image/*" capture="environment" hidden>
+<div class="toast" id="toast"></div>
+
+<script src="../../shared/core/firebase-init.js"></script>
+<script src="../../demo/seed.js"></script>
+<script src="../../shared/core/sync.js"></script>
+<script src="../../shared/core/sync-routes.js"></script>
+<script src="../../shared/storage.js"></script>
+<script src="../../shared/core/economy.js"></script>
+<script src="../../shared/core/db-storage.js"></script>
+<script src="../../shared/core/auth.js"></script>
+<script src="countries.js"></script>
+<script src="crop.js"></script>
+<script src="edit.js"></script>
+</body>
+</html>

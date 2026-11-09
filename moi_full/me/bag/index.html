@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<script src="../../shared/theme/theme.js"></script>
+<script src="../../shared/ui/fallback.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>MOI — My Decoration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="bag.css">
+<link rel="stylesheet" href="../../shared/theme/theme.css">
+<link rel="stylesheet" href="../../shared/theme/theme-light.css">
+</head>
+<body>
+<div class="bg-bg"></div>
+
+<main class="bg-page">
+
+  <!-- উপরের বার: Back + My Decoration -->
+  <header class="bg-top">
+    <button class="bg-back" id="bgBack" type="button" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <span class="bg-title">My Decoration</span>
+    <span class="bg-top-space"></span>
+  </header>
+
+  <!-- ট্যাব বার -->
+  <nav class="bg-tabs" id="bgTabs" role="tablist">
+    <button class="bg-tab on" type="button" role="tab" data-tab="frame">Frame</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="entry">Entry</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="luckybox">Lucky Box Skin</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="aperture">Aperture</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="personal">Personal Page</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="bubble">Messages Bubble</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="roomframe">Room frame</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="roomtags">Room Tags</button>
+  </nav>
+
+  <!-- প্রতিটা ট্যাবের জিনিসের জায়গা: কিছু বসালে নিচের "List is empty" নিজে থেকেই সরে যাবে -->
+  <section class="bg-panes" id="bgPanes">
+    <div class="bg-pane on" id="list-frame"></div>
+    <div class="bg-pane" id="list-entry"></div>
+    <div class="bg-pane" id="list-luckybox"></div>
+    <div class="bg-pane" id="list-aperture"></div>
+    <div class="bg-pane" id="list-personal"></div>
+    <div class="bg-pane" id="list-bubble"></div>
+    <div class="bg-pane" id="list-roomframe"></div>
+    <div class="bg-pane" id="list-roomtags"></div>
+
+    <!-- খালি থাকলে এটা দেখায় (বাক্সের গায়ে MOI) -->
+    <div class="bg-empty" id="bgEmpty">
+      <svg viewBox="0 0 360 290" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="bxF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f6b6a"/><stop offset="1" stop-color="#0a4a4f"/></linearGradient>
+          <linearGradient id="bxS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0c5a5c"/><stop offset="1" stop-color="#083f45"/></linearGradient>
+          <radialGradient id="bear" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#e8a45c"/><stop offset="1" stop-color="#b9702f"/></radialGradient>
+        </defs>
+        <!-- সামনের পাশের খোলা বাক্স -->
+        <path d="M150 200 L250 168 L360 182 L262 222z" fill="#0b4f52" opacity=".55"/>
+        <path d="M176 196 L278 170 L330 190 L232 222z" fill="#126f6e"/>
+        <path d="M176 196 L232 222 L232 280 L176 252z" fill="url(#bxS)"/>
+        <path d="M232 222 L330 190 L330 246 L232 280z" fill="url(#bxF)"/>
+        <path d="M278 170 L340 150 L350 196 L330 190z" fill="#0d5d60" opacity=".9"/>
+        <text x="291" y="256" text-anchor="middle" transform="rotate(-17 291 256)" font-family="Poppins,Arial,sans-serif" font-weight="700" font-size="22" fill="#4fd6c2" opacity=".9">MOI</text>
+        <!-- ভাবনার বুদবুদ -->
+        <g transform="translate(220 20)"><rect x="0" y="0" width="140" height="92" rx="46" fill="#0a3f45" stroke="#1d9c92" stroke-width="3"/><path d="M26 82 L14 104 L50 88z" fill="#0a3f45" stroke="#1d9c92" stroke-width="3"/><circle cx="76" cy="46" r="30" fill="#1b8a85"/><text x="76" y="58" text-anchor="middle" font-family="Poppins,Arial,sans-serif" font-weight="700" font-size="38" fill="#0a3f45">?</text></g>
+        <!-- ভালুক -->
+        <ellipse cx="86" cy="262" rx="62" ry="10" fill="#000" opacity=".28"/>
+        <path d="M34 236 Q30 170 92 160 Q150 168 146 236 Q140 268 90 268 Q40 268 34 236z" fill="#0d3f46"/>
+        <circle cx="38" cy="116" r="22" fill="url(#bear)"/><circle cx="38" cy="116" r="11" fill="#c98a52"/>
+        <circle cx="140" cy="116" r="22" fill="url(#bear)"/><circle cx="140" cy="116" r="11" fill="#c98a52"/>
+        <ellipse cx="89" cy="140" rx="62" ry="54" fill="url(#bear)"/>
+        <ellipse cx="89" cy="158" rx="26" ry="20" fill="#f0cfa2"/>
+        <ellipse cx="89" cy="150" rx="9" ry="6.5" fill="#2b1a12"/>
+        <circle cx="62" cy="132" r="7.5" fill="#1a0f0b"/><circle cx="116" cy="132" r="7.5" fill="#1a0f0b"/><circle cx="64.5" cy="129.5" r="2.4" fill="#fff"/><circle cx="118.5" cy="129.5" r="2.4" fill="#fff"/>
+        <path d="M54 118 Q62 112 70 116M108 116 Q116 112 124 118" stroke="#6b3a1c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M80 170 Q89 176 98 170" stroke="#6b3a1c" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M70 214 Q86 190 118 196 Q128 214 112 226 Q92 232 70 214z" fill="#d79a5d"/>
+        <text x="62" y="248" font-family="Poppins,Arial,sans-serif" font-weight="700" font-size="14" fill="#3db7a8" transform="rotate(-8 62 248)">MOI</text>
+      </svg>
+      <p>List is empty</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="bg-toast" id="bgToast"></div>
+
+<script src="../../shared/config.js"></script>
+<script src="../../shared/core/firebase-init.js"></script>
+<script src="../../shared/core/sync.js"></script>
+<script src="../../shared/core/sync-routes.js"></script>
+<script src="../../shared/storage.js"></script>
+<script src="../../shared/core/economy.js"></script>
+<script src="../../shared/core/db-storage.js"></script>
+<script src="../../shared/core/auth.js"></script>
+<script src="../../shared/store/store-data.js"></script>
+<script src="../../shared/svip/entry.js"></script>
+<script src="bag.js"></script>
+</body>
+</html>

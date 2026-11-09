@@ -1,0 +1,103 @@
+/* room/moi-rel.css — Relationship অংশ, CP কার্ড, Special ঘর, Supporters, ইনভাইট, সিটের হার্ট */
+
+/* প্রোফাইল: বাটনগুলো একটু উপরে — নিচে Relationship-এর মাথা উঁকি দেয় */
+#userProfileModal .profile-cover{height:170px}
+#userProfileModal .profile-avatar-wrap{margin-top:-56px;width:104px;height:104px}
+#userProfileModal .profile-avatar{width:104px;height:104px}
+#userProfileModal .profile-info{padding-top:8px}
+#userProfileModal .profile-name{font-size:21px}
+#userProfileModal .profile-follow-row{margin-top:8px}
+#userProfileModal .profile-actions{padding:10px 22px 4px}
+#userProfileModal .profile-btn{padding:11px 10px}
+#pfMore{padding:6px 14px 24px}
+
+.rel-sec{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:10px 12px 14px;margin-bottom:12px}
+.rel-sec h5{margin:0 0 10px;font-size:15px;font-weight:700;color:#f5e6b8;font-family:Georgia,'Times New Roman',serif}
+.rel-sec h5 span::before{content:'❨ ';color:#d9b86a}.rel-sec h5 span::after{content:' ❩';color:#d9b86a}
+
+/* CP কার্ড */
+.cp-card{--ca:#ff8fb4;--cb:#c2185b;--k1:#e0345f;--k2:#a3124a;position:relative;display:flex;align-items:center;justify-content:space-between;padding:16px 10px 30px;border-radius:16px;
+  background:radial-gradient(circle at 50% 0,rgba(255,255,255,.25),transparent 55%),linear-gradient(160deg,var(--k1),var(--k2));overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2),0 6px 18px rgba(0,0,0,.35)}
+.cp-card::before,.cp-card::after{content:'❦';position:absolute;font-size:34px;color:rgba(255,255,255,.18);bottom:2px}
+.cp-card::before{left:6px}.cp-card::after{right:6px;transform:scaleX(-1)}
+.cp-card.t2{--ca:#d6a5ff;--cb:#7b2fd0;--k1:#8b3ee0;--k2:#42157f}
+.cp-card.t3{--ca:#8fd0ff;--cb:#1f6fd8;--k1:#2f86e8;--k2:#12407f}
+.cp-card.t4{--ca:#ffe27a;--cb:#e08a00;--k1:#e8a41c;--k2:#8a4a00}
+.cp-side{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}
+.cp-av{width:70px;height:70px;border-radius:50%;padding:3px;background:conic-gradient(#fff2b0,#d9a63a,#fff2b0,#b8801f,#fff2b0);box-shadow:0 0 12px rgba(255,220,120,.6)}
+.cp-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.cp-av.plus{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);color:#fff;font-size:22px;box-shadow:none;cursor:pointer;border:1px solid rgba(255,255,255,.2)}
+.cp-av.empty{background:rgba(0,0,0,.2);box-shadow:none;border:1px dashed rgba(255,255,255,.35)}
+.cp-nm{margin-top:5px;font-size:12px;color:#fff;max-width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cp-mid{flex:0 0 96px;display:flex;flex-direction:column;align-items:center}
+.cp-heart{position:relative;width:64px;height:58px;animation:cpBeat 1.6s ease-in-out infinite}
+.cp-heart>svg:not(.cp-wing){width:100%;height:100%;filter:drop-shadow(0 3px 6px rgba(0,0,0,.4))}
+.cp-wing{position:absolute;top:2px;width:26px;height:20px}.cp-wing.l{left:-20px}.cp-wing.r{right:-20px}
+.cp-heart b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:17px;line-height:1;padding-bottom:6px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.cp-heart b small{font-size:9px;font-weight:600}
+@keyframes cpBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.1)}30%{transform:scale(1)}45%{transform:scale(1.07)}}
+.cp-lv{margin-top:6px;padding:2px 14px;border-radius:14px;background:linear-gradient(180deg,#ff5f8f,#c2185b);border:1px solid #ffd6e4;color:#fff3c4;font-weight:800;font-size:13px;font-family:Georgia,serif}
+.cp-foot{position:absolute;left:0;right:0;bottom:7px;text-align:center;font-size:11.5px;color:#fff}
+.cp-sheet{padding:2px 2px 16px}
+
+/* Special ঘর */
+.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.sp-slot{position:relative;aspect-ratio:1/1.1;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 4px 8px;overflow:hidden;color:#fff}
+.sp-slot.empty{background:linear-gradient(180deg,#0f5d63,#06262c);border:2px solid #c9a24d;box-shadow:0 0 0 1px rgba(0,0,0,.4) inset;justify-content:center;color:#f3d489;font-size:22px;padding:0}
+.sp-slot.friend{background:linear-gradient(160deg,#8e9cff,#6a57d8)}
+.sp-slot.sister{background:linear-gradient(160deg,#e6a6ee,#c07be0)}
+.sp-slot.brother{background:linear-gradient(160deg,#6ed6c8,#2f93b0)}
+.sp-rib{position:absolute;top:0;left:50%;transform:translateX(-50%);padding:1px 16px;border-radius:0 0 10px 10px;font-size:11px;font-weight:700;background:#1f3fb0}
+.sp-slot.sister .sp-rib{background:#c2185b}.sp-slot.brother .sp-rib{background:#0b7d73}
+.sp-slot img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-bottom:5px}
+.sp-nm{font-size:11px;font-weight:700;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-lv{margin-top:3px;font-size:10px;font-weight:700;padding:1px 10px;border-radius:10px;background:rgba(255,255,255,.35)}
+
+/* Supporters */
+.sup-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sup{position:relative;aspect-ratio:1/1.25;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)}
+.sup.t1{background:linear-gradient(160deg,#e0382f,#a1141b);box-shadow:inset 0 0 0 3px #f1c453}
+.sup.t2{background:linear-gradient(160deg,#e85b8e,#b02a64);box-shadow:inset 0 0 0 3px #ffb7cf}
+.sup.t3{background:linear-gradient(160deg,#5aa0ea,#2a5cb4);box-shadow:inset 0 0 0 3px #bfdcff}
+.sup-top{position:absolute;top:6px;font-weight:800;font-size:12px;color:#ffd978;text-shadow:0 1px 2px #0008}
+.sup-av{width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,.7);margin-top:12px}
+.sup-av img{width:100%;height:100%;object-fit:cover}.sup-av.none{background:rgba(0,0,0,.25)}
+.sup-nm{margin-top:6px;font-size:11px;max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ইনভাইট শিট */
+.iv-wrap{padding:0 2px 10px}
+.iv-chips{display:flex;gap:8px;margin-bottom:10px}
+.iv-chip{padding:6px 16px;border-radius:16px;background:rgba(255,255,255,.07);color:#cbb8ff;font-size:12.5px;cursor:pointer}
+.iv-chip.on{background:linear-gradient(135deg,#8b5cf6,#ff5fa2);color:#fff}
+.iv-search{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:14px;background:rgba(255,255,255,.07);color:#9c8fb0}
+.iv-search input{flex:1;background:none;border:none;outline:none;color:#fff;font:inherit;font-size:14px}
+.iv-cost{font-size:11.5px;color:#ffd166;margin:8px 2px}
+.iv-row{display:flex;align-items:center;gap:10px;padding:9px 10px;margin-bottom:7px;border-radius:14px;background:rgba(255,255,255,.05)}
+.iv-row img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.iv-row span{flex:1;color:#fff;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iv-row button{padding:7px 18px;border:none;border-radius:16px;background:linear-gradient(180deg,#5fe08f,#27a85a);color:#fff;font-weight:700;font-size:13px;cursor:pointer}
+.iv-row em{font-size:11px;color:#9c8fb0;font-style:normal}
+
+/* ইনকামিং রিকোয়েস্ট কার্ড */
+.rq-pop{position:absolute;left:10px;right:10px;top:12px;z-index:400;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:linear-gradient(135deg,rgba(60,20,90,.97),rgba(20,10,50,.97));border:1px solid rgba(255,150,200,.5);box-shadow:0 8px 28px rgba(0,0,0,.6);animation:rqIn .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes rqIn{from{transform:translateY(-120%)}}
+.rq-pop img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.rq-t{flex:1;min-width:0;display:flex;flex-direction:column;font-size:12px;color:#d9cdf0}.rq-t b{color:#fff;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rq-pop button{border:none;border-radius:14px;padding:7px 12px;font-weight:700;font-size:12.5px;cursor:pointer;color:#fff}
+.rq-pop .no{background:rgba(255,255,255,.12)}.rq-pop .yes{background:linear-gradient(180deg,#ff6f9f,#d81b60)}
+.rel-burst{position:absolute;inset:0;z-index:500;pointer-events:none;overflow:hidden}
+.rel-burst i{position:absolute;bottom:-30px;font-style:normal;animation:relUp 2.2s ease-out forwards}
+@keyframes relUp{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+
+/* সিটে CP — হার্ট ও রিং */
+#moiHearts{position:absolute;inset:0;pointer-events:none;z-index:9}
+.seat-heart{position:absolute;width:30px;height:27px;margin:-14px 0 0 -15px;pointer-events:auto;cursor:pointer;animation:cpBeat 1.6s ease-in-out infinite;filter:drop-shadow(0 0 7px var(--sg,rgba(255,80,140,.9)));
+  --ca:#ff8fb4;--cb:#c2185b;--sg:rgba(255,80,140,.9)}
+.seat-heart svg{width:100%;height:100%}
+.seat-heart.t2{--ca:#d6a5ff;--cb:#7b2fd0;--sg:rgba(170,100,255,.9)}
+.seat-heart.t3{--ca:#8fd0ff;--cb:#1f6fd8;--sg:rgba(70,150,255,.9)}
+.seat-heart.t4{--ca:#ffe27a;--cb:#e08a00;--sg:rgba(255,200,40,1)}
+.seat-avatar.cp-ring{box-shadow:0 0 0 2px #ff9fc4,0 0 14px 2px rgba(255,80,140,.75)!important}
+.seat-avatar.cp-ring.cp-t2{box-shadow:0 0 0 2px #e0c0ff,0 0 14px 2px rgba(170,100,255,.8)!important}
+.seat-avatar.cp-ring.cp-t3{box-shadow:0 0 0 2px #b8e0ff,0 0 14px 2px rgba(70,150,255,.8)!important}
+.seat-avatar.cp-ring.cp-t4{box-shadow:0 0 0 2px #fff0a8,0 0 16px 3px rgba(255,200,40,.95)!important}

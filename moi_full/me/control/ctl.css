@@ -1,0 +1,220 @@
+/* me/control/ctl.css — User Control (Host + Transfer) পেজের সবার ডিজাইন */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:#011a1e;color:#fff;overflow:hidden}
+button,input{font-family:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+svg{display:block}
+
+.c-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(90% 40% at 20% 0%,rgba(40,190,150,.2),transparent 70%),radial-gradient(70% 40% at 100% 30%,rgba(30,140,160,.18),transparent 70%),linear-gradient(180deg,#02242a 0%,#012328 45%,#011a1e 100%)}
+.c-page{position:relative;z-index:1;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+
+/* উপরের বার */
+.c-top{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;padding:0 14px}
+.c-back,.c-top-sp{width:40px;height:40px}
+.c-back{display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.08);transition:transform .15s}
+.c-back svg{width:22px;height:22px;stroke:#fff}
+.c-back:active{transform:scale(.88)}
+.c-title{font-size:19px;font-weight:500}
+
+/* স্ক্রল এলাকা */
+.c-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:6px 14px calc(30px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.c-sub{margin:2px 4px 14px;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.55)}
+
+/* Balance — সোনালি আভার কাচের কার্ড */
+.c-balance{position:relative;height:92px;border-radius:26px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;overflow:hidden;
+  background:linear-gradient(135deg,#0d5a63 0%,#0f7c78 48%,#14a187 100%);border:1px solid rgba(255,255,255,.32);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 14px 32px rgba(0,0,0,.4),0 0 40px rgba(46,214,170,.12)}
+.c-balance::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 15% 0%,rgba(255,255,255,.28),transparent 70%)}
+.c-balance::after{content:"";position:absolute;top:-40%;bottom:-40%;width:60px;left:-80px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.22),transparent);transform:skewX(-20deg);animation:cShine 5s ease-in-out infinite}
+@keyframes cShine{0%,60%{left:-80px}100%{left:120%}}
+.c-bal-l{position:relative}
+.c-bal-l small{display:block;font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.c-bal-l b{display:block;margin-top:2px;font-size:32px;font-weight:700;letter-spacing:.3px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.c-bal-ic{position:relative;width:54px;height:54px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));animation:cFloat 3.6s ease-in-out infinite}
+@keyframes cFloat{50%{transform:translateY(-4px) rotate(4deg)}}
+.c-hint{margin:9px 6px 0;text-align:center;font-size:12px;color:rgba(255,255,255,.5)}
+
+/* Targets & Rewards সারি */
+.c-row{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px 14px;border-radius:20px;text-align:left;
+  background:linear-gradient(90deg,rgba(246,196,69,.2),rgba(46,214,170,.12) 60%,rgba(255,255,255,.04));border:1px solid rgba(246,196,69,.35);transition:transform .15s}
+.c-row:active{transform:scale(.98)}
+.c-row-ic{flex:0 0 auto;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#ffd75a,#e8970d);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 4px 10px rgba(0,0,0,.3)}
+.c-row-ic svg{width:24px;height:24px;stroke:#5a3300}
+.c-row-t{flex:1;min-width:0}
+.c-row-t b{display:block;font-size:15.5px;font-weight:600}
+.c-row-t small{display:block;margin-top:1px;font-size:11.5px;color:rgba(255,255,255,.6)}
+.c-row>svg.ch,.c-row>i svg.ch{width:20px;height:20px;stroke:#f6d85a}
+
+/* চারটা ছোট বাটন */
+.c-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.c-act{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 2px 9px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);transition:transform .15s}
+.c-act:active{transform:scale(.93)}
+.c-act span{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 4px 9px rgba(0,0,0,.3)}
+.c-act svg{width:21px;height:21px;stroke:#fff}
+.c-act b{font-size:11.5px;font-weight:500;color:rgba(255,255,255,.88)}
+.a-sell span{background:linear-gradient(145deg,#ffd75a,#e8970d)} .a-sell svg{stroke:#5a3300}
+.a-exch span{background:linear-gradient(145deg,#52e0b0,#13a07c)}
+.a-wd span{background:linear-gradient(145deg,#6db6ff,#2f6fe0)}
+.a-rec span{background:linear-gradient(145deg,#c79bff,#7a45e0)}
+
+/* নিচের দুই কার্ড */
+.c-cards2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.c-card2{display:flex;align-items:center;gap:12px;padding:16px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.14);position:relative;overflow:hidden}
+.c-card2::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 70% at 20% 0%,rgba(255,255,255,.16),transparent 70%)}
+.k-a{background:linear-gradient(150deg,#0b4f6c,#0d7488)} .k-b{background:linear-gradient(150deg,#6a4a0a,#b8800f)}
+.c-card2>*{position:relative}
+.c-card2 i{width:36px;height:36px;flex:0 0 auto}
+.c-card2 svg{width:36px;height:36px;stroke:#fff}
+.c-card2 small{display:block;font-size:11.5px;color:rgba(255,255,255,.7)}
+.c-card2 b{font-size:20px;font-weight:700}
+.c-month{margin:12px 0 0;text-align:center;font-size:11.5px;color:rgba(255,255,255,.4)}
+
+/* স্লাইড-ইন ভিউ */
+.c-view{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;max-width:520px;margin:0 auto;padding-top:env(safe-area-inset-top,0px);
+  background:radial-gradient(90% 40% at 20% 0%,rgba(40,190,150,.2),transparent 70%),linear-gradient(180deg,#02242a 0%,#012328 45%,#011a1e 100%);
+  transform:translateX(100%);visibility:hidden;transition:transform .28s cubic-bezier(.2,.8,.25,1),visibility 0s .28s}
+.c-view.on{transform:none;visibility:visible;transition:transform .28s cubic-bezier(.2,.8,.25,1)}
+.c-view .c-title{font-size:18px}
+
+/* Targets summary */
+.c-tsum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.c-tsum>div{padding:11px 6px;border-radius:16px;text-align:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.c-tsum small{display:block;font-size:11px;color:rgba(255,255,255,.55)}
+.c-tsum b{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:3px;font-size:17px;font-weight:700}
+.c-tsum b i{width:18px;height:18px}
+
+/* টার্গেট কার্ড */
+.c-targets{display:flex;flex-direction:column;gap:10px}
+.c-tg{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.11);animation:cFade .35s ease both;animation-delay:var(--d,0ms)}
+.c-tg .no{flex:0 0 auto;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;background:linear-gradient(135deg,#1e9c86,#0b5f66);box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.c-tg .no i{width:36px;height:36px}
+.c-tg .mid{flex:1;min-width:0}
+.c-tg .need{display:flex;align-items:center;gap:6px;font-size:17px;font-weight:700}
+.c-tg .need i{width:19px;height:19px}
+.c-tg .need small{font-size:11.5px;font-weight:400;color:rgba(255,255,255,.5);margin-left:1px}
+.c-tg .bar{position:relative;margin-top:9px;height:12px;border-radius:7px;background:rgba(0,0,0,.35);box-shadow:inset 0 1px 3px rgba(0,0,0,.5);overflow:hidden}
+.c-tg .bar u{display:block;height:100%;width:0;border-radius:7px;background:linear-gradient(90deg,#34d399,#a3e635 55%,#fbbf24);text-decoration:none;transition:width .7s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden}
+.c-tg .bar u::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-100%);animation:cBar 2.4s ease-in-out infinite}
+@keyframes cBar{60%,100%{transform:translateX(100%)}}
+.c-tg .nums{display:flex;justify-content:space-between;margin-top:6px;font-size:11.5px;color:rgba(255,255,255,.62)}
+.c-tg .nums span:first-child{color:#8be9ae}
+.c-tg .rw{flex:0 0 auto;text-align:right}
+.c-tg .rw b{display:flex;align-items:center;justify-content:flex-end;gap:4px;font-size:17px;color:#f6d85a}
+.c-tg .rw i{width:22px;height:22px}
+.c-tg .st{display:inline-block;margin-top:7px;padding:3px 9px;border-radius:10px;font-size:10.5px;font-weight:600;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.c-tg.done{border-color:rgba(110,230,160,.35);background:linear-gradient(180deg,rgba(80,220,140,.16),rgba(255,255,255,.04))}
+.c-tg.done .st{background:rgba(110,230,160,.22);color:#7fe3a8}
+.c-tg.done .no{background:none;box-shadow:none}
+
+/* Exchange */
+.x-have{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 14px;font-size:14px;color:rgba(255,255,255,.7)}
+.x-have b{color:#f6d85a;font-size:20px} .x-have i{width:24px;height:24px}
+.x-box{padding:14px 16px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.x-get{background:linear-gradient(135deg,rgba(45,123,240,.28),rgba(40,190,200,.14));border-color:rgba(120,200,255,.35)}
+.x-box label{display:block;font-size:12.5px;color:rgba(255,255,255,.6)}
+.x-line{display:flex;align-items:center;gap:10px;margin-top:8px;height:46px}
+.x-line>i{width:34px;height:34px}
+.x-line output,.x-line input{flex:1;min-width:0;font-size:30px;font-weight:700;border:0;outline:0;background:none;color:#fff}
+.x-line input::placeholder{color:rgba(255,255,255,.25)}
+.x-max{padding:7px 14px;border-radius:12px;font-size:12px;font-weight:700;color:#4b2e00;background:linear-gradient(180deg,#ffd75a,#e8970d)}
+.x-mid{display:grid;place-items:center;margin:-10px 0;position:relative;z-index:1}
+.x-mid span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#0f7c78;border:3px solid #02242a}
+.x-mid svg{width:20px;height:20px;stroke:#fff}
+.x-rate{display:flex;align-items:center;justify-content:center;gap:6px;margin:16px 0 0;font-size:14px;color:rgba(255,255,255,.7)}
+.x-rate i{width:20px;height:20px}
+.x-ok{display:block;width:100%;height:54px;margin-top:20px;border-radius:27px;font-size:18px;font-weight:600;color:#06382c;background:linear-gradient(180deg,#b6f08f,#37b87d);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 8px 20px rgba(40,190,130,.3);transition:opacity .2s,transform .15s}
+.x-ok:active{transform:scale(.97)} .x-ok.dim{opacity:.45}
+
+/* Records */
+.r-list{display:flex;flex-direction:column;gap:9px}
+.r-it{display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}
+.r-ic{flex:0 0 auto;width:42px;height:42px;border-radius:14px;display:grid;place-items:center}
+.r-ic svg{width:22px;height:22px;stroke:#fff}
+.r-it.in .r-ic{background:linear-gradient(145deg,#52e0b0,#13a07c)}
+.r-it.out .r-ic{background:linear-gradient(145deg,#ff9a6b,#e0502f)}
+.r-m{flex:1;min-width:0}
+.r-m b{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-m small{display:block;margin-top:1px;font-size:11.5px;color:rgba(255,255,255,.6)}
+.r-m .r-t{color:rgba(255,255,255,.38)}
+.r-a{display:flex;align-items:center;gap:4px;font-size:16px;font-weight:700}
+.r-a i{width:20px;height:20px}
+.r-it.in .r-a{color:#7fe3a8} .r-it.out .r-a{color:#ff9a7b}
+.r-empty{padding:70px 10px;text-align:center;color:rgba(255,255,255,.4)}
+.r-empty svg{width:56px;height:56px;margin:0 auto 10px;stroke:rgba(255,255,255,.3)}
+@keyframes cFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Transfer পেজ */
+.t-bal{margin:2px 14px 0;display:flex;align-items:center;gap:8px;padding:0 18px;height:68px;border-radius:20px;background:#04383e;font-size:19px;font-weight:500}
+.t-bal i{width:30px;height:30px}
+.t-card{margin-top:4px;padding:12px;border-radius:26px;background:#04383e}
+.t-hostrow{display:flex;align-items:center;gap:14px;padding:10px 6px}
+.t-hostrow+.t-hostrow{border-top:1px solid rgba(255,255,255,.08)}
+.t-av{flex:0 0 auto;width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.2);background:#2d6a63}
+.t-info{flex:1;min-width:0}
+.t-info b{display:flex;align-items:center;gap:6px;font-size:18px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-info b i{width:22px;height:22px;flex:0 0 auto}
+.t-info small{display:block;margin-top:4px;font-size:15px;color:rgba(255,255,255,.62)}
+.t-send{padding:10px 26px;border-radius:22px;font-size:17px;background:linear-gradient(180deg,#52b9d0,#2c86a0);box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.t-search{display:flex;gap:10px}
+.t-search input{flex:1;min-width:0;height:58px;padding:0 16px;border-radius:18px;border:0;outline:0;background:#022a30;font-size:19px;color:#fff}
+.t-search input::placeholder{color:rgba(255,255,255,.7)}
+.t-btn{padding:0 22px;height:58px;border-radius:18px;font-size:19px;color:#073b30;background:linear-gradient(180deg,#a8e08a,#3fb882);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.t-note{margin:10px 4px 0;font-size:13.5px;color:rgba(255,255,255,.5)}
+.t-rec{margin:20px 0 10px;text-align:center;font-size:17px;color:rgba(255,255,255,.55)}
+.t-seller{margin-bottom:12px;padding:14px;border-radius:26px;background:#022e34}
+.t-seller .top{display:flex;align-items:center;gap:12px}
+.t-seller .t-av{width:60px;height:60px}
+.t-flag{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:10px;background:rgba(255,255,255,.1);font-size:16px;color:rgba(255,255,255,.8)}
+.t-flag u{width:20px;height:13px;border-radius:2px;background:#0a7a4a;position:relative;display:block}
+.t-flag u::after{content:"";position:absolute;left:6px;top:3px;width:7px;height:7px;border-radius:50%;background:#e5252a}
+.t-wa{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:500}
+.t-wa button{padding:2px}
+.t-wa svg{width:20px;height:20px;stroke:#fff}
+.t-two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.t-pill{display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:27px;font-size:18px;color:#073b30;background:linear-gradient(180deg,#a8e08a,#3fb882);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.t-pill svg{width:26px;height:26px;stroke:#073b30}
+.t-empty{padding:40px 10px;text-align:center;color:rgba(255,255,255,.5);font-size:16px}
+
+/* Transfer পপআপ */
+.t-mask{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,10,12,.65);backdrop-filter:blur(3px)}
+.t-mask.show{display:flex}
+.t-pop{width:100%;max-width:420px;padding:22px 18px 18px;border-radius:26px;background:linear-gradient(180deg,#033a40,#022a30);border:1px solid rgba(255,255,255,.18);box-shadow:0 20px 50px rgba(0,0,0,.6);animation:cFade .25s ease both}
+.t-pop h2{text-align:center;font-size:24px;font-weight:600}
+.t-pop .who{margin-top:16px;text-align:center}
+.t-pop .who img{width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.3);background:#2d6a63}
+.t-pop .who b{display:block;margin-top:8px;font-size:18px;font-weight:500}
+.t-pop .who small{font-size:15px;color:rgba(255,255,255,.7)}
+.t-pop label{display:block;margin:20px 0 8px 8px;font-size:17px}
+.t-amt{display:flex;align-items:center;height:60px;padding:0 14px;border-radius:16px;background:#022a30}
+.t-amt input{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;font-size:20px;color:#fff}
+.t-amt i{width:30px;height:30px}
+.t-pbal{display:flex;align-items:center;gap:6px;margin:14px 8px 0;font-size:17px}
+.t-pbal i{width:26px;height:26px}
+.t-pbtns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px}
+.t-cancel{height:54px;border-radius:27px;border:1.5px solid #2ea98a;color:#4fd1a8;font-size:19px}
+.t-confirm{height:54px;border-radius:27px;font-size:19px;color:#073b30;background:linear-gradient(180deg,#a8e08a,#3fb882);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+
+.c-toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,16px);padding:10px 16px;border-radius:14px;background:rgba(10,40,44,.97);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+.c-toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* আইকনের <i> ঘর */
+i[data-ic]{display:inline-block;font-style:normal;line-height:0;flex:0 0 auto}
+.c-act i,.c-row i,.c-back i{display:block}
+.c-back svg{width:22px;height:22px}
+.t-wa i svg,.t-pill i svg{display:block}
+.t-pill i{width:26px;height:26px}
+.t-wa i{width:20px;height:20px}
+
+/* Sell পেজ — ফাইনাল টাচ */
+.t-bal{margin:0 14px 8px;display:flex;align-items:center;gap:10px;padding:0 20px;height:64px;border-radius:22px;font-size:14px;color:rgba(255,255,255,.75);
+  background:linear-gradient(135deg,#0d5a63,#12907f);border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px rgba(0,0,0,.3)}
+.t-bal b{flex:1;font-size:26px;font-weight:700;color:#fff}
+.t-bal i{width:34px;height:34px}
+.t-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
+.t-seller{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.1)}
+.t-wa i{width:24px;height:24px} .t-wa i svg{width:24px;height:24px;stroke:none}
+.t-wab i svg{stroke:none}
+.t-wab{background:linear-gradient(180deg,#6bf59a,#19b455);color:#053a1c}
+.t-pill i svg{width:26px;height:26px}
+.t-info b i{width:20px;height:20px}

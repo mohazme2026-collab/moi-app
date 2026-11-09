@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<script src="../../shared/theme/theme.js"></script>
+<script src="../../shared/ui/fallback.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>MOI — Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="store.css">
+<link rel="stylesheet" href="../../shared/theme/theme.css">
+<link rel="stylesheet" href="../../shared/theme/theme-light.css">
+</head>
+<body>
+<div class="st-bg"></div>
+
+<main class="st-page">
+
+  <!-- উপরের বার: Back + Store -->
+  <header class="st-top">
+    <button class="st-back" id="stBack" type="button" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <span class="st-title">Store</span>
+    <span class="st-bal" id="stBal" title="Your diamonds"><i class="gem"></i><b id="stBalN">0</b></span>
+  </header>
+
+  <!-- ট্যাব বার -->
+  <nav class="st-tabs" id="stTabs" role="tablist">
+    <button class="st-tab on" type="button" role="tab" data-tab="frame">Frame</button>
+    <button class="st-tab" type="button" role="tab" data-tab="entry">Entry</button>
+    <button class="st-tab" type="button" role="tab" data-tab="luckybox">Lucky Box Skin</button>
+    <button class="st-tab" type="button" role="tab" data-tab="bubble">Messages Bubble</button>
+    <button class="st-tab" type="button" role="tab" data-tab="wallpaper">Room Wallpaper</button>
+    <button class="st-tab" type="button" role="tab" data-tab="special">Special</button>
+    <button class="st-tab" type="button" role="tab" data-tab="emoji">Emoji</button>
+  </nav>
+
+  <!-- প্রতিটা ট্যাবের ভিতরের পেজ (এখন ফাঁকা — পরে যা বসানোর এখানে বসবে) -->
+  <section class="st-panes">
+    <div class="st-pane on" id="pane-frame"></div>
+    <div class="st-pane" id="pane-entry"></div>
+    <div class="st-pane" id="pane-luckybox"></div>
+    <div class="st-pane" id="pane-bubble"></div>
+    <div class="st-pane" id="pane-wallpaper"></div>
+    <div class="st-pane" id="pane-special"></div>
+    <div class="st-pane" id="pane-emoji"></div>
+  </section>
+
+</main>
+
+<div class="st-toast" id="stToast"></div>
+
+<script src="../../shared/config.js"></script>
+<script src="../../shared/core/firebase-init.js"></script>
+<script src="../../shared/core/sync.js"></script>
+<script src="../../shared/core/sync-routes.js"></script>
+<script src="../../shared/storage.js"></script>
+<script src="../../shared/core/economy.js"></script>
+<script src="../../shared/core/db-storage.js"></script>
+<script src="../../shared/core/auth.js"></script>
+<script src="../../shared/store/store-data.js"></script>
+<script src="../../shared/svip/entry.js"></script>
+<script src="store.js"></script>
+</body>
+</html>

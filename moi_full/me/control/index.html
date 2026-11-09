@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>MOI — Host</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ctl.css">
+</head>
+<body>
+<div class="c-bg"></div>
+
+<main class="c-page">
+
+  <header class="c-top">
+    <button class="c-back" id="cBack" type="button" aria-label="Back"><i data-ic="back"></i></button>
+    <span class="c-title">Host</span>
+    <span class="c-top-sp"></span>
+  </header>
+
+  <section class="c-scroll">
+
+    <!-- Balance -->
+    <div class="c-balance">
+      <div class="c-bal-l"><small>Balance</small><b id="wBal">0.00</b></div>
+      <i class="c-bal-ic" data-ic="ticket"></i>
+    </div>
+    <p class="c-hint">Money earned from your completed targets</p>
+
+    <!-- Targets & Rewards -->
+    <button class="c-row" id="goTargets" type="button">
+      <span class="c-row-ic"><i data-ic="target"></i></span>
+      <span class="c-row-t"><b>Targets &amp; Rewards</b><small id="rowSub">0 / 10 done</small></span>
+      <i data-ic="chev"></i>
+    </button>
+
+    <!-- চার বাটন (ছোট) -->
+    <div class="c-actions">
+      <button class="c-act a-sell" type="button" data-act="sell"><span><i data-ic="bag"></i></span><b>Sell</b></button>
+      <button class="c-act a-exch" type="button" data-act="exchange"><span><i data-ic="exchange"></i></span><b>Exchange</b></button>
+      <button class="c-act a-wd" type="button" data-act="withdraw"><span><i data-ic="withdraw"></i></span><b>Withdraw</b></button>
+      <button class="c-act a-rec" type="button" data-act="records"><span><i data-ic="records"></i></span><b>Records</b></button>
+    </div>
+
+    <!-- নিচে: Targets done + Money earned -->
+    <div class="c-cards2">
+      <div class="c-card2 k-a"><i data-ic="target"></i><div><small>Targets done</small><b id="dDone">0/10</b></div></div>
+      <div class="c-card2 k-b"><i data-ic="ticket"></i><div><small>Money earned</small><b id="dEarn">0.00</b></div></div>
+    </div>
+    <p class="c-month" id="dMonth"></p>
+
+  </section>
+</main>
+
+<!-- ═══ Targets & Rewards (পুরো প্যানেল) ═══ -->
+<div class="c-view" id="vTargets">
+  <header class="c-top">
+    <button class="c-back" data-close type="button" aria-label="Back"><i data-ic="back"></i></button>
+    <span class="c-title">Targets &amp; Rewards</span>
+    <span class="c-top-sp"></span>
+  </header>
+  <div class="c-scroll">
+    <div class="c-tsum">
+      <div><small>This month</small><b><i data-ic="gem"></i><span id="tDia">0</span></b></div>
+      <div><small>Done</small><b id="tDone">0/10</b></div>
+      <div><small>Earned</small><b><i data-ic="ticket"></i><span id="tEarn">0.00</span></b></div>
+    </div>
+    <p class="c-sub">Every 💎 gift you receive fills your targets. A target's reward is added to your balance the moment it is complete.</p>
+    <div class="c-targets" id="targets"></div>
+  </div>
+</div>
+
+<!-- ═══ Exchange ═══ -->
+<div class="c-view" id="vExch">
+  <header class="c-top">
+    <button class="c-back" data-close type="button" aria-label="Back"><i data-ic="back"></i></button>
+    <span class="c-title">Exchange Diamonds</span>
+    <span class="c-top-sp"></span>
+  </header>
+  <div class="c-scroll">
+    <div class="x-have">Available money <b id="xBal">0.00</b><i data-ic="ticket"></i></div>
+
+    <div class="x-box x-get">
+      <label>You will get</label>
+      <div class="x-line"><i data-ic="gem"></i><output id="xDia">0</output></div>
+    </div>
+    <div class="x-mid"><span><i data-ic="arrowdown"></i></span></div>
+    <div class="x-box">
+      <label for="xMoney">Money to exchange</label>
+      <div class="x-line"><i data-ic="ticket"></i><input id="xMoney" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><button class="x-max" id="xMax" type="button">MAX</button></div>
+    </div>
+    <p class="x-rate">1 <i data-ic="ticket"></i> = <span id="xRate">2</span> <i data-ic="gem"></i></p>
+    <button class="x-ok" id="xOk" type="button">Confirm</button>
+  </div>
+</div>
+
+<!-- ═══ Records ═══ -->
+<div class="c-view" id="vRec">
+  <header class="c-top">
+    <button class="c-back" data-close type="button" aria-label="Back"><i data-ic="back"></i></button>
+    <span class="c-title">Records</span>
+    <span class="c-top-sp"></span>
+  </header>
+  <div class="c-scroll"><div class="r-list" id="recList"></div></div>
+</div>
+
+<div class="c-toast" id="cToast"></div>
+
+<script src="../../shared/config.js"></script>
+<script src="../../shared/core/firebase-init.js"></script>
+<script src="../../shared/core/sync.js"></script>
+<script src="../../shared/core/sync-routes.js"></script>
+<script src="../../shared/storage.js"></script>
+<script src="../../shared/core/economy.js"></script>
+<script src="../../shared/core/db-storage.js"></script>
+<script src="../../shared/core/auth.js"></script>
+<script src="icons.js"></script>
+<script src="host.js"></script>
+</body>
+</html>

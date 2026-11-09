@@ -1,0 +1,19 @@
+/* room/moi-report.css — ট্যাগ (@) ও রিপোর্ট (⋯) */
+.msg-tag{color:#7fd8ff;font-weight:700;background:rgba(127,216,255,.12);border-radius:6px;padding:0 4px}
+.msg-tag.me{color:#ffd166;background:rgba(255,209,102,.2);box-shadow:0 0 8px rgba(255,209,102,.35)}
+.rp-wrap{padding:2px 4px 14px}
+.rp-who{display:flex;align-items:center;gap:10px;margin-bottom:10px;color:#fff;font-size:14px}
+.rp-who img{width:38px;height:38px;border-radius:50%;object-fit:cover}
+.rp-sub{font-size:12px;color:#9c8fb0;margin:0 0 8px}
+.rp-reason{display:flex;align-items:center;gap:10px;padding:11px 12px;margin-bottom:7px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:#eee;font-size:13.5px;cursor:pointer}
+.rp-reason i{width:18px;color:#ff7a90;text-align:center}
+.rp-reason.on{border-color:#ff4d6d;background:rgba(255,77,109,.14)}
+.rp-reason .ck{margin-left:auto;opacity:0;color:#ff4d6d}
+.rp-reason.on .ck{opacity:1}
+.rp-note{width:100%;min-height:64px;resize:none;margin-top:4px;padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;font:inherit;font-size:13px;box-sizing:border-box;outline:none}
+.rp-send{width:100%;margin-top:12px;padding:13px;border:none;border-radius:14px;font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,#ff4d6d,#ff8a5c);cursor:pointer;font-family:inherit}
+.rp-send:disabled{opacity:.4}
+
+/* প্রোফাইল শিট খোলা থাকলেও ⋯ অপশন শিট সবার উপরে আসবে */
+body:has(#userProfileModal.active) #sheetBackdrop{z-index:340}
+body:has(#userProfileModal.active) #seatSheet{z-index:350}

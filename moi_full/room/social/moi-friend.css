@@ -1,0 +1,71 @@
+/* room/moi-friend.css — (১) প্রোফাইল ৮০% শিট  (২) ফ্রেন্ডশিপ হাত */
+
+/* ═══ প্রোফাইল শিট ═══ */
+#userProfileModal{background:rgba(0,0,0,.38)!important;overflow:hidden!important;padding:0!important}
+#userProfileModal .pf-backdrop{flex:0 0 20%;width:100%}
+#userProfileModal .pf-sheet{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;background:var(--bg0);border-radius:24px 24px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.55);animation:pfUp .28s cubic-bezier(.2,.8,.2,1);position:relative}
+@keyframes pfUp{from{transform:translateY(60%);opacity:.4}to{transform:none;opacity:1}}
+#userProfileModal .pf-grab{position:sticky;top:0;z-index:6;height:0;display:flex;justify-content:center}
+#userProfileModal .pf-grab::before{content:'';margin-top:8px;width:42px;height:4px;border-radius:4px;background:rgba(255,255,255,.55)}
+#userProfileModal .profile-top-bar{position:sticky!important;top:0;margin-bottom:-62px;padding-top:18px!important}
+#userProfileModal .profile-cover{height:210px;border-radius:24px 24px 0 0}
+#userProfileModal .profile-bottom-bar{position:sticky;bottom:0;z-index:7}
+.pf-hint{text-align:center;font-size:11px;color:#9c8fb0;padding:4px 0 10px}
+.pf-hint i{display:block;animation:pfBob 1.4s ease-in-out infinite}
+@keyframes pfBob{50%{transform:translateY(-4px)}}
+.pf-more{padding:4px 18px 26px;display:flex;flex-direction:column;gap:12px}
+.pf-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px 14px}
+.pf-card h5{margin:0 0 8px;font-size:13px;color:#cbb8ff;font-weight:700;display:flex;align-items:center;gap:6px}
+.pf-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;color:#ddd;border-bottom:1px dashed rgba(255,255,255,.07)}
+.pf-row:last-child{border-bottom:none}
+.pf-row b{color:#fff;font-weight:600;text-align:right}
+.pf-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pf-stat{background:rgba(255,255,255,.05);border-radius:14px;padding:12px 6px;text-align:center}
+.pf-stat b{display:block;font-size:17px;color:#fff}
+.pf-stat span{font-size:11px;color:#9c8fb0}
+.pf-fr{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer}
+.pf-fr img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.pf-fr .n{flex:1;font-size:13px;color:#fff}
+.pf-fr .lv{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;color:#fff;background:var(--fc1,#ff5fa2)}
+.pf-empty{font-size:12px;color:#8b7fa3;text-align:center;padding:8px 0}
+
+/* ═══ ফ্রেন্ডশিপ হাত (বাস্তব হ্যান্ডশেক, দুই প্রোফাইলের মাঝে) ═══ */
+#moiHands{position:absolute;inset:0;pointer-events:none;z-index:8}
+.fhand{position:absolute;width:24px;height:14px;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  --fc1:#ef3b4f;--fc2:#7ff0e4;--fd:#7a1020;--fg:rgba(127,240,228,.55);filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.fhand svg{display:block;width:100%;height:100%;overflow:visible}
+.fhand .sh{transform-box:view-box;transform-origin:50% 58%;animation:fhIn .5s ease-out both,fhShake 3.6s ease-in-out .5s infinite}
+@keyframes fhIn{from{opacity:0}to{opacity:1}}
+/* হ্যান্ডশেক: কয়েকবার উপর-নিচ ঝাঁকিয়ে থামে, আবার ঝাঁকায় */
+@keyframes fhShake{
+  0%,34%,100%{transform:translateY(0) rotate(0)}
+  4%{transform:translateY(-2.6px) rotate(-5deg)}
+  9%{transform:translateY(2.4px) rotate(5deg)}
+  14%{transform:translateY(-2.2px) rotate(-4.5deg)}
+  19%{transform:translateY(2px) rotate(4deg)}
+  24%{transform:translateY(-1.4px) rotate(-2.5deg)}
+  29%{transform:translateY(1px) rotate(1.8deg)}
+}
+.fhand:active{opacity:.8}
+/* লেভেল অনুযায়ী হাতার রঙ */
+.fhand.t1{--fc1:#ef3b4f;--fd:#7a1020}
+.fhand.t2{--fc1:#2f8bff;--fd:#10306f}
+.fhand.t3{--fc1:#8b5cf6;--fd:#341a7a;--fg:rgba(190,130,255,.7);filter:drop-shadow(0 0 3px var(--fg)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.fhand.t4{--fc1:#f5a300;--fd:#7a4300;--fg:rgba(255,200,40,.8);filter:drop-shadow(0 0 4px var(--fg)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.fhand.t5{--fc1:#ff3d8b;--fd:#5a1a8a;--fg:rgba(255,255,255,.85);filter:drop-shadow(0 0 5px var(--fg)) drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+
+/* ফ্রেন্ডশিপ শিট */
+.fs-wrap{text-align:center;padding:6px 6px 18px;--fc1:#ef3b4f;--fc2:#7ff0e4;--fd:#8a1020}
+.fs-wrap.t2{--fc1:#2f8bff;--fc2:#9ee7ff;--fd:#12307a}.fs-wrap.t3{--fc1:#8b5cf6;--fc2:#f0c6ff;--fd:#3b1a8a}.fs-wrap.t4{--fc1:#f5a300;--fc2:#fff0a8;--fd:#8a4b00}.fs-wrap.t5{--fc1:#ff3d8b;--fc2:#ffd966;--fd:#5a1a8a}
+.fs-pair{display:flex;align-items:center;justify-content:center;gap:0;margin:8px 0 6px}
+.fs-pair .u{width:84px}
+.fs-pair img{width:74px;height:74px;border-radius:50%;object-fit:cover;border:3px solid var(--fc1);box-shadow:0 0 18px var(--fc1)}
+.fs-pair .u div{font-size:12px;color:#fff;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fs-link{width:104px;height:60px;margin:0 -14px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 12px var(--fc1));z-index:2}
+.fs-link svg{width:104px;height:60px}
+.fs-lv{font-size:26px;font-weight:800;margin:10px 0 2px;background:linear-gradient(90deg,var(--fc2),var(--fc1));-webkit-background-clip:text;background-clip:text;color:transparent}
+.fs-tier{font-size:12px;color:#cbb8ff;margin-bottom:12px}
+.fs-dia{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:8px 18px;border-radius:22px;font-size:16px;font-weight:700;color:#fff}
+.fs-bar{height:8px;border-radius:8px;background:rgba(255,255,255,.1);margin:16px 12px 6px;overflow:hidden}
+.fs-bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--fc2),var(--fc1))}
+.fs-next{font-size:11px;color:#9c8fb0}

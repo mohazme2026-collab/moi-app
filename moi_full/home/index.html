@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<script src="../shared/theme/theme.js"></script>
+<script src="../shared/ui/fallback.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MOI — Home</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="rank/rank.css">
+<link rel="stylesheet" href="../shared/theme/theme.css">
+<link rel="stylesheet" href="../shared/features/features.css">
+<link rel="stylesheet" href="../shared/theme/theme-light.css">
+<link rel="stylesheet" href="../shared/chat-badge/chat-badge.css">
+<link rel="stylesheet" href="../shared/broadcast/broadcast.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <header class="head" id="head">
+    <div class="bar">
+      <div class="logo"><i id="logoIc"></i><b>MOI</b></div>
+      <button class="ib" id="searchToggle" aria-label="সার্চ"></button>
+      <button class="ib" id="bellBtn" aria-label="নোটিফিকেশন"></button>
+      <button class="me-ring" id="btnProfile" aria-label="আমার প্রোফাইল"><span id="meInit">?</span><img id="userAvatar" alt="profile"></button>
+    </div>
+    <div class="searchbar" id="searchSlide"><input type="search" id="hotSearchInput" placeholder="রুমের নাম, দেশ বা রুম ID খুঁজুন"></div>
+  </header>
+
+  <main>
+    <!-- ═══ লাইভ রুম ═══ -->
+    <section class="view" id="v-home">
+      <div class="promo" id="promo"></div>
+      <div class="sec first"><h2>আমার রুম</h2></div>
+      <div class="rail" id="myRail"></div>
+
+      <div class="sec"><h2>তোমার জন্য লাইভ রুম</h2><div class="ctry" id="ctryWrap"><button class="ctry-btn" id="ctryBtn" aria-label="দেশ বাছুন"><span class="fl" id="ctryFlag">🌍</span><svg viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="ctry-menu" id="ctryMenu" hidden></div></div><button class="ibtn" id="btnShuffle" aria-label="রুম এলোমেলো করুন"></button></div>
+      <div class="cats" id="cats"></div>
+      <div class="feed" id="feed"></div>
+    </section>
+
+    <!-- ═══ আবিষ্কার (দেশ অনুযায়ী) ═══ -->
+    <section class="view" id="v-explore" hidden>
+      <div class="sec"><h2>দেশ অনুযায়ী রুম</h2></div>
+      <div class="country-row" id="countryRow"></div>
+      <div class="feed" id="exploreFeed"></div>
+    </section>
+  </main>
+
+  <button class="disc" id="player" aria-label="চলমান রুমে ফিরুন" hidden></button>
+
+  <nav class="nav"><div class="pill">
+    <button class="nb on" id="navRoom"></button>
+    <button class="nb" id="navChat"></button>
+    <button class="nb" id="navMe"></button>
+  </div></nav>
+</div>
+
+<div id="chatOverlay">
+  <div class="chat-loading" id="chatLoading">
+    <div class="chat-spinner"></div>
+    <div>Chat লোড হচ্ছে...</div>
+  </div>
+  <iframe id="chatFrame" allow="microphone;camera;clipboard-read;clipboard-write;autoplay;fullscreen"></iframe>
+</div>
+
+<div class="modal-overlay" id="roomModal">
+  <div class="modal-card">
+    <h3><i class="fa-solid fa-sliders"></i> নতুন রুম তৈরি করুন</h3>
+    <label style="text-align:center;">রুমের ছবি</label>
+    <div class="upload-box" id="uploadBox">
+      <i class="fa-solid fa-plus"></i>
+      <img id="croppedPreview" src="" alt="preview">
+      <input type="file" id="modalImgInput" accept="image/*" hidden>
+    </div>
+    <label>রুমের নাম</label>
+    <input type="text" id="modalGroupName" placeholder="যেমন: রাতের গান" maxlength="30">
+    <label>দেশ</label>
+    <select id="modalCountry">
+      <option value="">দেশ বাছুন</option>
+      <option value="Bangladesh">🇧🇩 Bangladesh</option>
+      <option value="India">🇮🇳 India</option>
+      <option value="Pakistan">🇵🇰 Pakistan</option>
+      <option value="Nepal">🇳🇵 Nepal</option>
+      <option value="Sri Lanka">🇱🇰 Sri Lanka</option>
+      <option value="UAE">🇦🇪 UAE</option>
+      <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+      <option value="Malaysia">🇲🇾 Malaysia</option>
+      <option value="Singapore">🇸🇬 Singapore</option>
+      <option value="UK">🇬🇧 UK</option>
+      <option value="USA">🇺🇸 USA</option>
+      <option value="Canada">🇨🇦 Canada</option>
+      <option value="Australia">🇦🇺 Australia</option>
+      <option value="Japan">🇯🇵 Japan</option>
+      <option value="South Korea">🇰🇷 South Korea</option>
+      <option value="China">🇨🇳 China</option>
+      <option value="Russia">🇷🇺 Russia</option>
+      <option value="France">🇫🇷 France</option>
+      <option value="Germany">🇩🇪 Germany</option>
+      <option value="Italy">🇮🇹 Italy</option>
+    </select>
+    <label>রুম ID</label>
+    <input type="text" id="modalRoomUid" readonly>
+    <div class="modal-btn-group">
+      <button class="modal-btn cancel" id="modalCloseBtn">বাতিল</button>
+      <button class="modal-btn submit" id="modalSubmitBtn">তৈরি করে ঢুকুন</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cropperModal">
+  <div class="modal-card">
+    <h3><i class="fa-solid fa-crop"></i> ছবি কাটুন</h3>
+    <div style="max-height:300px;overflow:hidden;border-radius:12px;background:#000">
+      <img id="cropperImage" src="" alt="To Crop">
+    </div>
+    <div class="modal-btn-group">
+      <button class="modal-btn cancel" id="cropCancelBtn">বাতিল</button>
+      <button class="modal-btn submit" id="cropSaveBtn">কেটে সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script src="../shared/config.js"></script>
+<script src="../shared/core/firebase-init.js"></script>
+<script src="../demo/seed.js"></script>
+<script src="../shared/core/sync.js"></script>
+<script src="../shared/core/sync-routes.js"></script>
+<script src="../shared/storage.js"></script>
+<script src="../shared/core/economy.js"></script>
+<script src="../shared/core/db-storage.js"></script>
+<script src="../shared/core/auth.js"></script>
+<script src="../shared/chat-badge/chat-badge.js"></script>
+<script src="../shared/broadcast/broadcast-core.js"></script>
+<script src="../shared/broadcast/broadcast-ui.js"></script>
+<script src="../shared/features/features.js"></script>
+<script src="icons.js"></script>
+<script src="rooms/rooms.js"></script>
+<script src="banner/banner.js"></script>
+<script src="banner/promo.js"></script>
+<script src="rank/rank.js"></script>
+<script src="modal.js"></script>
+<script src="home.js"></script>
+<script src="../demo/sim.js"></script>
+<script src="../demo/chatbots.js"></script>
+<script src="../demo/broadcast-sim.js"></script>
+</body>
+</html>

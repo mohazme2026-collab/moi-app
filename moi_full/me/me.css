@@ -1,0 +1,125 @@
+/* me/me.css — নতুন Me পেজ: উপরে প্রোফাইল, SVIP কার্ড, দ্রুত বাটন, তালিকা
+   রঙ থিম থেকে আসে (সাদা/কালো/পিংক); আইকন ও SVIP কার্ডের রঙ সব থিমে একই থাকে */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg0,#0f0818);color:var(--tx,#f4eefb);overflow-x:hidden}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.me-page{--ink:var(--ink-rgb,255,255,255);position:relative;z-index:1;max-width:520px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px calc(130px + env(safe-area-inset-bottom,0px))}
+/* কালো থিমে হালকা সবুজাভ আভা (ছবির মতো) */
+.me-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+:root[data-theme="black"] .me-bg{background:radial-gradient(90% 55% at 15% 0%,rgba(30,170,130,.28),transparent 70%),radial-gradient(80% 50% at 100% 35%,rgba(20,120,110,.22),transparent 70%),linear-gradient(180deg,#06201e 0%,#06100f 55%,#050b0a 100%)}
+:root[data-theme="light"] .me-bg{background:radial-gradient(90% 45% at 10% 0%,rgba(80,210,160,.16),transparent 70%)}
+:root[data-theme="pink"] .me-bg{background:radial-gradient(90% 45% at 10% 0%,rgba(255,150,190,.3),transparent 70%)}
+
+/* উপরের বার */
+.me-top{display:flex;align-items:center;justify-content:space-between;height:44px;margin-bottom:6px}
+.me-title{font-size:18px;font-weight:600;letter-spacing:.2px}
+.me-gear{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;color:var(--tx);transition:transform .2s,background .2s}
+.me-gear svg{width:30px;height:30px}
+.me-gear:active{transform:scale(.88) rotate(30deg);background:rgba(var(--ink),.08)}
+
+/* প্রোফাইল হেডার */
+.me-head{display:flex;gap:18px;align-items:flex-start;padding:6px 2px 20px}
+.me-av{position:relative;flex:0 0 auto;width:92px;height:92px;border-radius:50%;padding:2px;background:linear-gradient(135deg,rgba(var(--ink),.55),rgba(var(--ink),.12));box-shadow:0 6px 22px rgba(0,0,0,.28)}
+.me-av > img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:#243b3a}
+.me-dot{position:absolute;top:2px;right:0;width:15px;height:15px;border-radius:50%;background:#ff4f86;border:2px solid var(--bg0,#0f0818);box-shadow:0 0 10px rgba(255,79,134,.7)}
+.me-dot[hidden]{display:none}
+.me-info{flex:1;min-width:0;padding-top:2px}
+.me-name{font-size:23px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.me-idrow{display:flex;align-items:center;gap:10px;margin-top:9px}
+.me-id{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 14px 0 4px;border-radius:15px;background:linear-gradient(90deg,#1f5fd0 0%,#1c8a9a 55%,#25a58b 100%);box-shadow:0 3px 12px rgba(30,120,200,.4),inset 0 1px 0 rgba(255,255,255,.3);color:#fff}
+.me-id .idb{width:32px;height:28px;margin-left:-6px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4))}
+.me-id b{font-size:17px;font-weight:700;letter-spacing:.6px}
+.me-copy{width:30px;height:30px;display:grid;place-items:center;border-radius:8px;color:var(--mute,#a89fbd)}
+.me-copy svg{width:20px;height:20px}
+.me-copy:active{transform:scale(.85);color:var(--tx)}
+.me-stats{display:flex;align-items:center;gap:0;margin-top:14px}
+.me-stat{display:flex;flex-direction:column;align-items:center;min-width:76px;padding:2px 12px;transition:transform .15s}
+.me-stat b{font-size:19px;font-weight:700;line-height:1.1}
+.me-stat span{font-size:13px;color:rgba(var(--ink),.66);margin-top:3px}
+.me-stat:active{transform:scale(.92)}
+.me-stats .sep{width:1px;height:26px;background:rgba(var(--ink),.2)}
+
+/* SVIP কার্ড (সব থিমে একই রঙ) */
+.svip{padding:1.6px;border-radius:24px;cursor:pointer;margin-bottom:12px;background:linear-gradient(135deg,#fff3b8,#e6b83c 28%,#7a4a05 52%,#f6d860 78%,#fff3b8);box-shadow:0 10px 30px rgba(0,0,0,.3),0 0 22px rgba(226,177,58,.25);transition:transform .15s}
+.svip:active{transform:scale(.985)}
+.svip-in{position:relative;display:flex;align-items:center;justify-content:space-between;min-height:116px;padding:13px 8px 13px 18px;border-radius:23px;overflow:hidden;color:#fff;
+  background:radial-gradient(60% 120% at 82% 50%,rgba(255,214,102,.34),transparent 62%),radial-gradient(110% 150% at 90% 10%,rgba(40,200,135,.5),transparent 60%),radial-gradient(70% 100% at 0% 100%,rgba(16,100,80,.7),transparent 70%),linear-gradient(135deg,#0a3a31,#08241f 55%,#0c3326)}
+.svip-in::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 2px,transparent 2px 9px),linear-gradient(180deg,rgba(255,255,255,.12),transparent 38%)}
+.svip-in::after{content:"";position:absolute;top:0;bottom:0;width:70px;left:-100px;transform:skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);animation:meShine 4.5s ease-in-out 1s infinite}
+@keyframes meShine{0%{left:-100px}45%,100%{left:120%}}
+.svip-tx{position:relative;z-index:2}
+.svip-t{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-size:38px;font-weight:800;line-height:1;letter-spacing:.5px;background:linear-gradient(180deg,#fff6c8 0%,#f6cf55 45%,#b9780b 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.svip-s{margin:6px 0 10px;font-size:12px;white-space:nowrap;font-style:italic;font-weight:500;color:#f1fff8;line-height:1.35}
+.svip-b{display:inline-flex;align-items:center;gap:2px;height:28px;padding:0 12px;border-radius:14px;border:1.3px solid #e8b83e;color:#ffeaa8;font-size:13px;font-weight:600;background:linear-gradient(180deg,rgba(255,226,130,.16),rgba(0,0,0,.28))}
+.svip-b .chev{width:14px;height:14px}
+.emblem{position:absolute;z-index:1;right:-4px;top:50%;transform:translateY(-50%);width:128px;height:109px}
+
+/* দ্রুত বাটন */
+.quick{display:flex;justify-content:space-around;padding:12px 8px 11px;margin-bottom:10px;border-radius:24px;
+  background:linear-gradient(135deg,rgba(60,210,170,.2),rgba(30,120,110,.1));border:1px solid rgba(110,230,190,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+:root[data-theme="light"] .quick{background:linear-gradient(135deg,rgba(60,210,170,.16),rgba(255,255,255,.7));box-shadow:0 8px 24px rgba(20,23,42,.08)}
+:root[data-theme="pink"] .quick{background:linear-gradient(135deg,rgba(60,210,170,.14),rgba(255,255,255,.72));box-shadow:0 8px 24px rgba(58,18,38,.08)}
+.qk{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:78px;padding:3px 6px;font-size:14px;font-weight:500;transition:transform .15s}
+.qk .ico{width:38px;height:38px;filter:drop-shadow(0 3px 6px rgba(30,200,150,.35))}
+.qk:active{transform:scale(.9)}
+
+/* তালিকা */
+.list{display:flex;flex-direction:column}
+.row{position:relative;display:flex;align-items:center;gap:16px;padding:13px 6px 13px 8px;text-align:left;border-radius:14px;transition:background .15s}
+.row::after{content:"";position:absolute;left:52px;right:0;bottom:0;height:1px;background:linear-gradient(90deg,rgba(var(--ink),.16),rgba(var(--ink),.04))}
+.row:last-child::after{display:none}
+.row .ico{flex:0 0 auto;width:30px;height:30px;filter:drop-shadow(0 2px 5px rgba(30,200,150,.3))}
+.row .lbl{flex:1;font-size:18px;font-weight:500}
+.row .chev{width:20px;height:20px;color:rgba(var(--ink),.55);flex:0 0 auto}
+.row:active{background:rgba(var(--ink),.07)}
+
+/* ছোট বার্তা */
+.me-toast{position:fixed;left:50%;bottom:112px;transform:translate(-50%,20px);padding:10px 16px;border-radius:14px;background:rgba(20,16,40,.94);color:#fff;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:9300;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.me-toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* পেজ খোলার সময় নরম অ্যানিমেশন */
+.me-page>*{animation:meUp .5s cubic-bezier(.2,.8,.3,1) both}
+.me-page>*:nth-child(2){animation-delay:.05s}.me-page>*:nth-child(3){animation-delay:.1s}.me-page>*:nth-child(4){animation-delay:.15s}.me-page>*:nth-child(5){animation-delay:.2s}
+@keyframes meUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* আইকনের রঙ: হালকা থিমে একটু গাঢ় সবুজ-টিল (পড়তে সহজ), কালোতে উজ্জ্বল মিন্ট */
+:root[data-theme="light"] #meG stop:nth-child(1),:root[data-theme="pink"] #meG stop:nth-child(1){stop-color:#27c47c}
+:root[data-theme="light"] #meG stop:nth-child(2),:root[data-theme="pink"] #meG stop:nth-child(2){stop-color:#0e98a6}
+:root[data-theme="light"] .quick{background:linear-gradient(135deg,rgba(40,200,140,.2),rgba(255,255,255,.85) 65%);border-color:rgba(40,190,140,.45)}
+:root[data-theme="pink"] .quick{background:linear-gradient(135deg,rgba(40,200,140,.17),rgba(255,255,255,.86) 65%);border-color:rgba(40,190,140,.4)}
+.me-av{background:conic-gradient(from 200deg,#fff3b8,#34c9a3,#e2b13a,#9cf0b4,#fff3b8);box-shadow:0 6px 22px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.2)}
+
+/* ছোট ফোনে (৩৭০px-এর কম) SVIP লেখা আর প্রতীক একটু ছোট, যেন একে অপরের উপর না পড়ে */
+@media (max-width:370px){.svip-s{font-size:10.8px}.svip-t{font-size:34px}.emblem{width:112px;height:95px}}
+
+/* ═══ Me — ছবির বাটন (অরিজিনাল আর্ট) ═══ */
+.svip,.quick,.list{all:unset}
+.svip{display:block;position:relative;margin:2px 0 8px;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:meUp .5s both;transition:transform .15s;isolation:isolate}
+.svip .art{display:block;width:100%;height:auto;animation:meFloat 4s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
+.svip:active{transform:scale(.97)}
+.svip .glint{position:absolute;inset:0;z-index:2;pointer-events:none;-webkit-mask:url(svip/btn_svip.webp) center/100% 100% no-repeat;mask:url(svip/btn_svip.webp) center/100% 100% no-repeat;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.75) 50%,transparent 60%) no-repeat;background-size:250% 100%;background-position:130% 0;animation:meGlint 3.6s ease-in-out 1s infinite}
+.svip .sp{position:absolute;z-index:3;width:14px;height:14px;pointer-events:none;background:radial-gradient(circle,#fff 0 18%,rgba(255,255,255,0) 62%);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:0;animation:meTw 2.6s ease-in-out infinite}
+.svip .s1{left:44%;top:14%}.svip .s2{left:70%;top:60%;animation-delay:.9s}.svip .s3{left:12%;top:70%;animation-delay:1.7s}
+.quick{display:flex;gap:8px;margin:0 0 8px;justify-content:space-between}
+.qk{all:unset;flex:1;min-width:0;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s,filter .15s;animation:meUp .5s both,meFloat 4.5s ease-in-out infinite}
+.qk:nth-child(2){animation-delay:.05s,.4s}.qk:nth-child(3){animation-delay:.1s,.8s}
+.qk img{display:block;width:100%;height:auto;filter:drop-shadow(0 5px 8px rgba(0,0,0,.35));pointer-events:none}
+.qk:active{transform:scale(.93);filter:brightness(1.12)}
+.list{display:flex;flex-direction:column;gap:2px}
+.row{all:unset;display:block;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s,filter .15s;animation:meUp .5s both}
+.row:nth-child(2){animation-delay:.06s}.row:nth-child(3){animation-delay:.12s}.row:nth-child(4){animation-delay:.18s}.row:nth-child(5){animation-delay:.24s}
+.row img{display:block;width:100%;height:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.3));pointer-events:none}
+.row::after{display:none}
+.row:active{transform:scale(.97) translateY(2px);filter:brightness(1.1)}
+@keyframes meFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+@keyframes meGlint{0%{background-position:130% 0}55%,100%{background-position:-30% 0}}
+@keyframes meTw{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+@media (prefers-reduced-motion:reduce){.svip .art,.qk,.svip .glint,.svip .sp{animation:none}}
+
+:root .quick,:root[data-theme] .quick{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+:root .svip,:root[data-theme] .svip{background:none!important;border:0!important;box-shadow:none!important;padding:0!important}
+
+/* ব্যাগ থেকে স্টোর-রিং/মুকুট পরা থাকলে: ডানা-মুকুটের জায়গা ছেড়ে দেয়, পুরোনো গোল বর্ডার সরে যায় */
+.me-av.has-ring{background:none;box-shadow:none;padding:0;margin:30px 34px 22px 30px}

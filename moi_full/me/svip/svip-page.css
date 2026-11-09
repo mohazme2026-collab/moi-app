@@ -1,0 +1,156 @@
+/* me/svip-page.css — SVIP Privilege পেজ + SVIP List (সব থিমে একই গাঢ়-সোনালি ডিজাইন) */
+.sv{position:fixed;inset:0;z-index:7200;display:flex;flex-direction:column;color:#f6e7bf;font-family:Poppins,"Hind Siliguri",system-ui,sans-serif;overflow:hidden;
+  background:#120b08;transform:translateX(100%);visibility:hidden;transition:transform .28s cubic-bezier(.2,.8,.25,1),visibility 0s .28s}
+.sv.show{transform:none;visibility:visible;transition:transform .28s cubic-bezier(.2,.8,.25,1),visibility 0s}
+html.sv-lock,html.sv-lock body{overflow:hidden}
+.sv *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.sv button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.sv-fx{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(70% 38% at 50% 8%,rgba(255,196,80,.32),transparent 70%),
+  repeating-linear-gradient(90deg,rgba(150,10,16,.0) 0 22px,rgba(150,10,16,.45) 22px 48px,rgba(60,0,4,.5) 48px 60px),
+  linear-gradient(180deg,#7c0e14 0%,#3a0709 36%,#140c08 62%,#0c0806 100%);opacity:1}
+.sv-fx::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,#0c0806 66%)}
+.sv-top{position:relative;z-index:2;display:flex;align-items:center;height:56px;padding:calc(env(safe-area-inset-top,0px) + 6px) 12px 0;box-sizing:content-box;flex:none}
+.sv-back{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:2px solid #d9a948!important;background:rgba(40,20,6,.7)!important;color:#f3d27a}
+.sv-back svg{width:22px;height:22px}
+.sv-title{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-size:21px;font-weight:600;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.sv-q{width:26px;height:26px;border-radius:50%;border:2px solid #fff!important;font-size:15px;font-weight:700;line-height:1;color:#fff}
+.sv-trophy{width:44px;height:44px;filter:drop-shadow(0 0 8px rgba(255,200,70,.7))}
+.sv-trophy svg{width:100%;height:100%}
+.sv-sp{width:44px}
+.sv-body{position:relative;z-index:2;flex:1;overflow-y:auto;padding-bottom:84px;-webkit-overflow-scrolling:touch}
+/* কার্ড স্লাইডার */
+.sv-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px calc((100% - min(86vw,380px))/2) 6px;scrollbar-width:none}
+.sv-track::-webkit-scrollbar{display:none}
+.sv-slide{flex:none;width:min(86vw,380px);scroll-snap-align:center}
+.sv-card{position:relative;height:292px;border-radius:20px;overflow:hidden;border:2px solid #c99a3b;box-shadow:0 10px 28px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,230,160,.25);
+  background:linear-gradient(180deg,#0b0b0b 0 28%,#222 28.2% 30%,var(--bg) 30%)}
+.sv-card::before{content:"";position:absolute;left:0;right:0;top:30%;bottom:0;opacity:.55;
+  background:linear-gradient(45deg,transparent 48%,rgba(255,255,255,.14) 49% 51%,transparent 52%) 0 0/34px 34px,linear-gradient(-45deg,transparent 48%,rgba(255,255,255,.14) 49% 51%,transparent 52%) 0 0/34px 34px,radial-gradient(80% 100% at 70% 20%,var(--c1),transparent 70%)}
+.sv-card.big{border-width:3px;border-color:#f3c75a;box-shadow:0 10px 28px rgba(0,0,0,.55),0 0 22px rgba(255,190,60,.5)}
+.sv-ct{position:absolute;left:18px;top:14px;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:800;font-size:44px;line-height:1.1;letter-spacing:1px;
+  background:linear-gradient(180deg,var(--t1),var(--t2));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}
+.sv-emb{position:absolute;right:4px;top:12px;width:160px;height:150px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.sv-card.tuned .sv-st{position:absolute;left:0;right:0;top:46%;text-align:center;font-size:32px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.sv-info{position:absolute;left:12px;right:12px;bottom:12px;padding:9px 11px 10px;border-radius:12px;background:rgba(10,10,10,.62);border:1px solid rgba(255,230,160,.2);backdrop-filter:blur(2px)}
+.sv-rc{display:flex;align-items:center;gap:6px;font-size:13.5px;white-space:nowrap;color:#f2ead0;margin-bottom:6px}
+.sv-gem{width:15px;height:15px;flex:none;vertical-align:middle}
+.sv-pr{display:flex;align-items:center;gap:5px;font-size:10.5px;white-space:nowrap;color:#e9dcb4}
+.sv-pl{min-width:0}
+.sv-pl:empty{display:none}
+.sv-bar{flex:1;min-width:20px;height:7px;border-radius:5px;background:rgba(255,255,255,.18);overflow:hidden}
+.sv-bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#6ec8ff,#a06bff,#ff62d0)}
+.sv-left{margin-left:auto;font-size:13px;color:#fff;font-weight:500}
+.sv-act{padding:2px 2px;font-size:13px;color:#f3d27a;font-weight:600}
+.sv-act.on{color:#6ee7a8}
+/* লেভেল লাইন */
+.sv-line{display:flex;justify-content:space-between;margin:14px 6px 0;padding:0 4px;position:relative}
+.sv-line::before{content:"";position:absolute;left:0;right:0;top:34px;height:2px;background:linear-gradient(90deg,#c9983a,rgba(201,152,58,.35));border-radius:2px}
+.sv-nd{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;color:rgba(255,255,255,.55);font-size:12px}
+.sv-nd em{font-style:normal;font-size:12px}
+.sv-nd i{width:9px;height:9px;border-radius:50%;border:1.5px solid #c9983a;background:#1a0f08;margin:7px 0 3px;position:relative;z-index:1}
+.sv-nd b{font-weight:500;font-size:13px}
+.sv-nd.on{color:#fff}
+.sv-nd.on i{width:22px;height:22px;margin:0 0 -3px;border:0;border-radius:0;background:#fff;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);filter:drop-shadow(0 0 5px #ffd777)}
+.sv-nd.on b{font-size:16px;font-weight:600}
+/* সুবিধার প্যানেল */
+.sv-panel{position:relative;margin:34px 16px 0;padding:46px 12px 20px;border-radius:26px;border:1.5px solid rgba(201,152,58,.7);background:linear-gradient(180deg,rgba(30,24,34,.92),rgba(14,12,18,.95))}
+.sv-rib{position:absolute;left:50%;top:-22px;transform:translateX(-50%);width:240px;height:46px;display:grid;place-items:center;
+  background:linear-gradient(180deg,#2a2018,#120d09);clip-path:polygon(7% 0,93% 0,100% 50%,93% 100%,7% 100%,0 50%);border:0}
+.sv-rib::before{content:"";position:absolute;inset:2px;background:linear-gradient(180deg,#1c140d,#0d0a07);clip-path:inherit}
+.sv-rib span{position:relative;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:700;font-size:25px;color:#d9a948}
+.sv-pcount{text-align:center;font-size:19px;color:#e8dcc0;margin-bottom:18px}
+.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 6px}
+.sv-pv{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.sv-pc{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;color:#e5b857;background:radial-gradient(circle at 50% 35%,#2c2218,#0b0907);box-shadow:0 0 0 1.5px rgba(201,152,58,.55)}
+.sv-pc svg{width:38px;height:38px}
+.sv-pt{font-size:14px;line-height:1.35;color:#eadfc4}
+/* নিচের টগল */
+.sv-hide{position:absolute;z-index:3;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:16px 22px calc(env(safe-area-inset-bottom,0px) + 16px);background:linear-gradient(180deg,transparent,#0b0806 40%);font-size:16px;color:#f1e6c8;cursor:pointer}
+.sv-hide svg{width:32px;height:20px;color:#f3d27a}
+.sv-hide span{flex:1}
+.sv-hide input{position:absolute;opacity:0;pointer-events:none}
+.sv-hide i{position:relative;width:62px;height:34px;border-radius:17px;background:#2a211a;border:2px solid #e6c88a;transition:.2s;flex:none}
+.sv-hide i::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}
+.sv-hide input:checked+i{background:#c9983a}
+.sv-hide input:checked+i::after{left:31px}
+/* ? বক্স */
+.sv-help{position:absolute;z-index:6;inset:0;padding:calc(env(safe-area-inset-top,0px) + 62px) 22px 0;background:rgba(0,0,0,.2)}
+.sv-hb{padding:22px 24px 8px;border-radius:24px;background:rgba(52,50,52,.96);border:1px solid rgba(255,255,255,.18);color:#f0f0f0;font-size:17px;line-height:1.55;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+.sv-hb p{margin:0 0 18px}
+.sv-toast{position:absolute;z-index:8;left:50%;bottom:110px;transform:translate(-50%,12px);opacity:0;pointer-events:none;max-width:86%;text-align:center;padding:10px 18px;border-radius:18px;background:rgba(20,14,44,.96);color:#fff;font-size:13.5px;font-weight:600;transition:.25s}
+.sv-toast.show{opacity:1;transform:translate(-50%,0)}
+/* SVIP পিল */
+.sv-pill{display:inline-block;padding:1px 9px;border-radius:10px;font-size:11px;font-weight:800;letter-spacing:.4px;color:#ffe9a8;background:linear-gradient(180deg,#d4382f,#7a0c10);border:1px solid #f3c75a;font-family:"Playfair Display",Georgia,serif}
+.sv-pill.l1{background:linear-gradient(180deg,#27b172,#0b5f37)}.sv-pill.l2{background:linear-gradient(180deg,#4c8ff0,#1b3fa8)}.sv-pill.l3{background:linear-gradient(180deg,#d447c0,#7a1a86)}
+/* লিস্ট পেজ */
+.sv-list{position:absolute;z-index:5;inset:0;display:flex;flex-direction:column;background:#0b0806;transform:translateX(100%);transition:transform .26s cubic-bezier(.2,.8,.25,1)}
+.sv-list.in{transform:none}
+.sv-list .sv-fx{background:radial-gradient(60% 40% at 50% 14%,rgba(255,196,80,.5),transparent 70%),linear-gradient(180deg,#2c1a08,#0b0806 55%)}
+.sv-list .sv-fx::after{display:none}
+.sv-ls{position:relative;z-index:2;flex:1;overflow-y:auto;padding-bottom:96px}
+.sv-podium{position:relative;height:290px;margin:0 0 6px}
+.sv-tri{position:absolute;left:50%;bottom:0;width:78%;height:92%;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,214,120,.0),rgba(255,214,120,.38) 40%,rgba(120,70,10,.5));clip-path:polygon(50% 0,100% 100%,0 100%)}
+.sv-pd{position:absolute;display:flex;flex-direction:column;align-items:center;text-align:center;width:33%}
+.sv-pd.p1{left:33.5%;top:18px}.sv-pd.p2{left:2%;top:70px}.sv-pd.p3{right:2%;top:70px}
+.sv-pa{position:relative;width:84px;height:84px;margin-top:22px}
+.sv-pd.p1 .sv-pa{width:100px;height:100px}
+.sv-pa img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid #f3c75a;box-shadow:0 0 14px rgba(255,200,80,.6)}
+.sv-crown{position:absolute;left:50%;top:-22px;width:38px;transform:translateX(-50%);z-index:2}
+.sv-pd .sv-pill{margin-top:-8px;position:relative;z-index:2}
+.sv-pn2{font-size:13px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px;color:#fff}
+.sv-pv2{display:flex;align-items:center;gap:4px;font-size:13px;color:#ffe6a8}
+.sv-n{position:absolute;bottom:2px;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:800;font-size:46px;color:#d9a948;opacity:.9}
+.sv-n.n1{left:50%;transform:translateX(-50%);font-size:60px}.sv-n.n2{left:6%}.sv-n.n3{right:6%}
+.sv-rows{padding:8px 16px 0}
+.sv-row,.sv-mine{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 14px 10px 12px;border-radius:16px;color:#3a2410;background:linear-gradient(110deg,#d9b988 0 18%,#f4dcb2 18%,#fff0d3)}
+.sv-row.me{outline:2px solid #ffd777}
+.rk{width:26px;text-align:center;font-size:22px;font-weight:700;color:#4a2f12}
+.ra img{width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;border:2px solid rgba(255,255,255,.6)}
+.rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.rt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rv{display:flex;align-items:center;gap:5px;font-size:15.5px;font-weight:600}
+.sv-mine{position:absolute;z-index:4;left:0;right:0;bottom:0;margin:0;border-radius:22px 22px 0 0;padding:14px 18px calc(env(safe-area-inset-bottom,0px) + 14px);background:linear-gradient(180deg,#f7e2b0,#e7c47c);box-shadow:0 -6px 20px rgba(0,0,0,.5)}
+.sv-mine .mn{flex:1;min-width:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mv{text-align:right}.mv span{display:flex;justify-content:flex-end;align-items:center;gap:5px;font-size:17px;font-weight:600}.mv em{font-style:normal;font-size:12px;color:#5b4020}
+
+.sv-hide span{white-space:nowrap;font-size:15px}
+.sv-card.tuned{--bg:#0f3b26;--c1:#35d68a;--t1:#d8ffe9;--t2:#7fe0ae}
+
+/* ═══ নতুন প্লেট কার্ড (VIP প্লেট + অ্যানিমেটেড SVIP ব্যাজ) ═══ */
+.sv-fx{background:radial-gradient(70% 38% at 50% 8%,rgba(190,110,255,.35),transparent 70%),linear-gradient(180deg,#3a1478 0%,#1d0a40 38%,#0d0620 70%,#080414 100%)!important}
+.sv-fx::after{background:linear-gradient(180deg,transparent 30%,#080414 72%)!important}
+.sv-track{padding-left:calc((100% - min(92vw,430px))/2);padding-right:calc((100% - min(92vw,430px))/2)}
+.sv-slide{width:min(92vw,430px)}
+.sv-plate{position:relative;width:100%;aspect-ratio:1752/898;user-select:none}
+.sv-plate .pl-bg{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
+.sv-plate .pl-glint{position:absolute;inset:0;pointer-events:none;-webkit-mask:url(art/svip_plate.webp) center/100% 100% no-repeat;mask:url(art/svip_plate.webp) center/100% 100% no-repeat;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.55) 50%,transparent 58%) no-repeat;background-size:260% 100%;background-position:130% 0;mix-blend-mode:soft-light;animation:svGlint 4s ease-in-out 1s infinite}
+@keyframes svGlint{0%{background-position:130% 0}55%,100%{background-position:-30% 0}}
+.sv-plate .pl-emb{position:absolute;right:5%;top:-3%;width:36%;height:auto;pointer-events:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));animation:svFloat 3.6s ease-in-out infinite}
+@keyframes svFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.sv-plate .pl-info{position:absolute;left:6.4%;right:6.4%;top:69.5%;height:22%;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.sv-plate .pl-rc{display:flex;align-items:center;gap:5px;font-size:clamp(10px,3vw,13px);font-weight:600;color:#f6e7bf;white-space:nowrap;line-height:1}
+.sv-plate .pl-row{display:flex;align-items:center;gap:6px;font-size:clamp(9px,2.7vw,11.5px);color:#e9dcf8;white-space:nowrap;line-height:1}
+.sv-plate .pl-bar{flex:1;min-width:30px;height:7px;border-radius:4px;background:rgba(255,255,255,.14);box-shadow:inset 0 1px 2px rgba(0,0,0,.5);overflow:hidden}
+.sv-plate .pl-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#7a5cff,#d38bff,#ffd36a);box-shadow:0 0 8px rgba(190,120,255,.7)}
+.sv-plate .pl-left{font-weight:700;color:#ffe9a8}
+.sv-plate .sv-gem{width:12px;height:12px}
+.sv-plate .pl-act{height:22px;padding:0 11px;border-radius:11px;font-size:clamp(9.5px,2.8vw,12px);font-weight:700;color:#3a1d00!important;background:linear-gradient(180deg,#ffe58a,#f2a91d)!important;box-shadow:0 2px 0 #a8650a,0 3px 6px rgba(0,0,0,.4);transition:transform .1s}
+.sv-plate .pl-act:active{transform:translateY(2px);box-shadow:0 0 0 #a8650a}
+.sv-plate .pl-act.on{background:linear-gradient(180deg,#9aa0b8,#6b7088)!important;color:#fff!important;box-shadow:none}
+.sv-plate.tuned .pl-bg{filter:brightness(.4) saturate(.6) drop-shadow(0 8px 16px rgba(0,0,0,.55))}
+.sv-plate .pl-st{position:absolute;inset:0;display:grid;place-items:center;font-size:28px;font-weight:600;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.sv-grid{min-height:180px}
+.sv-pcount{display:none}
+
+/* ═══ সুবিধার আইটেম কার্ড ═══ */
+.sv-it{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.sv-it-art{position:relative;width:100%;aspect-ratio:1/1;display:grid;place-items:center}
+.sv-it-av{position:relative;width:43.5%;aspect-ratio:1;border-radius:50%;background:#1b1230}
+.sv-it-av>img:first-child{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;filter:grayscale(.35) brightness(.85)}
+.sv-it.ok .sv-it-av>img:first-child{filter:none}
+.sv-it .rg{width:230%}
+.sv-it-n{font-size:12.5px;font-weight:700;color:#f6e7bf;margin-top:2px}
+.sv-it-s{font-size:10.5px;color:#cdbbea;margin-top:3px;display:flex;align-items:center;gap:3px;justify-content:center}
+.sv-it.ok .sv-it-s{color:#7dffb0;font-weight:700}
+.sv-it-s .sv-gem{width:11px;height:11px}

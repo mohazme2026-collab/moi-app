@@ -1,0 +1,116 @@
+/* store/store.css — Store পেজ: উপরে Back + Store, নিচে ট্যাব, ভিতরে ফাঁকা পেজ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg0,#0f0818);color:var(--tx,#f4eefb);overflow:hidden}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.st-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+:root[data-theme="black"] .st-bg{background:radial-gradient(90% 55% at 15% 0%,rgba(30,170,130,.28),transparent 70%),radial-gradient(80% 50% at 100% 35%,rgba(20,120,110,.22),transparent 70%),linear-gradient(180deg,#06201e 0%,#06100f 55%,#050b0a 100%)}
+:root[data-theme="light"] .st-bg{background:radial-gradient(90% 45% at 10% 0%,rgba(80,210,160,.16),transparent 70%)}
+:root[data-theme="pink"] .st-bg{background:radial-gradient(90% 45% at 10% 0%,rgba(255,150,190,.3),transparent 70%)}
+
+.st-page{--ink:var(--ink-rgb,255,255,255);position:relative;z-index:1;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+
+/* উপরের বার */
+.st-top{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 14px}
+.st-back,.st-top-space{width:40px;height:40px}
+.st-back{display:grid;place-items:center;border-radius:50%;background:rgba(var(--ink),.08);transition:transform .15s,background .2s}
+.st-back svg{width:22px;height:22px}
+.st-back:active{transform:scale(.88);background:rgba(var(--ink),.16)}
+.st-title{font-size:19px;font-weight:600;letter-spacing:.2px}
+
+/* ট্যাব বার (আঙুল দিয়ে সরানো যায়) */
+.st-tabs{flex:0 0 auto;display:flex;gap:0;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 8px;border-bottom:1px solid rgba(var(--ink),.1);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.st-tabs::-webkit-scrollbar{display:none}
+.st-tab{position:relative;flex:0 0 auto;padding:14px 16px 16px;font-size:17px;font-weight:500;color:rgba(var(--ink),.5);transition:color .2s}
+.st-tab.on{color:var(--tx);font-size:19px;font-weight:600}
+.st-tab::after{content:"";position:absolute;left:50%;bottom:6px;width:0;height:3px;border-radius:2px;background:#f6c445;transform:translateX(-50%);transition:width .25s cubic-bezier(.2,.9,.3,1.2)}
+.st-tab.on::after{width:26px}
+
+/* ট্যাবের ভিতরের পেজ — এখন ফাঁকা */
+.st-panes{position:relative;flex:1 1 auto;min-height:0}
+.st-pane{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:14px 14px calc(24px + env(safe-area-inset-bottom,0px));display:none;-webkit-overflow-scrolling:touch}
+.st-pane.on{display:block;animation:stFade .25s ease both}
+@keyframes stFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ═══ উপরের ডায়মন্ড ব্যালেন্স ═══ */
+.st-bal{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px 0 9px;border-radius:17px;background:rgba(var(--ink),.09);font-size:14px;font-weight:700;min-width:40px;justify-content:center}
+.gem{display:inline-block;width:17px;height:17px;flex:0 0 auto;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='a' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23b8f4ff'/><stop offset='.5' stop-color='%2325b8ff'/><stop offset='1' stop-color='%230a56c8'/></linearGradient></defs><path d='M6 3h12l4 6-10 12L2 9z' fill='url(%23a)' stroke='%23063a8a' stroke-width='1.2' stroke-linejoin='round'/><path d='M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12' fill='none' stroke='%23e8fbff' stroke-opacity='.75' stroke-width='.9'/></svg>") center/contain no-repeat}
+
+/* ═══ জিনিসের কার্ড (দুই কলাম) ═══ */
+.sc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sc{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 10px 14px;border-radius:20px;background:linear-gradient(160deg,rgba(var(--ink),.10),rgba(var(--ink),.04));border:1px solid rgba(246,196,69,.28);box-shadow:0 10px 26px rgba(0,0,0,.28);transition:transform .15s,border-color .2s;overflow:hidden}
+.sc:active{transform:scale(.97)}
+.sc::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 55% at 50% 30%,rgba(255,190,60,.20),transparent 70%);pointer-events:none}
+.sc-pv{position:relative;width:100%;aspect-ratio:1}
+.sc-pv .sc-av{position:absolute;left:50%;top:52.1%;width:49%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;background:#2b4a48}
+.sc-pv .sc-av img{width:100%;height:100%;object-fit:cover;display:block}
+.sc-pv .sc-ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.sc-nm{position:relative;margin-top:2px;font-size:15px;font-weight:700;letter-spacing:.2px}
+.sc small{position:relative;font-size:11.5px;color:rgba(var(--ink),.55);margin-top:1px}
+.sc-pr{position:relative;display:flex;gap:6px;margin:9px 0 10px;flex-wrap:wrap;justify-content:center}
+.sc-pr span{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:12px;background:rgba(0,0,0,.28);font-size:12.5px;font-weight:700}
+.sc-pr em{font-style:normal;font-weight:500;font-size:10.5px;color:rgba(var(--ink),.6)}
+.sc-pr .gem{width:14px;height:14px}
+.sc-buy{position:relative;width:100%;padding:10px 0;border-radius:14px;font-size:15px;font-weight:800;color:#4a2600;background:linear-gradient(#ffe27a,#f2a516);box-shadow:0 4px 14px rgba(242,165,22,.4),inset 0 1px 0 rgba(255,255,255,.6);overflow:hidden}
+.sc-buy::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);animation:scGl 3.2s ease-in-out infinite}
+@keyframes scGl{0%,55%{left:-60%}100%{left:130%}}
+.sc-buy:active{transform:scale(.96)}
+.sc-own{position:relative;width:100%;padding:9px 0;border-radius:14px;font-size:13.5px;font-weight:700;color:#0a7d58;background:rgba(40,200,150,.14);border:1px solid rgba(80,230,180,.4);display:flex;flex-direction:column;align-items:center;gap:1px}
+.sc-own small{margin:0;color:rgba(var(--ink),.6)}
+.st-soon{padding:60px 20px;text-align:center;color:rgba(var(--ink),.45);font-size:15px}
+
+/* ═══ কেনার পপ-আপ ═══ */
+.sm-back{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(3px)}
+.sm-back.on{display:flex;animation:smB .2s ease both}
+@keyframes smB{from{opacity:0}to{opacity:1}}
+.sm{--ink:255,255,255;--tx:#f4eefb;color:#f4eefb;width:min(100%,360px);padding:20px 18px 16px;border-radius:24px;background:linear-gradient(170deg,#12332f,#0a1b1a);border:1px solid rgba(246,196,69,.4);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(246,196,69,.12);animation:smP .28s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes smP{from{opacity:0;transform:translateY(24px) scale(.92)}to{opacity:1;transform:none}}
+.sm-h{display:flex;align-items:center;gap:12px}
+.sm-pv{position:relative;flex:0 0 74px;width:74px;height:74px}
+.sm-pv .sc-av{position:absolute;left:50%;top:52.1%;width:49%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;background:#2b4a48}
+.sm-pv .sc-av img{width:100%;height:100%;object-fit:cover}
+.sm-pv .sc-ring{position:absolute;inset:-6px;width:calc(100% + 12px);height:calc(100% + 12px)}
+.sm-t b{display:block;font-size:17px;font-weight:700}
+.sm-t span{font-size:12.5px;color:rgba(var(--ink),.6)}
+.sm-q{margin:16px 0 10px;font-size:15px;font-weight:600;line-height:1.4}
+.sm-opts{display:flex;flex-direction:column;gap:9px}
+.sm-opt{display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);text-align:left;transition:border-color .2s,background .2s,transform .12s}
+.sm-opt:active{transform:scale(.98)}
+.sm-opt .rd{flex:0 0 20px;width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.4);display:grid;place-items:center;transition:.2s}
+.sm-opt .rd::after{content:"";width:10px;height:10px;border-radius:50%;background:#f6c445;transform:scale(0);transition:transform .2s}
+.sm-opt b{flex:1;font-size:16px;font-weight:700}
+.sm-opt .pr{display:inline-flex;align-items:center;gap:5px;font-size:16px;font-weight:800;color:#ffe27a}
+.sm-opt .pr .gem{width:18px;height:18px}
+.sm-opt.on{border-color:#f6c445;background:rgba(246,196,69,.12)}
+.sm-opt.on .rd{border-color:#f6c445}
+.sm-opt.on .rd::after{transform:scale(1)}
+.sm-have{display:flex;align-items:center;justify-content:center;gap:6px;margin:13px 0 4px;font-size:13px;color:rgba(var(--ink),.62)}
+.sm-have .gem{width:15px;height:15px}.sm-have b{color:var(--tx)}
+.sm-btns{display:flex;gap:10px;margin-top:12px}
+.sm-btns button{flex:1;padding:13px 0;border-radius:15px;font-size:15.5px;font-weight:800}
+.sm-no{background:rgba(255,255,255,.09)}
+.sm-ok{display:flex;align-items:center;justify-content:center;gap:6px;color:#4a2600;background:linear-gradient(#ffe27a,#f2a516);box-shadow:0 4px 16px rgba(242,165,22,.45)}
+.sm-ok .gem{width:17px;height:17px}
+.sm-ok:disabled{opacity:.6}
+.st-toast{color:#fff;position:fixed;left:50%;bottom:calc(60px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);max-width:86vw;padding:11px 18px;border-radius:14px;background:rgba(10,20,20,.94);border:1px solid rgba(255,255,255,.16);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:80;transition:.28s;text-align:center}
+.st-toast.on{opacity:1;transform:translate(-50%,0)}
+
+:root[data-theme="black"] .sc-own{color:#7ff0c9}
+
+/* ═══ এন্ট্রি এনিমেশনের কার্ড (স্থির ছবি + ▶ প্রিভিউ) ═══ */
+.sc-pv.ent{aspect-ratio:373/320;margin:4px 0 6px;border-radius:14px;overflow:hidden;background:radial-gradient(90% 80% at 50% 45%,#2a5db3,#0d1a3a 78%)}
+.sc-poster{width:100%;height:100%;object-fit:contain;display:block}
+.pv-play{position:absolute;right:7px;bottom:7px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:14px;color:#fff;background:rgba(0,0,0,.55);border:1.5px solid rgba(255,255,255,.7);padding-left:2px}
+.pv-play:active{transform:scale(.9)}
+.sm-pv.ent{flex:0 0 96px;width:96px;height:74px;border-radius:12px;overflow:hidden;background:radial-gradient(90% 80% at 50% 45%,#2a5db3,#0d1a3a 78%)}
+
+/* ═══ মেসেজ ব্যানার ও ইমোজি প্যাকের কার্ড ═══ */
+.sc-pv.ban{aspect-ratio:1046/369;margin:14px 0 12px;filter:drop-shadow(0 4px 10px rgba(80,60,255,.35))}
+.sc-pv.ban .sc-poster{object-fit:contain}
+.sc-pv.emo{aspect-ratio:4/3;margin:4px 0 6px;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;align-content:center;padding:4px}
+.sc-pv.emo img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
+.sm-pv.ban{flex:0 0 112px;width:112px;height:40px;margin:16px 0}
+.sm-pv.ban .sc-poster{object-fit:contain}
+.sm-pv.emo{flex:0 0 96px;width:96px;height:64px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.sm-pv.emo img{width:100%;aspect-ratio:1;object-fit:contain}

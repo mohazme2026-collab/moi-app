@@ -1,0 +1,43 @@
+/* me/visitor/visitor.css — Visitors / Viewed পেজ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:#011a1e;color:#fff;overflow:hidden}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.vs-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(90% 40% at 20% 0%,rgba(40,190,150,.18),transparent 70%),linear-gradient(180deg,#02242a 0%,#012328 45%,#011a1e 100%)}
+.vs-page{position:relative;z-index:1;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+
+/* উপরের বার */
+.vs-top{flex:0 0 auto;display:flex;align-items:center;height:64px;padding:0 12px}
+.vs-back{flex:0 0 auto;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.08);transition:transform .15s}
+.vs-back svg{width:22px;height:22px}
+.vs-back:active{transform:scale(.88)}
+.vs-tabs{flex:1;display:flex;margin-right:40px}
+.vs-tab{position:relative;flex:1;padding:14px 0 18px;font-size:21px;font-weight:400;color:rgba(255,255,255,.4);transition:color .2s}
+.vs-tab.on{color:#fff}
+.vs-tab::after{content:"";position:absolute;left:50%;bottom:6px;width:0;height:4px;border-radius:2px;background:#fff;transform:translateX(-50%);transition:width .25s cubic-bezier(.2,.9,.3,1.2)}
+.vs-tab.on::after{width:12px}
+
+/* তালিকা */
+.vs-list{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:10px 14px calc(24px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch}
+.vs-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;padding:14px;border-radius:22px;background:#04383e;animation:vsIn .25s ease both}
+@keyframes vsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.vs-av{flex:0 0 auto;width:62px;height:62px;border-radius:50%;object-fit:cover;background:#2d6a63;border:2px solid rgba(255,255,255,.15)}
+.vs-info{flex:1;min-width:0}
+.vs-name{font-size:19px;font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vs-meta{display:flex;align-items:center;gap:8px;margin-top:5px}
+.vs-g{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 3px;border-radius:13px;background:rgba(0,0,0,.28);font-size:15px}
+.vs-g.nonum{padding-right:3px}
+.vs-g u{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;text-decoration:none;font-size:13px;font-weight:700;line-height:1}
+.vs-g.f u{background:linear-gradient(135deg,#ff7ac8,#e0409a)}
+.vs-g.m u{background:linear-gradient(135deg,#59b4ff,#2d78e6)}
+.vs-lv{position:relative;flex:0 0 auto;width:30px;height:32px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 16%,100% 68%,50% 100%,0 68%,0 16%);background:linear-gradient(180deg,#fff0b0,#d9a22a)}
+.vs-lv i{position:absolute;inset:2.5px;clip-path:polygon(50% 0,100% 16%,100% 68%,50% 100%,0 68%,0 16%);background:var(--bc,#2a86e8)}
+.vs-lv b{position:relative;z-index:1;font-size:12px;font-weight:800;margin-top:-3px;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.vs-date{margin-top:4px;font-size:17px;color:rgba(255,255,255,.55)}
+
+/* খালি অবস্থা */
+.vs-empty{position:absolute;left:0;right:0;top:64px;bottom:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding-bottom:12vh;pointer-events:none}
+.vs-empty.show{display:flex}
+.vs-empty svg{width:min(66vw,300px);height:auto;filter:drop-shadow(0 12px 22px rgba(0,0,0,.35))}
+.vs-empty p{margin-top:14px;font-size:18px;color:rgba(255,255,255,.6)}

@@ -1,0 +1,80 @@
+/* me/bag/bag.css — Bag (My Decoration) পেজ: Back + ট্যাব + খালি অবস্থা */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg0,#0f0818);color:var(--tx,#f4eefb);overflow:hidden}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+.bg-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+:root[data-theme="black"] .bg-bg{background:radial-gradient(90% 55% at 15% 0%,rgba(30,170,130,.28),transparent 70%),radial-gradient(80% 50% at 100% 35%,rgba(20,120,110,.22),transparent 70%),linear-gradient(180deg,#06201e 0%,#06100f 55%,#050b0a 100%)}
+:root[data-theme="light"] .bg-bg{background:radial-gradient(90% 45% at 10% 0%,rgba(80,210,160,.16),transparent 70%)}
+:root[data-theme="pink"] .bg-bg{background:radial-gradient(90% 45% at 10% 0%,rgba(255,150,190,.3),transparent 70%)}
+
+.bg-page{--ink:var(--ink-rgb,255,255,255);position:relative;z-index:1;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+
+/* উপরের বার */
+.bg-top{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 14px}
+.bg-back,.bg-top-space{width:40px;height:40px}
+.bg-back{display:grid;place-items:center;border-radius:50%;background:rgba(var(--ink),.08);transition:transform .15s,background .2s}
+.bg-back svg{width:22px;height:22px}
+.bg-back:active{transform:scale(.88);background:rgba(var(--ink),.16)}
+.bg-title{font-size:19px;font-weight:500;letter-spacing:.2px}
+
+/* ট্যাব বার (আঙুল দিয়ে সরানো যায়) */
+.bg-tabs{flex:0 0 auto;display:flex;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 8px;border-bottom:1px solid rgba(var(--ink),.1);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.bg-tabs::-webkit-scrollbar{display:none}
+.bg-tab{position:relative;flex:0 0 auto;padding:14px 16px 16px;font-size:17px;font-weight:500;color:rgba(var(--ink),.5);transition:color .2s}
+.bg-tab.on{color:var(--tx);font-size:19px;font-weight:600}
+.bg-tab::after{content:"";position:absolute;left:50%;bottom:6px;width:0;height:3px;border-radius:2px;background:#f6c445;transform:translateX(-50%);transition:width .25s cubic-bezier(.2,.9,.3,1.2)}
+.bg-tab.on::after{width:26px}
+
+/* ট্যাবের ভিতরের জায়গা */
+.bg-panes{position:relative;flex:1 1 auto;min-height:0}
+.bg-pane{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:14px 14px calc(24px + env(safe-area-inset-bottom,0px));display:none;-webkit-overflow-scrolling:touch}
+.bg-pane.on{display:block;animation:bgFade .25s ease both}
+@keyframes bgFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* খালি অবস্থা: ভালুক + বাক্স (গায়ে MOI) + List is empty */
+.bg-empty{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding-bottom:12vh;pointer-events:none}
+.bg-empty.show{display:flex}
+.bg-empty svg{width:min(66vw,300px);height:auto;filter:drop-shadow(0 12px 22px rgba(0,0,0,.35))}
+.bg-empty p{margin-top:14px;font-size:18px;color:rgba(var(--ink),.62)}
+
+/* ═══ Frame ট্যাবের কার্ড ═══ */
+.bi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bi{position:relative;display:flex;flex-direction:column;align-items:center;padding:8px 6px 10px;border-radius:18px;background:linear-gradient(160deg,rgba(var(--ink),.10),rgba(var(--ink),.04));border:1px solid rgba(var(--ink),.14);text-align:center;transition:transform .15s,border-color .2s;overflow:hidden}
+.bi:active{transform:scale(.96)}
+.bi.worn{border-color:#f6c445;box-shadow:0 0 0 1px rgba(246,196,69,.35),0 6px 20px rgba(246,196,69,.18)}
+.bi::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 55% at 50% 30%,rgba(255,190,60,.16),transparent 70%);pointer-events:none}
+.bi b{position:relative;font-size:12.5px;font-weight:700;margin-top:1px;line-height:1.2}
+.bi small{position:relative;font-size:10.5px;color:rgba(var(--ink),.55);margin-top:2px}
+.bi-tag{position:absolute;top:6px;right:6px;font-style:normal;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:9px;color:#06301f;background:#6df0b8}
+.bi-pv{position:relative;width:100%;aspect-ratio:1}
+.bi-av{position:absolute;left:50%;top:52.1%;width:49%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;overflow:hidden;background:#2b4a48}
+.bi-av img{width:100%;height:100%;object-fit:cover;display:block}
+.bi-ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* ═══ Use / Remove শিট ═══ */
+.bs-back{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0);transition:background .22s;pointer-events:none}
+.bs-back.on{background:rgba(0,0,0,.6);pointer-events:auto}
+.bs{--ink:255,255,255;--tx:#f4eefb;color:#f4eefb;width:min(100%,520px);display:flex;flex-direction:column;align-items:center;padding:10px 22px calc(22px + env(safe-area-inset-bottom,0px));border-radius:26px 26px 0 0;background:linear-gradient(170deg,#12332f,#0a1b1a);border:1px solid rgba(246,196,69,.35);border-bottom:0;box-shadow:0 -14px 50px rgba(0,0,0,.55);transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.9,.3,1.1)}
+.bs-back.on .bs{transform:none}
+.bs-grab{width:42px;height:4px;border-radius:2px;background:rgba(255,255,255,.25);margin-bottom:4px}
+.bs .bi-pv{width:min(62vw,260px)}
+.bs-nm{font-size:19px;font-weight:700;margin-top:-4px}
+.bs-sub{font-size:13px;color:rgba(var(--ink),.6);margin:3px 0 16px}
+.bs-btn{width:100%;padding:15px 0;border-radius:16px;font-size:17px;font-weight:800;transition:background .25s,color .25s,transform .12s}
+.bs-btn:active{transform:scale(.97)}
+.bs-btn.use{color:#4a2600;background:linear-gradient(#ffe27a,#f2a516);box-shadow:0 5px 18px rgba(242,165,22,.45)}
+.bs-btn.worn{color:#d9fff0;background:linear-gradient(#1fae7c,#0d7a58);box-shadow:0 5px 18px rgba(30,180,130,.35)}
+.bg-toast{color:#fff;position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-20px);max-width:86vw;padding:11px 18px;border-radius:14px;background:rgba(10,20,20,.94);border:1px solid rgba(255,255,255,.16);font-size:14px;font-weight:600;opacity:0;pointer-events:none;z-index:80;transition:.28s;text-align:center}
+.bg-toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ═══ এন্ট্রি এনিমেশনের কার্ড/শিট ═══ */
+.bi-pv.ent{aspect-ratio:373/320;margin:2px 0 4px;border-radius:12px;overflow:hidden;background:radial-gradient(90% 80% at 50% 45%,#2a5db3,#0d1a3a 78%)}
+.bi-poster{width:100%;height:100%;object-fit:contain;display:block}
+.bs .bi-pv.ent{width:min(78vw,340px);margin:6px 0 12px}
+.bs-play{margin:-4px 0 10px;padding:8px 20px;border-radius:20px;font-size:14px;font-weight:700;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3)}
+
+/* ═══ মেসেজ ব্যানারের কার্ড ═══ */
+.bi-pv.ban{aspect-ratio:1046/369;margin:14px 0 12px;filter:drop-shadow(0 4px 10px rgba(80,60,255,.35))}
+.bs .bi-pv.ban{width:min(80vw,340px);margin:16px 0 14px}

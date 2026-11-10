@@ -73,7 +73,7 @@ function finishInit(){
     /* ═══ Storage change listener (একই ব্রাউজারে অন্য ট্যাব) ═══ */
     const handleSync = (e) => {
         if (e.key === KEY.seats){
-            state.seats = ls_get(KEY.seats) || new Array(10).fill(null);
+            state.seats = ls_get(KEY.seats) || new Array(12).fill(null);
             renderSeats();
             updateMicButton();
         }

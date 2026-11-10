@@ -21,7 +21,7 @@ function initState(){
     loadRoomInfo();
     state.topic = ls_get(KEY.topic) || state.topic || '';
     const seats = ls_get(KEY.seats) || [];
-    const n = Math.max(10, seats.length);
+    const n = Math.max(12, seats.length);
     state.seats = new Array(n).fill(null).map((_, i) => seats[i] || null);
     state.listeners = ls_get(KEY.listeners) || [];
     state.messages = ls_get(KEY.messages) || [];

@@ -7,9 +7,9 @@ console.log('[ROOM] theme.js loaded');
 
 /* ═══ লেআউট ডেফিনিশন ═══ */
 var RT_LAYOUTS = {
-    'basic-10': {
-        title:'Basic 10 mic seat', category:'Basic',
-        rows: [{ count:5, mult:1.0 }, { count:5, mult:1.0 }]
+    'basic-12': {
+        title:'Basic 12 mic seat', category:'Basic',
+        rows: [{ count:4, mult:1.0 }, { count:4, mult:1.0 }, { count:4, mult:1.0 }]
     },
     'basic-6': {
         title:'Basic 6 mic seat', category:'Basic',
@@ -34,7 +34,7 @@ var RT_LAYOUTS = {
     }
 };
 
-var _rtCurrent = 'basic-10';
+var _rtCurrent = 'basic-12';
 var _rtTab = 'quantity';
 var _rtPending = null;
 var _origRenderSeats = null;
@@ -43,51 +43,63 @@ var _origRenderSeats = null;
 function rtLoad(){
     try {
         var saved = (typeof ls_get === 'function') ? ls_get(KEY.roomLayout) : null;
+        if (saved === 'basic-10') saved = 'basic-12';   /* আগের ১০ সিট এখন ১২ সিট */
         if (saved && RT_LAYOUTS[saved]) _rtCurrent = saved;
         if (typeof state !== 'undefined') state.roomLayout = _rtCurrent;
     } catch(e){ console.warn('[THEME] load', e); }
 }
 
 /* ═══ সিট রেন্ডার (overridden) ═══ */
+function rtTotalSeats(layout){ var n = 0; layout.rows.forEach(function(r){ n += r.count; }); return n; }
 function rtRenderSeats(){
     var grid = document.getElementById('seatsGrid');
     if (!grid) return;
     if (typeof destroyAllRings === 'function') destroyAllRings();
 
-    var layout = RT_LAYOUTS[_rtCurrent] || RT_LAYOUTS['basic-10'];
+    var layout = RT_LAYOUTS[_rtCurrent] || RT_LAYOUTS['basic-12'];
+    /* সিটের তালিকা লেআউটের সংখ্যার সমান রাখা */
+    if (typeof state !== 'undefined' && state.seats){
+        var need = rtTotalSeats(layout);
+        while (state.seats.length < need) state.seats.push(null);
+    }
     grid.removeAttribute('style');
     grid.className = 'seats-grid';
     grid.style.display = 'flex';
     grid.style.flexDirection = 'column';
-    grid.style.justifyContent = 'space-evenly';
     grid.style.alignItems = 'center';
-    grid.style.height = '215px';
-    grid.style.minHeight = '215px';
-    grid.style.padding = '6px 6px';
-    grid.style.gap = '6px';
-    grid.style.marginTop = '8px';
+    grid.style.padding = '14px 6px 4px';   /* উপরে মুকুট/রিঙের জায়গা */
+    grid.style.marginTop = '2px';
     grid.innerHTML = '';
 
+    /* ── মাপ: পর্দার চওড়া ও উচ্চতা দেখে নিজে নিজে ঠিক হয় ──
+       চওড়ায় প্রতি সিটের ঘরের ~৬২% নেওয়া হয়, যাতে মুকুট/রিং পাশের সিটের উপর না পড়ে।
+       উচ্চতায় নিচে চ্যাটের (টপিক + ৩-৪ মেসেজ) আর বাটন বারের জায়গা আগে রেখে বাকিটা সিটকে দেওয়া হয়। */
     var W = grid.clientWidth || 380;
-    var H = 215;
-    var numRows = layout.rows.length;
-    var maxCount = 1;
-    layout.rows.forEach(function(r){ if (r.count > maxCount) maxCount = r.count; });
+    var app = document.querySelector('.app-container');
+    var appH = app ? app.clientHeight : window.innerHeight;
+    var dock = document.getElementById('moiDock');
+    var dockH = dock ? dock.offsetHeight : 80;
+    var H = appH - grid.offsetTop - dockH - 150 - 10;
+    H = Math.max(180, Math.min(H, 360));
 
-    var padX = 8, gapX = 4, rowGap = 6;
-    var sizeByW = (W - padX * 2 - (maxCount - 1) * gapX) / maxCount;
-    var totalMult = 0;
-    layout.rows.forEach(function(r){ totalMult += r.mult; });
-    var sizeByH = (H - 12 - (numRows - 1) * rowGap) / (1.45 * totalMult);
-    var baseSize = Math.min(sizeByW, sizeByH);
-    baseSize = Math.max(18, Math.min(baseSize, 50));
+    var numRows = layout.rows.length, padX = 8, totalMult = 0, sizeByW = 999;
+    layout.rows.forEach(function(r){
+        totalMult += r.mult;
+        sizeByW = Math.min(sizeByW, (W - padX * 2) / r.count / r.mult * 0.62);
+    });
+    var minGap = 8;
+    var META = 42;   /* সিটের নিচে নাম + ডায়মন্ডের জায়গা (px) */
+    var sizeByH = (H - minGap * (numRows - 1) - META * numRows) / totalMult;
+    var baseSize = Math.max(26, Math.min(sizeByW, sizeByH, 56));
+    var gap = numRows > 1 ? Math.max(minGap, Math.min(18, (H - totalMult * baseSize - META * numRows) / (numRows - 1))) : 0;
+    grid.style.gap = gap + 'px';
 
     var idx = 0;
     layout.rows.forEach(function(row){
         var rowDiv = document.createElement('div');
         rowDiv.style.display = 'flex';
         rowDiv.style.justifyContent = row.align === 'left' ? 'flex-start' : 'space-around';
-        rowDiv.style.alignItems = 'center';
+        rowDiv.style.alignItems = 'flex-start';
         rowDiv.style.width = '100%';
         rowDiv.style.gap = '4px';
         if (row.align === 'left') rowDiv.style.paddingLeft = '6px';

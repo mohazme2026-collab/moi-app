@@ -55,9 +55,14 @@ function updateJoinButton(){
 
 /* ═══ Top Gifters (উপরে ৩টি avatar) ═══ */
 function renderTopGifters(){
+    const top3 = computeGifterStats('month').slice(0, 3);
+    /* পয়েন্ট-পিলে প্রথম ২ জন (ছোট ছবি) */
+    const pill = $('rpGifters');
+    if (pill) pill.innerHTML = top3.length
+        ? top3.slice(0, 2).map((u, i) => `<span class="rp-a r${i+1}" title="${esc(u.name)}"><img src="${esc(u.avatar)}" onerror="this.src='${GUEST_AVATAR}'"></span>`).join('')
+        : `<i class="fa-solid fa-crown rp-crown"></i>`;
     const wrap = $('topGiftersAvatars');
     if (!wrap) return;
-    const top3 = computeGifterStats('month').slice(0, 3);
     if (!top3.length){
         wrap.innerHTML = `<div class="tg-empty">No gifts yet</div>`;
         return;
@@ -165,14 +170,17 @@ window.renderGifterBody = renderGifterBody;
 window.logActivity = logActivity;
 window.showActivity = showActivity;
 /* ═══ Message feed ═══ */
+/* রুমে ঢোকার আগের পুরনো মেসেজ/গিফট দেখাবে না — ঢোকার পর থেকে যা আসবে শুধু তা। বের হয়ে আবার ঢুকলে আবার নতুন করে শুরু। */
+const ROOM_ENTER_TS = Date.now();
 function renderMessageFeed(){
     $('topicText').textContent = state.topic || 'কোনো টপিক নেই';
     const list = $('messagesList');
-    if (!state.messages.length){
+    const fresh = state.messages.filter(m => m && (m.ts || 0) >= ROOM_ENTER_TS);
+    if (!fresh.length){
         list.innerHTML = `<div class="msg-empty">এখনো কোনো মেসেজ নেই...</div>`;
         return;
     }
-    list.innerHTML = state.messages.slice(-60).map(m => {
+    list.innerHTML = fresh.slice(-60).map(m => {
         if (window.MOIChatFx){ const h = MOIChatFx.row(m); if (h) return h; }   /* SVIP চ্যাট ব্যানার */
         if (m.type === 'gift') return `<div class="msg-item gift-msg">🎁 <span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;
         return `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;

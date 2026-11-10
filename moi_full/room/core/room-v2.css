@@ -1,0 +1,58 @@
+/* room/core/room-v2.css — রুমের নতুন চেহারা: স্কয়ার লোগো, টপ-গিফটার পিল, অ্যাড বক্স, বড় টপ-গিফটার প্যানেল
+   (পুরনো CSS-এর পরে লোড হয়, তাই এখানে লিখলেই আগেরটা বদলে যায়) */
+
+/* উপরের অংশ একটু উপরে */
+.top-bar{padding-top:10px}
+.seats-grid{margin-top:2px}
+
+/* রুমের লোগো: গোল থেকে স্কয়ার (একই সাইজ) */
+.room-logo-circle{border-radius:14px}
+.room-logo-circle::after{border-radius:14px}
+.room-logo-circle img{border-radius:12px}
+
+/* আলাদা TOP সারি আর নেই — টপ গিফটার এখন পয়েন্ট-পিলের ভিতরে */
+.top-gifters-row{display:none!important}
+.room-points{padding:2px 9px 2px 4px;gap:5px;cursor:pointer}
+.rp-gifters{display:inline-flex;align-items:center;margin-right:4px;min-width:10px}
+.rp-a{position:relative;width:20px;height:20px;border-radius:50%;overflow:hidden;border:1.5px solid var(--c3);background:var(--bg1);margin-right:-7px;flex-shrink:0}
+.rp-a:last-child{margin-right:0}
+.rp-a img{width:100%;height:100%;object-fit:cover;display:block}
+.rp-a.r1{z-index:2;box-shadow:0 0 6px rgba(var(--c3-rgb),.7)}
+.rp-a.r2{z-index:1;border-color:#e5e7eb}
+.rp-crown{font-size:11px;color:var(--c3);padding-left:4px}
+
+/* ডানের চার বাটন আপাতত লুকানো (কোড আছে, পরে অন্য জায়গায় বসবে) */
+.rx-rail,.rx-hearts{display:none!important}
+.message-feed{padding-right:66px}
+
+/* অফিসিয়াল অ্যাড বক্স */
+.room-ads{position:absolute;right:10px;bottom:104px;z-index:60;display:flex;flex-direction:column;gap:10px}
+.ra-box{position:relative;width:52px;height:52px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.2);box-shadow:0 8px 20px rgba(0,0,0,.4);cursor:pointer;background:rgba(var(--bg1-rgb),.7)}
+.ra-box:active{transform:scale(.94)}
+.ra-slide{position:absolute;inset:0;opacity:0;transition:opacity .7s ease;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#fff}
+.ra-slide.on{opacity:1}
+.ra-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.ra-slide em{font-style:normal;font-size:21px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.ra-slide b{font:800 8.5px/1 'Figtree',sans-serif;letter-spacing:.05em;text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.ra-tag{position:absolute;left:3px;top:2px;z-index:3;font:700 6.5px/1 'Figtree',sans-serif;color:rgba(255,255,255,.85);background:rgba(0,0,0,.35);padding:1px 3px;border-radius:4px;letter-spacing:.04em}
+
+/* টপ গিফটার: ফুল স্ক্রিন (ভিতরে 1 Day / 1 Month দুই পাতা) */
+#gifterSheet{height:var(--app-h,100dvh);max-height:var(--app-h,100dvh);border-radius:0;max-width:420px}
+
+/* ═════════ নিচের বাটন বার: নতুন ছবির বাটন (কাজ আগের মতোই, শুধু চেহারা) ═════════
+   ছবি: room/dock/*.png — ডিজাইন বদলাতে শুধু ওই ছবি বদলান */
+.moi-dock{align-items:flex-end;padding-top:6px}
+.moi-dock .md-btn{width:42px;height:48px;border-radius:0;background:transparent center/contain no-repeat;box-shadow:none;font-size:0;color:transparent;
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,.45));overflow:visible}
+.moi-dock .md-btn i{display:none}
+.moi-dock .md-chat{background-image:url(../dock/chat.png)}
+.moi-dock .md-emoji{background-image:url(../dock/emoji.png)}
+.moi-dock .md-mic,.moi-dock .md-mic.mic-on,.moi-dock .md-mic.mic-off{background-image:url(../dock/mic.png);background-color:transparent;background-size:contain;background-position:center;background-repeat:no-repeat}
+.moi-dock .md-gift{width:60px;height:75px;margin-top:-26px;background-image:url(../dock/gift.png);background-color:transparent;box-shadow:none}
+.moi-dock .md-game{background-image:url(../dock/game.png)}
+.moi-dock .md-menu{background-image:url(../dock/menu.png)}
+.moi-dock .md-dm{background-image:url(../dock/dm.png)}
+/* মাইক বন্ধ: ছবি ধূসর + লাল কাটা দাগ */
+.moi-dock .md-mic.mic-off{background-color:transparent;filter:grayscale(.85) brightness(.75) drop-shadow(0 6px 8px rgba(0,0,0,.45))}
+.moi-dock .md-mic.mic-off::after{content:'';position:absolute;left:50%;top:50%;width:3px;height:78%;background:#ff4d6d;border-radius:2px;transform:translate(-50%,-50%) rotate(40deg);box-shadow:0 0 6px rgba(255,77,109,.8)}
+@media (max-width:360px){.moi-dock .md-btn{width:38px;height:44px}.moi-dock .md-gift{width:54px;height:68px;margin-top:-22px}}

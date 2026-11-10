@@ -73,14 +73,14 @@ const state = {
     owner:null,
     myRole:'member',
     topic:'',
-    seats:new Array(10).fill(null),
+    seats:new Array(12).fill(null),
     listeners:[],
     messages:[],
     giftStats:{},
     gifterRange:'day',
     joinedUsers: new Set(),
     pk: null,
-    roomLayout: 'basic-10'
+    roomLayout: 'basic-12'
 };
 
 /* ═══ Profile (login ইউজার) ═══ */

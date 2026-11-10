@@ -1,3 +1,24 @@
+/* ═══ PWA: অ্যাপ হিসেবে ইনস্টল (সব পেজে একবারেই) ═══
+   এই ফাইল সব পেজে লোড হয়, তাই এখান থেকেই manifest ও service worker যুক্ত হয়। */
+(function(){
+    try {
+        var src = (document.currentScript && document.currentScript.src) || '';
+        var i = src.indexOf('shared/core/firebase-init.js');
+        if (i < 0) return;
+        var root = src.slice(0, i);
+        var h = document.head || document.documentElement;
+        function add(tag, attrs){ var e = document.createElement(tag); for (var k in attrs) e.setAttribute(k, attrs[k]); h.appendChild(e); }
+        if (!document.querySelector('link[rel="manifest"]')){
+            add('link', { rel: 'manifest', href: root + 'manifest.json' });
+            add('meta', { name: 'theme-color', content: '#120a28' });
+            add('meta', { name: 'mobile-web-app-capable', content: 'yes' });
+            add('meta', { name: 'apple-mobile-web-app-capable', content: 'yes' });
+            add('link', { rel: 'apple-touch-icon', href: root + 'icons/icon-192.png' });
+        }
+        if ('serviceWorker' in navigator) window.addEventListener('load', function(){ navigator.serviceWorker.register(root + 'sw.js').catch(function(){}); });
+    } catch(e){}
+})();
+
 /* shared/core/firebase-init.js — ডেমো মোড (Firebase ছাড়া)
    ─────────────────────────────────────────────────────────────
    এই ফাইলটা আসল Firebase-এর জায়গায় বসে। ব্রাউজারের localStorage-এ একটা ছোট

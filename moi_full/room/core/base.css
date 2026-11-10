@@ -1,7 +1,7 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Figtree','Hind Siliguri',sans-serif;user-select:none}
 input,textarea{user-select:text;-webkit-user-select:text}
-body{background:radial-gradient(circle at 50% 100%,var(--bg3),var(--bg1),var(--bg0));display:flex;justify-content:center;align-items:center;min-height:100vh;min-height:100dvh;color:#fff;overflow:hidden}
-.app-container{width:100%;max-width:420px;height:100vh;height:100dvh;max-height:850px;position:relative;background:url('https://www.transparenttextures.com/patterns/stardust.png');background-color:rgba(var(--bg1-rgb),.7);background-blend-mode:overlay;overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,.9);border-radius:20px;border:1px solid rgba(255,255,255,.05)}
+body{background:radial-gradient(circle at 50% 100%,var(--bg3),var(--bg1),var(--bg0));display:flex;justify-content:center;align-items:center;min-height:100vh;min-height:100dvh;min-height:var(--app-h,100dvh);color:#fff;overflow:hidden}
+.app-container{width:100%;max-width:420px;height:100vh;height:100dvh;height:var(--app-h,100dvh);max-height:850px;position:relative;background:url('https://www.transparenttextures.com/patterns/stardust.png');background-color:rgba(var(--bg1-rgb),.7);background-blend-mode:overlay;overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,.9);border-radius:20px;border:1px solid rgba(255,255,255,.05)}
 
 .room-wallpaper{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .5s ease;opacity:0;pointer-events:none}
 .room-wallpaper.has-wallpaper{opacity:1}

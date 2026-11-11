@@ -56,3 +56,32 @@
 .moi-dock .md-mic.mic-off{background-color:transparent;filter:grayscale(.85) brightness(.75) drop-shadow(0 6px 8px rgba(0,0,0,.45))}
 .moi-dock .md-mic.mic-off::after{content:'';position:absolute;left:50%;top:50%;width:3px;height:78%;background:#ff4d6d;border-radius:2px;transform:translate(-50%,-50%) rotate(40deg);box-shadow:0 0 6px rgba(255,77,109,.8)}
 @media (max-width:360px){.moi-dock .md-btn{width:38px;height:44px}.moi-dock .md-gift{width:54px;height:68px;margin-top:-22px}}
+
+/* ── চ্যাট: ছবি, ডিলিট ডায়ালগ, গ্যালারি বাটন ── */
+.chat-gal-btn{background:linear-gradient(135deg,#3aa0ff,#6a5cff)!important}
+.msg-img{display:block;max-width:150px;max-height:150px;margin-top:4px;border-radius:12px;border:1px solid rgba(255,255,255,.18);object-fit:cover;cursor:pointer}
+.mw{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#chatClearBtn{color:#ff8a8a}
+.cx-del{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:24px}
+.cx-del-box{width:100%;max-width:300px;border-radius:20px;padding:20px 18px 16px;background:linear-gradient(180deg,#2a1a5e,#150e34);border:1.5px solid rgba(255,212,90,.5);text-align:center;color:#fff;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+.cx-del-t{font:700 15px/1.4 'Hind Siliguri','Figtree',sans-serif;margin-bottom:16px}
+.cx-del-r{display:flex;gap:10px}.cx-del-r button{flex:1;border:0;border-radius:14px;padding:11px;font:800 13px 'Figtree',sans-serif;color:#fff;cursor:pointer}
+.cx-del-r .no{background:rgba(255,255,255,.12)}.cx-del-r .yes{background:linear-gradient(135deg,#ff5a5a,#c4151f)}
+.cx-view{position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center}
+.cx-view img{max-width:96%;max-height:90%;border-radius:12px}
+
+/* ── রুম মেনু: ছবির বাটন; সাধারণ ইউজারের জন্য স্টাফ-বাটন লুকানো ── */
+.mn-grid{grid-template-columns:repeat(3,1fr)!important;gap:14px 6px!important;padding:0 4px 8px!important}
+.mn-btn{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.mn-btn:active{transform:scale(.94)}
+.mn-btn img{display:block;width:100%;height:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45));pointer-events:none}
+#settingsSheet:not(.staff) .mn-btn.st{display:none}
+.mn-off{display:none;position:absolute;right:8px;top:6px;font:900 10px 'Figtree',sans-serif;letter-spacing:.06em;color:#fff;background:#e5334b;padding:2px 7px;border-radius:9px;box-shadow:0 0 8px rgba(255,60,80,.8)}
+.mn-btn.is-off .mn-off{display:block}.mn-btn.is-off img{filter:grayscale(.7) brightness(.8) drop-shadow(0 4px 8px rgba(0,0,0,.45))}
+#settingsSheet .settings-header h3{font-size:15px}
+
+/* ── গান চলছে: সিটের উজ্জ্বল রিং + 🎵 ── */
+.seat.music-on .seat-avatar{box-shadow:0 0 0 2px #fff,0 0 0 4px #29d3ff,0 0 16px 5px rgba(41,211,255,.9),0 0 30px 10px rgba(168,85,247,.55)!important;animation:mxRing 1.2s ease-in-out infinite}
+.seat.music-on .seat-avatar::after{content:'🎵';position:absolute;right:-4px;top:-6px;z-index:9;font-size:15px;line-height:1;filter:drop-shadow(0 0 5px #29d3ff);animation:mxNote 1.4s ease-in-out infinite}
+@keyframes mxRing{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+@keyframes mxNote{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-4px) rotate(10deg)}}

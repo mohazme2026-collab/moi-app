@@ -88,11 +88,10 @@ window.handleWallpaperSelect = (event) => {
 
 /* ═══ Settings menu ═══ */
 window.openSettingsMenu = () => {
-    if (!isAdminOrOwner()){
-        toastMsg('শুধু Owner/Admin Settings ব্যবহার করতে পারবে');
-        return;
-    }
+    if (typeof myProfile === 'undefined' || !myProfile){ toastMsg('লগইন করুন'); return; }
     closeSheet();
+    /* সাধারণ ইউজার শুধু ৪টা বাটন দেখে (Lucky Box, Music, Sound, Bag); বাকিগুলো Owner/Admin-এর */
+    $('settingsSheet').classList.toggle('staff', isAdminOrOwner());
     $('sheetBackdrop').classList.add('active');
     $('settingsSheet').classList.add('active');
 };

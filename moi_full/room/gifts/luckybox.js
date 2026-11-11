@@ -22,10 +22,6 @@ function saveLuckyBoxes(){ renderMessageFeed(); }
 
 /* ═══ Lucky Box Sheet খোলা ═══ */
 window.openLuckyBoxSheet = () => {
-    if (!isAdminOrOwner()){
-        toastMsg('শুধু Owner/Admin Lucky Box পাঠাতে পারবে');
-        return;
-    }
     closeSheet();
     $('sheetBackdrop').classList.add('active');
     $('luckyBoxSheet').classList.add('active');
@@ -59,10 +55,6 @@ function _getChipValue(groupId){
 
 /* ═══ Lucky Box পাঠানো ═══ */
 window.sendLuckyBox = async () => {
-    if (!isAdminOrOwner()){
-        toastMsg('শুধু Owner/Admin পারবে');
-        return;
-    }
     const timer = _getChipValue('luckyTimer');
     const total = _getChipValue('luckyDiamonds');
     const qty = _getChipValue('luckyQuantity');

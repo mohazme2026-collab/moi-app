@@ -181,9 +181,11 @@ function renderMessageFeed(){
         return;
     }
     list.innerHTML = fresh.slice(-60).map(m => {
-        if (window.MOIChatFx){ const h = MOIChatFx.row(m); if (h) return h; }   /* SVIP চ্যাট ব্যানার */
-        if (m.type === 'gift') return `<div class="msg-item gift-msg">🎁 <span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;
-        return `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;
+        let inner = null;
+        if (m.type === 'image' && m.img) inner = `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span><img class="msg-img" src="${esc(m.img)}" alt="" onclick="chatViewImg(this.src)"></div>`;
+        if (inner === null && window.MOIChatFx){ const h = MOIChatFx.row(m); if (h) inner = h; }   /* SVIP চ্যাট ব্যানার */
+        if (inner === null) inner = m.type === 'gift' ? `<div class="msg-item gift-msg">🎁 <span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>` : `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;
+        return `<div class="mw" data-mid="${esc(m.id || '')}">${inner}</div>`;
     }).join('');
     $('messageFeed').scrollTop = $('messageFeed').scrollHeight;
 }

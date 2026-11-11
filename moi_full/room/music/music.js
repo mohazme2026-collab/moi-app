@@ -16,6 +16,10 @@ window.openMusicPanel = () => {
         toastMsg('লগইন করুন');
         return;
     }
+    if (!_mpSeated()){
+        toastMsg('🎵 গান চালাতে হলে আগে মাইক সিটে বসুন');
+        return;
+    }
     closeSheet();
     document.getElementById('musicSelectPanel').classList.add('active');
     renderMusicFileList();
@@ -114,6 +118,7 @@ window.playMusicFile = (index) => {
         _mpUpdatePlayBtn();
         _mpStartProgress();
         _mpShowPlayerBar();
+        _mpPublish(true);
         closeMusicPanel();
         toastMsg(`🎵 ${file.name} প্লে হচ্ছে`);
     }).catch(() => {
@@ -136,6 +141,7 @@ window.mpClosePlayer = () => {
         _mpAudio = null;
     }
     _mpIsPlaying = false;
+    _mpPublish(false);
     _mpStopProgress();
     const bar = document.getElementById('musicPlayerBar');
     if (bar) bar.classList.remove('active');
@@ -233,3 +239,34 @@ function _mpStopProgress(){
 }
 
 window.renderMusicFileList = renderMusicFileList;
+
+/* ═══ সিটে বসা + কে গান চালাচ্ছে (সবার সিটে উজ্জ্বল রিং ও 🎵) ═══ */
+function _mpSeated(){
+    try { return !!(myProfile && state.seats.some(s => s && s.uid === myProfile.uid)); } catch(e){ return false; }
+}
+function _mpRef(){ const F = window.MOIFB; return F && F.rtdb ? F.rtdb.ref(F.LIVE + '/rooms/' + ROOM_ID + '/music') : null; }
+function _mpPublish(on){
+    const r = _mpRef(); if (!r || !myProfile) return;
+    try {
+        if (on){ r.set({ uid: myProfile.uid, name: myProfile.name || 'User', ts: Date.now() }); try { r.onDisconnect().remove(); } catch(e){} }
+        else r.once('value').then(sn => { const v = sn.val(); if (v && v.uid === myProfile.uid) r.remove(); });
+    } catch(e){}
+}
+let _mpPlayer = null;
+function _mpPaint(){
+    document.querySelectorAll('.seat.music-on').forEach(el => el.classList.remove('music-on'));
+    if (!_mpPlayer) return;
+    const el = document.querySelector('.seat[data-uid="' + _mpPlayer.uid + '"]');
+    if (el) el.classList.add('music-on');
+}
+(function(){
+    const t = setInterval(() => {
+        const r = _mpRef(); if (!r || typeof ROOM_ID === 'undefined') return;
+        clearInterval(t);
+        r.on('value', sn => { _mpPlayer = sn.val() || null; _mpPaint(); });
+        setInterval(_mpPaint, 700);
+        /* সিট ছেড়ে দিলে নিজের গান বন্ধ */
+        setInterval(() => { if (_mpAudio && !_mpSeated()) mpClosePlayer(); }, 1500);
+    }, 400);
+    window.addEventListener('pagehide', () => _mpPublish(false));
+})();

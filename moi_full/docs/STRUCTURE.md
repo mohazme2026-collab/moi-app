@@ -105,3 +105,8 @@ shared/           সবার কাজে লাগে এমন জিনি�
 
 ### Rocket v2
 Handlers in shared/core/economy.js: rocketState, rocketAdd (gift 💎 add; at 1000 launches, random 5–10 winners cap), rocketJoin (silent tap during 10 s), rocketSettle (after 10 s, server-only in real Firebase). UI: room/rocket/. Launch banner: shared/broadcast type 'rocket'.
+
+### Room v3 additions
+- room/core/chat-extra.js: gallery image messages (type:'image'), long-press delete (own msg; owner/admin any), Clear History (owner/admin only button).
+- room/menu/btn/*.png: image menu buttons; users see 4 (Lucky Box, Music, Sound, Bag), owner/admin all 9.
+- Music: any seated user; rtdb rooms/<id>/music {uid} drives ring+🎵 on that seat. (Audio itself is still local file playback — real room-wide audio needs a backend.)

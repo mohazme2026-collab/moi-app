@@ -91,9 +91,7 @@ function paintSound(){
     document.querySelectorAll('audio,video').forEach(applyMedia);
     const b = document.getElementById('roomMutedBadge'); if (b) b.classList.toggle('show', off);
     const ic = document.getElementById('menuSoundIcon'), lb = document.getElementById('menuSoundLabel'), it = document.getElementById('menuSoundItem');
-    if (ic) ic.className = 'fa-solid ' + (off ? 'fa-volume-xmark' : 'fa-volume-high');
-    if (lb) lb.textContent = off ? 'Sound Off' : 'Sound';
-    if (it) it.classList.toggle('active-feature', off);
+    if (it) it.classList.toggle('is-off', off);
 }
 window.moiToggleSound = function(){
     off = !off;

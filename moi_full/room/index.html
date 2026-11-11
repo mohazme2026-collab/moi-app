@@ -123,7 +123,7 @@
     </div>
 
     <div class="message-feed" id="messageFeed">
-        <div class="topic-row"><div class="topic-text" id="topicText">🎧FM 📻➡️SP ✨🎤Room 🎵</div><i class="fa-solid fa-pen topic-edit" onclick="editTopic()"></i></div>
+        <div class="topic-row"><div class="topic-text" id="topicText">🎧FM 📻➡️SP ✨🎤Room 🎵</div><i class="fa-solid fa-pen topic-edit" onclick="editTopic()"></i><i class="fa-solid fa-broom topic-edit" id="chatClearBtn" onclick="chatClearHistory()" title="Clear history" style="display:none"></i></div>
         <div class="messages-list" id="messagesList"></div>
     </div>
 
@@ -156,17 +156,16 @@
             <h3><i class="fa-solid fa-gear"></i> Room Menu</h3>
             <div class="st-close" onclick="closeSheet()"><i class="fa-solid fa-xmark"></i></div>
         </div>
-        <div class="settings-section-lbl">Atmosphere</div>
-        <div class="settings-grid">
-            <div class="settings-item" onclick="openLuckyBoxSheet()"><div class="si-icon"><i class="fa-solid fa-box-open"></i></div><div class="si-label">Lucky Box</div></div>
-            <div class="settings-item" onclick="openPKSetup()"><div class="si-icon"><i class="fa-solid fa-shield-halved"></i></div><div class="si-label">PK</div></div>
-            <div class="settings-item" onclick="openMusicPanel()"><div class="si-icon"><i class="fa-solid fa-music"></i></div><div class="si-label">Music</div></div>
-            <div class="settings-item" onclick="openRoomTheme()"><div class="si-icon"><i class="fa-solid fa-palette"></i></div><div class="si-label">Room Theme</div></div>
-            <div class="settings-item active-feature" onclick="openWallpaperPicker()"><div class="si-icon"><i class="fa-solid fa-image"></i></div><div class="si-label">Room Wallpaper</div></div>
-            <div class="settings-item" id="menuSoundItem" onclick="moiToggleSound()"><div class="si-icon"><i class="fa-solid fa-volume-high" id="menuSoundIcon"></i></div><div class="si-label" id="menuSoundLabel">Sound</div></div>
-            <div class="settings-item" onclick="openAdminList()"><div class="si-icon"><i class="fa-solid fa-user-tie"></i></div><div class="si-label">Administrator</div></div>
-            <div class="settings-item" onclick="openBlacklist()"><div class="si-icon"><i class="fa-solid fa-user-slash"></i></div><div class="si-label">Blacklist</div></div>
-            <div class="settings-item" onclick="openBag()"><div class="si-icon"><i class="fa-solid fa-bag-shopping"></i></div><div class="si-label">Bag</div></div>
+        <div class="settings-grid mn-grid" id="menuGrid">
+            <div class="mn-btn" onclick="openLuckyBoxSheet()"><img src="menu/btn/luckybox.png" alt="Lucky Box"></div>
+            <div class="mn-btn st" onclick="openPKSetup()"><img src="menu/btn/pk.png" alt="PK"></div>
+            <div class="mn-btn" onclick="openMusicPanel()"><img src="menu/btn/music.png" alt="Music"></div>
+            <div class="mn-btn st" onclick="openRoomTheme()"><img src="menu/btn/theme.png" alt="Room Theme"></div>
+            <div class="mn-btn st" onclick="openWallpaperPicker()"><img src="menu/btn/wallpaper.png" alt="Room Wallpaper"></div>
+            <div class="mn-btn" id="menuSoundItem" onclick="moiToggleSound()"><img src="menu/btn/sound.png" alt="Sound"><span class="mn-off" id="menuSoundLabel">OFF</span></div>
+            <div class="mn-btn st" onclick="openAdminList()"><img src="menu/btn/admin.png" alt="Administrator"></div>
+            <div class="mn-btn st" onclick="openBlacklist()"><img src="menu/btn/blacklist.png" alt="Blacklist"></div>
+            <div class="mn-btn" onclick="openBag()"><img src="menu/btn/bag.png" alt="Bag"></div>
         </div>
     </div>
 
@@ -234,7 +233,9 @@
         <div class="sheet-title">Send message to room</div>
         <div class="chat-input-row">
             <input type="text" id="chatInput" placeholder="Type your message..." maxlength="200" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChatMessage();}">
+            <button class="chat-send-btn chat-gal-btn" type="button" onclick="document.getElementById('chatImgInput').click()" aria-label="Gallery"><i class="fa-solid fa-image"></i></button>
             <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="file" id="chatImgInput" accept="image/*" style="display:none">
         </div>
     </div>
 
@@ -567,6 +568,7 @@
 <script src="core/live.js"></script>
 <script src="ads/room-ads.js"></script>
 <script src="rocket/rocket.js"></script>
+<script src="core/chat-extra.js"></script>
 <script src="../demo/sim.js"></script>
 <script src="menu/moi-menu.js"></script>
 <script src="menu/moi-join.js"></script>

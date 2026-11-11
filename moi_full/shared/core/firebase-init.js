@@ -1,3 +1,13 @@
+/* ═══ সত্যিকারের দেখা উচ্চতা (স্ট্যাটাস বার/নেভ বার বাদ) → --app-h ═══ */
+(function(){
+    function setH(){ try { document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); } catch(e){} }
+    setH();
+    window.addEventListener('resize', setH);
+    window.addEventListener('orientationchange', function(){ setTimeout(setH, 200); });
+    window.addEventListener('pageshow', setH);
+    setTimeout(setH, 300);
+})();
+
 /* ═══ PWA: অ্যাপ হিসেবে ইনস্টল (সব পেজে একবারেই) ═══
    এই ফাইল সব পেজে লোড হয়, তাই এখান থেকেই manifest ও service worker যুক্ত হয়। */
 (function(){

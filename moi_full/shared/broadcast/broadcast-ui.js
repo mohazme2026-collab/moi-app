@@ -60,6 +60,9 @@
         if (ev.type === 'game'){
             return '<div class="bc-in">' + SP + av + who(ev, ev.round ? 'Round ' + ev.round : 'Game 🎮') + '<span class="bc-win">WIN</span><span class="bc-logo"></span><span class="bc-amtbox">' + GEM + '<span class="bc-amt">' + fmt(ev.amount) + '</span></span></div>';
         }
+        if (ev.type === 'rocket'){
+            return '<div class="bc-in">' + SP + av + who(ev, 'Rocket launched 🚀') + '<span class="bc-rk"></span><span class="bc-rkt">LIFT OFF!</span></div>';
+        }
         if (ev.type === 'lucky'){
             return '<div class="bc-in">' + SP + av + who(ev, 'Lucky Box 🎁') + '<span class="bc-pkt"></span><span class="bc-amtbox">' + GEM + '<span class="bc-amt">' + fmt(ev.amount) + '</span></span></div>';
         }
@@ -69,6 +72,7 @@
     }
     function cls(ev){
         if (ev.type === 'game') return 'bc bc-game' + (ev.amount >= BC.CONFIG.RED_GAME ? ' red' : '');
+        if (ev.type === 'rocket') return 'bc bc-rocket';
         return ev.type === 'lucky' ? 'bc bc-green' : 'bc bc-gift';
     }
 
@@ -93,6 +97,7 @@
 
     function line(ev){
         if (ev.type === 'game') return 'গেমে <b>' + fmt(ev.amount) + '</b> 💎 জিতেছেন 🎉';
+        if (ev.type === 'rocket') return 'রকেট ছেড়েছেন 🚀';
         if (ev.type === 'lucky') return 'লাকি বক্স ছেড়েছেন — <b>' + fmt(ev.amount) + '</b> 💎';
         return esc(ev.giftName || 'গিফট') + ' <b>&times;' + (ev.qty || 1) + '</b> পাঠিয়েছেন' + (ev.toName ? ' &rarr; <b>' + esc(ev.toName) + '</b>' : '') + ' (' + fmt(ev.amount) + ' 💎)';
     }

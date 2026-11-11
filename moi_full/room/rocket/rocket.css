@@ -1,70 +1,98 @@
-/* room/rocket/rocket.css — রুম রকেট: ছোট ভাসমান রকেট, ৮০% প্যানেল, ব্যানার, ১০ সেকেন্ডের বড় রকেট */
+/* room/rocket/rocket.css — রুম রকেট: ছোট ভাসমান রকেট, শুধু-মিটার প্যানেল, ১০ সেকেন্ডের বড় রকেট (আগুন+ধোঁয়া), ফলাফল কার্ড */
 
 /* ── ছোট ভাসমান রকেট (অ্যাড বক্সের উপরে) ── */
-.rk-fab{position:absolute;right:9px;bottom:228px;width:50px;z-index:61;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
-.rk-fab img{display:block;width:100%;height:auto;filter:drop-shadow(0 6px 10px rgba(255,170,30,.45));animation:rkBob 2.6s ease-in-out infinite;transform-origin:50% 80%}
-.rk-fab:active img{transform:scale(.92)}
-.rk-fab-bar{width:36px;height:4px;border-radius:3px;background:rgba(255,255,255,.18);margin:3px auto 0;overflow:hidden}
-.rk-fab-bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#ffd45a,#ff8a3d);transition:width .5s}
-.rk-fab.live img{animation:rkBob 1s ease-in-out infinite,rkGlow 1s ease-in-out infinite}
-.rk-fab-n{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);font:900 15px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 8px #3aa0ff,0 0 3px #000;display:none}
-.rk-fab.live .rk-fab-n{display:block}
-@keyframes rkBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
-@keyframes rkGlow{0%,100%{filter:drop-shadow(0 6px 10px rgba(255,170,30,.45))}50%{filter:drop-shadow(0 0 16px rgba(255,200,60,.95))}}
+.rk-fab{position:absolute;right:6px;bottom:222px;width:78px;z-index:61;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
+.rk-fab img{display:block;width:100%;height:auto;filter:drop-shadow(0 6px 10px rgba(255,170,30,.4));animation:rkBob 2.6s ease-in-out infinite;transform-origin:50% 80%}
+.rk-fab:active img{transform:scale(.93)}
+.rk-fab-bar{width:52px;height:5px;border-radius:4px;background:rgba(255,255,255,.2);margin:4px auto 0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.rk-fab-bar i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,#ffd45a,#ff7a3d);transition:width .5s}
+.rk-fab.live img{animation:rkBob .9s ease-in-out infinite,rkGlow 1s ease-in-out infinite}
+@keyframes rkBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+@keyframes rkGlow{0%,100%{filter:drop-shadow(0 6px 10px rgba(255,170,30,.4))}50%{filter:drop-shadow(0 0 18px rgba(255,210,70,.98))}}
 
-/* ── ছাড়ার ব্যানার (উপরে) ── */
-.rk-banner{position:absolute;top:84px;left:50%;z-index:90;display:flex;align-items:center;gap:9px;padding:6px 16px 6px 7px;border-radius:30px;max-width:92%;
-  background:linear-gradient(110deg,#1a2a6b,#3b1d8a 45%,#7a2a9b);border:1.5px solid #ffd45a;color:#fff;overflow:hidden;
-  box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 22px rgba(255,200,60,.55);transform:translate(-50%,-140%);opacity:0;animation:rkBanIn .6s cubic-bezier(.2,1.2,.3,1) forwards,rkBanOut .5s ease-in 4.3s forwards}
-.rk-banner::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:rkShine 1.6s ease-in-out .5s 2}
-.rk-ban-av{position:relative;flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:2px solid #ffd45a;overflow:hidden;background:#201040;box-shadow:0 0 10px rgba(255,212,90,.8)}
-.rk-ban-av img{width:100%;height:100%;object-fit:cover;display:block}
-.rk-ban-t{min-width:0;line-height:1.25}
-.rk-ban-t b{display:block;font-size:13px;font-weight:800;color:#ffe08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
-.rk-ban-t span{font-size:11px;color:#dfe6ff;font-weight:600}
-.rk-ban-r{flex:0 0 auto;width:30px;height:auto;filter:drop-shadow(0 2px 6px rgba(255,170,30,.8));animation:rkBob 1.2s ease-in-out infinite}
-@keyframes rkBanIn{to{transform:translate(-50%,0);opacity:1}}
-@keyframes rkBanOut{to{transform:translate(-50%,-140%);opacity:0}}
-@keyframes rkShine{to{left:130%}}
+/* ── ১০ সেকেন্ডের বড় রকেট ── */
+.rk-big{position:absolute;left:50%;top:70px;width:230px;margin-left:-115px;z-index:75;--sh:.5;--f:.55;pointer-events:none;animation:rkDrop .8s cubic-bezier(.2,1.1,.3,1) both}
+.rk-body{position:relative;z-index:2;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:rkShake .09s linear infinite;transform-origin:50% 90%}
+.rk-body img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 24px rgba(255,190,40,.8));user-select:none;-webkit-user-drag:none}
+.rk-count{position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);font:900 50px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 16px #2d9bff,0 0 5px #001a4d;pointer-events:none}
+.rk-count.pulse{animation:rkPulse .5s ease-out}
+@keyframes rkPulse{0%{transform:translate(-50%,-50%) scale(1.45)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes rkShake{
+  0%{transform:translate(calc(var(--sh)*-1px),0) rotate(calc(var(--sh)*-.25deg))}
+  25%{transform:translate(calc(var(--sh)*.8px),calc(var(--sh)*-.7px)) rotate(calc(var(--sh)*.2deg))}
+  50%{transform:translate(calc(var(--sh)*-.6px),calc(var(--sh)*.8px)) rotate(calc(var(--sh)*.25deg))}
+  75%{transform:translate(calc(var(--sh)*1px),calc(var(--sh)*.3px)) rotate(calc(var(--sh)*-.2deg))}
+  100%{transform:translate(calc(var(--sh)*-1px),0) rotate(calc(var(--sh)*-.25deg))}}
+@keyframes rkDrop{from{transform:translateY(-160px) scale(.35);opacity:0}}
+.rk-hint{position:absolute;left:50%;top:-26px;transform:translateX(-50%);z-index:3;white-space:nowrap;font:900 12px 'Figtree',sans-serif;letter-spacing:.08em;padding:3px 12px;border-radius:14px;background:rgba(0,0,0,.55);border:1px solid #ffd45a;color:#ffe08a;animation:rkHint 1s ease-in-out infinite;pointer-events:none}
+@keyframes rkHint{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.1)}}
 
-/* ── ১০ সেকেন্ডের বড় রকেট (রুমের মাঝে) ── */
-.rk-big{position:absolute;left:50%;top:27%;width:150px;margin-left:-75px;z-index:75;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:rkDrop .7s cubic-bezier(.2,1.1,.3,1) both}
-.rk-big img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 22px rgba(255,190,40,.85));animation:rkWob 1.4s ease-in-out infinite}
-.rk-big .rk-count{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);font:900 40px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 14px #2d9bff,0 0 4px #001a4d}
-.rk-big .rk-tip{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);white-space:nowrap;font:800 12px 'Figtree','Hind Siliguri',sans-serif;padding:3px 12px;border-radius:14px;background:rgba(0,0,0,.6);border:1px solid #ffd45a;color:#ffe08a}
-.rk-big.done img{filter:grayscale(.6) brightness(.7);animation:none}
-.rk-big.fly{animation:rkFly 1.25s ease-in forwards;pointer-events:none}
-.rk-big.fly .rk-tip,.rk-big.fly .rk-count{opacity:0}
-@keyframes rkDrop{from{transform:translateY(-120px) scale(.3);opacity:0}}
-@keyframes rkWob{0%,100%{transform:rotate(-2.5deg) translateY(0)}50%{transform:rotate(2.5deg) translateY(-7px)}}
-@keyframes rkFly{0%{transform:translateY(0) scale(1);opacity:1}25%{transform:translateY(14px) scale(1.04)}100%{transform:translateY(-135vh) scale(.55);opacity:0}}
-.rk-pop{position:absolute;left:50%;top:-8px;transform:translateX(-50%);white-space:nowrap;font:900 22px 'Figtree','Hind Siliguri',sans-serif;color:#ffe08a;text-shadow:0 2px 10px #000,0 0 16px rgba(255,200,60,.9);animation:rkPop 2.2s ease-out forwards;pointer-events:none}
-.rk-pop.none{color:#cfd6ff;font-size:15px;text-shadow:0 2px 8px #000}
-@keyframes rkPop{0%{transform:translate(-50%,10px) scale(.5);opacity:0}15%{transform:translate(-50%,-6px) scale(1.15);opacity:1}100%{transform:translate(-50%,-70px) scale(1);opacity:0}}
+/* আগুন (রকেটের নিচে, সময় যত যায় তত বড় হয়) */
+.rk-fx{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.rk-fl{position:absolute;transform-origin:50% 0;pointer-events:none;
+  background:linear-gradient(180deg,#fff 0%,#fff2b0 10%,#ffc233 32%,#ff6a1a 62%,rgba(255,50,20,0) 100%);
+  clip-path:polygon(0 0,100% 0,82% 40%,60% 100%,40% 100%,18% 40%);filter:drop-shadow(0 0 8px #ff8a1f);animation:rkFlk .09s linear infinite alternate}
+.rk-fl.m{left:50%;top:97%;width:23%;height:calc(var(--f)*150px);margin-left:-11.5%}
+.rk-fl.l,.rk-fl.r{top:91%;width:10%;height:calc(var(--f)*78px)}
+.rk-fl.l{left:32%;margin-left:-5%}.rk-fl.r{left:68%;margin-left:-5%}
+@keyframes rkFlk{from{transform:scale(1,1)}to{transform:scale(.88,1.14)}}
+/* ধোঁয়া */
+.rk-smoke{position:absolute;left:50%;top:97%;width:0;height:0;pointer-events:none}
+.rk-puff{position:absolute;left:0;top:0;width:var(--w,44px);height:var(--w,44px);margin:calc(var(--w,44px)/-2) 0 0 calc(var(--w,44px)/-2);border-radius:50%;opacity:0;pointer-events:none;
+  background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.95),rgba(214,218,232,.78) 45%,rgba(150,156,178,0) 72%);
+  animation:rkPuff var(--d,1.8s) ease-out forwards}
+@keyframes rkPuff{0%{transform:translate(0,0) scale(.25);opacity:0}14%{opacity:.95}100%{transform:translate(var(--dx),var(--dy)) scale(var(--s,2.4));opacity:0}}
 
-/* ── ৮০% প্যানেল ── */
+/* উড়ে যাওয়া */
+.rk-big.fly .rk-body{animation:rkFly 1.5s cubic-bezier(.5,0,.9,.4) forwards}
+.rk-big.fly .rk-fx{animation:rkFly 1.5s cubic-bezier(.5,0,.9,.4) forwards}
+.rk-big.fly .rk-hint,.rk-big.fly .rk-count{opacity:0}
+.rk-big.fly{--f:2.7}
+@keyframes rkFly{0%{transform:translateY(0) scale(1)}18%{transform:translateY(10px) scale(1.03)}100%{transform:translateY(-135vh) scale(.6)}}
+
+/* ── শুধু-মিটার প্যানেল (৮০%) ── */
 .rk-sheet-wrap{position:absolute;inset:0;z-index:250;display:none;align-items:flex-end}
 .rk-sheet-wrap.on{display:flex}
 .rk-sheet-bk{position:absolute;inset:0;background:rgba(0,0,0,.6)}
-.rk-sheet{position:relative;width:100%;height:80%;display:flex;flex-direction:column;align-items:center;padding:14px 18px 22px;overflow-y:auto;
+.rk-sheet{position:relative;width:100%;height:80%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:18px 22px 26px;overflow:hidden;
   background:radial-gradient(120% 60% at 50% 0%,rgba(255,190,60,.22),transparent 60%),linear-gradient(180deg,#1b1240,#0c0a22);
   border-radius:24px 24px 0 0;border-top:1.5px solid rgba(255,212,90,.55);animation:rkUp .3s cubic-bezier(.2,.8,.2,1)}
 @keyframes rkUp{from{transform:translateY(40px);opacity:0}}
 .rk-x{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:15px;cursor:pointer}
-.rk-h{font:800 16px 'Figtree','Hind Siliguri',sans-serif;color:#ffe08a;letter-spacing:.02em;margin:2px 0 6px}
-.rk-hero{position:relative;width:58%;max-width:230px;flex:0 0 auto;cursor:default}
-.rk-hero img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 26px rgba(255,190,40,.7));animation:rkWob 2.4s ease-in-out infinite}
-.rk-hero .rk-count{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);font:900 36px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 14px #2d9bff,0 0 4px #001a4d;text-align:center}
-.rk-hero .rk-count small{display:block;font:700 11px 'Figtree',sans-serif;color:#9fd0ff;margin-top:3px;letter-spacing:.04em}
-.rk-hero.live{cursor:pointer}
-.rk-need{margin:10px 0 8px;font:800 15px 'Hind Siliguri','Figtree',sans-serif;color:#fff;text-align:center}
-.rk-need b{color:#ffd45a;font-size:19px}
-.rk-barwrap{width:100%}
-.rk-bar{position:relative;height:16px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,212,90,.35);overflow:hidden}
-.rk-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:10px;background:linear-gradient(90deg,#ffb52e,#ff7a3d,#ff4d8d);box-shadow:0 0 12px rgba(255,150,50,.8);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.rk-hero{position:relative;width:64%;max-width:270px;flex:0 0 auto;-webkit-tap-highlight-color:transparent;user-select:none}
+.rk-hero img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 28px rgba(255,190,40,.7));animation:rkWob 2.4s ease-in-out infinite;pointer-events:none}
+@keyframes rkWob{0%,100%{transform:rotate(-2.5deg) translateY(0)}50%{transform:rotate(2.5deg) translateY(-7px)}}
+.rk-hero .rk-count{font-size:42px}
+.rk-hero .rk-count small{display:block;font:800 11px 'Figtree',sans-serif;color:#9fd0ff;margin-top:4px;letter-spacing:.06em;text-align:center}
+.rk-meter{width:100%}
+.rk-left{text-align:center;font:900 30px/1 'Figtree',sans-serif;color:#ffd45a;text-shadow:0 0 14px rgba(255,170,40,.6);margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.rk-left small{font:800 11px 'Figtree',sans-serif;color:#b7aee0;letter-spacing:.1em;display:block;margin-top:4px;text-shadow:none}
+.rk-bar{position:relative;height:18px;border-radius:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,212,90,.4);overflow:hidden}
+.rk-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:11px;background:linear-gradient(90deg,#ffb52e,#ff7a3d,#ff4d8d);box-shadow:0 0 12px rgba(255,150,50,.8);transition:width .6s cubic-bezier(.2,.8,.2,1)}
 .rk-bar i::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);animation:rkShineBar 2s linear infinite}
 @keyframes rkShineBar{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-.rk-bar-l{display:flex;justify-content:space-between;margin-top:6px;font:700 11px 'Figtree',sans-serif;color:#b7aee0}
-.rk-rules{width:100%;margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font:500 12px/1.65 'Hind Siliguri','Figtree',sans-serif;color:#cfc8ee}
-.rk-rules b{color:#ffe08a}
-.rk-demo{margin-top:12px;padding:8px 16px;border-radius:14px;border:1px dashed rgba(255,255,255,.35);background:transparent;color:#9fd0ff;font:700 12px 'Figtree','Hind Siliguri',sans-serif;cursor:pointer}
+.rk-bar-l{display:flex;justify-content:space-between;margin-top:7px;font:800 12px 'Figtree',sans-serif;color:#b7aee0}
+
+/* ── ফলাফল কার্ড ── */
+.rk-res{position:absolute;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(5,4,18,.55);animation:rkFade .25s ease-out}
+@keyframes rkFade{from{opacity:0}}
+.rk-card{position:relative;width:100%;max-width:330px;max-height:86%;display:flex;flex-direction:column;align-items:center;padding:18px 16px 14px;border-radius:24px;overflow:hidden;color:#fff;
+  background:radial-gradient(100% 50% at 50% 0%,rgba(255,190,60,.3),transparent 70%),linear-gradient(180deg,#2a1a5e,#120c2e);border:1.5px solid rgba(255,212,90,.7);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 30px rgba(255,190,60,.25);animation:rkCard .45s cubic-bezier(.2,1.2,.3,1)}
+@keyframes rkCard{from{transform:scale(.7) translateY(30px);opacity:0}}
+.rk-card .rk-x{right:10px;top:10px;width:28px;height:28px;font-size:13px}
+.rk-rt{font:900 15px 'Figtree',sans-serif;letter-spacing:.1em;color:#ffe08a}
+.rk-me{margin:8px 0 4px;text-align:center}
+.rk-me .big{font:900 44px/1.1 'Figtree',sans-serif;color:#ffd45a;text-shadow:0 0 20px rgba(255,170,40,.8);animation:rkWin .7s cubic-bezier(.2,1.4,.3,1)}
+.rk-me .cry{font-size:62px;line-height:1.1;animation:rkCry 1.6s ease-in-out infinite}
+.rk-me small{display:block;font:700 12px 'Figtree',sans-serif;color:#cfc8ee;margin-top:2px}
+@keyframes rkWin{from{transform:scale(.3);opacity:0}}
+@keyframes rkCry{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(4px) rotate(4deg)}}
+.rk-list{width:100%;margin-top:8px;overflow-y:auto;max-height:230px;display:flex;flex-direction:column;gap:6px}
+.rk-row{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}
+.rk-row .av{flex:0 0 auto;width:32px;height:32px;border-radius:50%;overflow:hidden;border:2px solid #ffd45a;background:#2a1d55}
+.rk-row .av img{width:100%;height:100%;object-fit:cover;display:block}
+.rk-row .nm{flex:1 1 auto;min-width:0;font:700 13px 'Figtree','Hind Siliguri',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-row .am{flex:0 0 auto;font:900 15px 'Figtree',sans-serif;color:#ffd45a}
+.rk-none{margin-top:10px;font:700 13px 'Figtree',sans-serif;color:#cfc8ee}
+.rk-conf{position:absolute;top:-10px;width:8px;height:12px;border-radius:2px;opacity:0;pointer-events:none;animation:rkConf 2.4s ease-in forwards}
+@keyframes rkConf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(380px) rotate(520deg);opacity:0}}

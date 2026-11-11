@@ -30,7 +30,7 @@
         } catch(e){ return 'Room ' + id; }
     }
 
-    /* ঘোষণা পাঠানো — ev: { type:'gift'|'lucky'|'game', amount, qty, icon, roomId, as:{uid,name,photo} } */
+    /* ঘোষণা পাঠানো — ev: { type:'gift'|'lucky'|'game'|'rocket', amount, qty, icon, roomId, as:{uid,name,photo} } */
     async function publish(ev){
         if (!FB() || !FB().rtdb) return false;
         const p = ev.as || prof(); if (!p || !p.uid) return false;

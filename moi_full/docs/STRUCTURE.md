@@ -102,3 +102,6 @@ shared/           সবার কাজে লাগে এমন জিনি�
 - নিয়ম আর প্রাইজ: `shared/core/economy.js` → `C.ROCKET` (TARGET 1000, DURATION 10s, PRIZES 3/5/10/কিছু না)। হ্যান্ডলার: `rocketState`, `rocketAdd`, `rocketClaim`। ডেটা: `rockets/<roomId>`।
 - হুক: `room/gifts/gifts.js` → `giftServerSend`-এর পরে `MOIRocket.onGift(মোট 💎)`।
 - লাইভে: তিনটা হ্যান্ডলার `functions/`-এও লাগবে; `rocketAdd` ভালো হয় `sendGift`-এর ভিতরেই করলে (জালিয়াতি ঠেকাতে)। ডেমো টেস্ট বাটন শুধু `window.__MOCK` থাকলে দেখায়।
+
+### Rocket v2
+Handlers in shared/core/economy.js: rocketState, rocketAdd (gift 💎 add; at 1000 launches, random 5–10 winners cap), rocketJoin (silent tap during 10 s), rocketSettle (after 10 s, server-only in real Firebase). UI: room/rocket/. Launch banner: shared/broadcast type 'rocket'.

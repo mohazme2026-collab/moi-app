@@ -329,6 +329,7 @@ async function giftServerSend(gift, targets, qty){
     });
     if (!r) return false;
     if (typeof r.balance === 'number'){ myProfile.diamonds = r.balance; giftUpdateBalance(); }
+    try { if (window.MOIRocket) MOIRocket.onGift((gift.price || 0) * qty * targets.length); } catch(e){}     /* রুম রকেটের ১০০০ 💎 হিসাবে যোগ */
     return true;
 }
 window.sendGift = async function(){

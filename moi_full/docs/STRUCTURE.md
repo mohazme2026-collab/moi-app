@@ -96,3 +96,9 @@ shared/           সবার কাজে লাগে এমন জিনি�
 - টার্গেট ও রেট বদলাতে: `shared/core/economy.js` → `C.HOST` (`TARGETS: [{need, reward}]`, `RATE` = ১ টাকায় কত 💎)।
 - ডেটা: `userState/<uid>/items/host` — গিফট পেলে `hostCredit` টার্গেট এগোয় (মাস বদলালে 💎 গণনা 0), টাকা থেকে যায়।
 - Handlers: `hostState`, `hostExchange`, `hostSell`। লাইভে `functions/`-এও একই লাগবে।
+
+## রুম রকেট (room/rocket/)
+- `rocket.js` + `rocket.css` + `rocket.png` / `rocket-s.png` — ডানদিকে ছোট ভাসমান রকেট (অ্যাড বক্সের উপরে), চাপলে ৮০% প্যানেল (ছবি + লম্বা দাগ + "আর কত 💎 বাকি"), ছাড়লে ব্যানার (শেষ গিফটদাতার ছবিসহ) আর ১০ সেকেন্ডের বড় রকেট (মাঝে কাউন্টডাউন)।
+- নিয়ম আর প্রাইজ: `shared/core/economy.js` → `C.ROCKET` (TARGET 1000, DURATION 10s, PRIZES 3/5/10/কিছু না)। হ্যান্ডলার: `rocketState`, `rocketAdd`, `rocketClaim`। ডেটা: `rockets/<roomId>`।
+- হুক: `room/gifts/gifts.js` → `giftServerSend`-এর পরে `MOIRocket.onGift(মোট 💎)`।
+- লাইভে: তিনটা হ্যান্ডলার `functions/`-এও লাগবে; `rocketAdd` ভালো হয় `sendGift`-এর ভিতরেই করলে (জালিয়াতি ঠেকাতে)। ডেমো টেস্ট বাটন শুধু `window.__MOCK` থাকলে দেখায়।

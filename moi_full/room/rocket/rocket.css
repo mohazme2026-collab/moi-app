@@ -1,0 +1,70 @@
+/* room/rocket/rocket.css — রুম রকেট: ছোট ভাসমান রকেট, ৮০% প্যানেল, ব্যানার, ১০ সেকেন্ডের বড় রকেট */
+
+/* ── ছোট ভাসমান রকেট (অ্যাড বক্সের উপরে) ── */
+.rk-fab{position:absolute;right:9px;bottom:228px;width:50px;z-index:61;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
+.rk-fab img{display:block;width:100%;height:auto;filter:drop-shadow(0 6px 10px rgba(255,170,30,.45));animation:rkBob 2.6s ease-in-out infinite;transform-origin:50% 80%}
+.rk-fab:active img{transform:scale(.92)}
+.rk-fab-bar{width:36px;height:4px;border-radius:3px;background:rgba(255,255,255,.18);margin:3px auto 0;overflow:hidden}
+.rk-fab-bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#ffd45a,#ff8a3d);transition:width .5s}
+.rk-fab.live img{animation:rkBob 1s ease-in-out infinite,rkGlow 1s ease-in-out infinite}
+.rk-fab-n{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);font:900 15px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 8px #3aa0ff,0 0 3px #000;display:none}
+.rk-fab.live .rk-fab-n{display:block}
+@keyframes rkBob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+@keyframes rkGlow{0%,100%{filter:drop-shadow(0 6px 10px rgba(255,170,30,.45))}50%{filter:drop-shadow(0 0 16px rgba(255,200,60,.95))}}
+
+/* ── ছাড়ার ব্যানার (উপরে) ── */
+.rk-banner{position:absolute;top:84px;left:50%;z-index:90;display:flex;align-items:center;gap:9px;padding:6px 16px 6px 7px;border-radius:30px;max-width:92%;
+  background:linear-gradient(110deg,#1a2a6b,#3b1d8a 45%,#7a2a9b);border:1.5px solid #ffd45a;color:#fff;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 22px rgba(255,200,60,.55);transform:translate(-50%,-140%);opacity:0;animation:rkBanIn .6s cubic-bezier(.2,1.2,.3,1) forwards,rkBanOut .5s ease-in 4.3s forwards}
+.rk-banner::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:rkShine 1.6s ease-in-out .5s 2}
+.rk-ban-av{position:relative;flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:2px solid #ffd45a;overflow:hidden;background:#201040;box-shadow:0 0 10px rgba(255,212,90,.8)}
+.rk-ban-av img{width:100%;height:100%;object-fit:cover;display:block}
+.rk-ban-t{min-width:0;line-height:1.25}
+.rk-ban-t b{display:block;font-size:13px;font-weight:800;color:#ffe08a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.rk-ban-t span{font-size:11px;color:#dfe6ff;font-weight:600}
+.rk-ban-r{flex:0 0 auto;width:30px;height:auto;filter:drop-shadow(0 2px 6px rgba(255,170,30,.8));animation:rkBob 1.2s ease-in-out infinite}
+@keyframes rkBanIn{to{transform:translate(-50%,0);opacity:1}}
+@keyframes rkBanOut{to{transform:translate(-50%,-140%);opacity:0}}
+@keyframes rkShine{to{left:130%}}
+
+/* ── ১০ সেকেন্ডের বড় রকেট (রুমের মাঝে) ── */
+.rk-big{position:absolute;left:50%;top:27%;width:150px;margin-left:-75px;z-index:75;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:rkDrop .7s cubic-bezier(.2,1.1,.3,1) both}
+.rk-big img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 22px rgba(255,190,40,.85));animation:rkWob 1.4s ease-in-out infinite}
+.rk-big .rk-count{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);font:900 40px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 14px #2d9bff,0 0 4px #001a4d}
+.rk-big .rk-tip{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);white-space:nowrap;font:800 12px 'Figtree','Hind Siliguri',sans-serif;padding:3px 12px;border-radius:14px;background:rgba(0,0,0,.6);border:1px solid #ffd45a;color:#ffe08a}
+.rk-big.done img{filter:grayscale(.6) brightness(.7);animation:none}
+.rk-big.fly{animation:rkFly 1.25s ease-in forwards;pointer-events:none}
+.rk-big.fly .rk-tip,.rk-big.fly .rk-count{opacity:0}
+@keyframes rkDrop{from{transform:translateY(-120px) scale(.3);opacity:0}}
+@keyframes rkWob{0%,100%{transform:rotate(-2.5deg) translateY(0)}50%{transform:rotate(2.5deg) translateY(-7px)}}
+@keyframes rkFly{0%{transform:translateY(0) scale(1);opacity:1}25%{transform:translateY(14px) scale(1.04)}100%{transform:translateY(-135vh) scale(.55);opacity:0}}
+.rk-pop{position:absolute;left:50%;top:-8px;transform:translateX(-50%);white-space:nowrap;font:900 22px 'Figtree','Hind Siliguri',sans-serif;color:#ffe08a;text-shadow:0 2px 10px #000,0 0 16px rgba(255,200,60,.9);animation:rkPop 2.2s ease-out forwards;pointer-events:none}
+.rk-pop.none{color:#cfd6ff;font-size:15px;text-shadow:0 2px 8px #000}
+@keyframes rkPop{0%{transform:translate(-50%,10px) scale(.5);opacity:0}15%{transform:translate(-50%,-6px) scale(1.15);opacity:1}100%{transform:translate(-50%,-70px) scale(1);opacity:0}}
+
+/* ── ৮০% প্যানেল ── */
+.rk-sheet-wrap{position:absolute;inset:0;z-index:250;display:none;align-items:flex-end}
+.rk-sheet-wrap.on{display:flex}
+.rk-sheet-bk{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.rk-sheet{position:relative;width:100%;height:80%;display:flex;flex-direction:column;align-items:center;padding:14px 18px 22px;overflow-y:auto;
+  background:radial-gradient(120% 60% at 50% 0%,rgba(255,190,60,.22),transparent 60%),linear-gradient(180deg,#1b1240,#0c0a22);
+  border-radius:24px 24px 0 0;border-top:1.5px solid rgba(255,212,90,.55);animation:rkUp .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes rkUp{from{transform:translateY(40px);opacity:0}}
+.rk-x{position:absolute;right:12px;top:12px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;font-size:15px;cursor:pointer}
+.rk-h{font:800 16px 'Figtree','Hind Siliguri',sans-serif;color:#ffe08a;letter-spacing:.02em;margin:2px 0 6px}
+.rk-hero{position:relative;width:58%;max-width:230px;flex:0 0 auto;cursor:default}
+.rk-hero img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 26px rgba(255,190,40,.7));animation:rkWob 2.4s ease-in-out infinite}
+.rk-hero .rk-count{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);font:900 36px/1 'Figtree',sans-serif;color:#fff;text-shadow:0 0 14px #2d9bff,0 0 4px #001a4d;text-align:center}
+.rk-hero .rk-count small{display:block;font:700 11px 'Figtree',sans-serif;color:#9fd0ff;margin-top:3px;letter-spacing:.04em}
+.rk-hero.live{cursor:pointer}
+.rk-need{margin:10px 0 8px;font:800 15px 'Hind Siliguri','Figtree',sans-serif;color:#fff;text-align:center}
+.rk-need b{color:#ffd45a;font-size:19px}
+.rk-barwrap{width:100%}
+.rk-bar{position:relative;height:16px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,212,90,.35);overflow:hidden}
+.rk-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:10px;background:linear-gradient(90deg,#ffb52e,#ff7a3d,#ff4d8d);box-shadow:0 0 12px rgba(255,150,50,.8);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.rk-bar i::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);animation:rkShineBar 2s linear infinite}
+@keyframes rkShineBar{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.rk-bar-l{display:flex;justify-content:space-between;margin-top:6px;font:700 11px 'Figtree',sans-serif;color:#b7aee0}
+.rk-rules{width:100%;margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);font:500 12px/1.65 'Hind Siliguri','Figtree',sans-serif;color:#cfc8ee}
+.rk-rules b{color:#ffe08a}
+.rk-demo{margin-top:12px;padding:8px 16px;border-radius:14px;border:1px dashed rgba(255,255,255,.35);background:transparent;color:#9fd0ff;font:700 12px 'Figtree','Hind Siliguri',sans-serif;cursor:pointer}

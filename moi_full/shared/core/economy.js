@@ -15,6 +15,7 @@ console.log('[MOI] economy.js loaded (client mode)');
         CHAT_GIFTS: { 10: 10, 50: 50, 100: 100, 500: 500, 1000: 1000 },
         FRAMES: { basic: 0, aurora: 500, flame: 1200, ocean: 2000, royal: 3500, galaxy: 6000 },
         /* Host: মাসের টার্গেট (need = এ মাসে পাওয়া 💎, reward = পূরণ হলে টাকা) ও এক্সচেঞ্জ রেট (১ টাকা = RATE 💎) */
+        ROCKET: { TARGET: 1000, DURATION: 10000, GRACE: 1500, PRIZES: [ { v: 3, w: 25 }, { v: 5, w: 20 }, { v: 10, w: 10 }, { v: 0, w: 45 } ] },
         HOST: { RATE: 2, TARGETS: [ { need: 5, reward: 2 }, { need: 20, reward: 8 }, { need: 50, reward: 20 }, { need: 100, reward: 45 }, { need: 150, reward: 100 }, { need: 250, reward: 170 }, { need: 500, reward: 350 }, { need: 1000, reward: 750 }, { need: 2500, reward: 2000 }, { need: 5000, reward: 4500 } ] },
         STORE: { ring_gold: { 7: 100, 30: 1000 }, entry_eyes1: { 7: 200, 30: 1200 }, bubble_vip1: { 7: 100, 30: 500 }, emoji_memes: { 0: 1000 } },   /* দিন 0 = একবার কিনলে সারাজীবন */   /* স্টোরের জিনিস: আইডি → { দিন: ডায়মন্ড } (shared/store/store-data.js এর সাথে একই রাখুন) */
         BADGES: ['official_host', 'top_gifter', 'verified', 'early_bird', 'moderator'],
@@ -647,6 +648,69 @@ console.log('[MOI] economy.js loaded (client mode)');
             v.money -= money; hostRec(v, { type: 'sell', money, to: name || sid, toId: sid });
             t.set(stRef(uid, 'host'), { v });
             return { ok: true, money: v.money };
+        });
+    };
+
+    /* ═══════════ রুম রকেট ═══════════
+       রুমে মোট C.ROCKET.TARGET 💎 এর গিফট পূর্ণ হলে রকেট ছাড়ে (শেষ গিফটদাতার নামে), ১০ সেকেন্ড রুমে থাকে।
+       এই সময়ে রুমের যে কেউ চাপলে একবার করে কোম্পানির পক্ষ থেকে 3/5/10 💎 পেতে পারে (বা কিছু না)।
+       ডেটা: rockets/<roomId> = { v:{ prog, launch:{ id,t0,t1,by:{uid,name,avatar},claims:{uid:amount} } } }
+       লাইভে এই তিনটা হ্যান্ডলার functions/-এও লাগবে, আর rocketAdd-এর কাজ sendGift-এর ভিতরেই করা ভালো (যাতে জালিয়াতি না হয়)। */
+    const rkRef = roomId => db().collection('rockets').doc(roomId);
+    const rkId = d => { const r = String((d && d.roomId) || '').slice(0, 60); if (!r) fail('INVALID'); return r; };
+    function rkNorm(doc, now){
+        const v = Object.assign({ prog: 0, launch: null }, (doc && doc.v) || {});
+        if (v.launch && now > v.launch.t1 + C.ROCKET.GRACE) v.launch = null;
+        return v;
+    }
+    function rkOut(v, uid){
+        const L = v.launch;
+        return { prog: v.prog, target: C.ROCKET.TARGET, now: Date.now(),
+            launch: L ? { id: L.id, t0: L.t0, t1: L.t1, by: L.by, mine: (L.claims && L.claims[uid] != null) ? L.claims[uid] : null } : null };
+    }
+    H.rocketState = async (data, uid) => {
+        const s = await rkRef(rkId(data)).get();
+        return rkOut(rkNorm(s.exists && s.data(), Date.now()), uid);
+    };
+    H.rocketAdd = async (data, uid) => {
+        const roomId = rkId(data), amount = Math.floor(Number(data.amount));
+        if (!(amount >= 1) || amount > 10000000) fail('INVALID');
+        return db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); if (!uS.exists) fail('NOT_FOUND');
+            const u = uS.data(); assertActive(u);
+            const s = await t.get(rkRef(roomId)); const now = Date.now();
+            const v = rkNorm(s.exists && s.data(), now), T = C.ROCKET.TARGET;
+            const active = v.launch && now <= v.launch.t1;
+            let launched = false;
+            v.prog += amount;
+            if (v.prog >= T){
+                if (!active){
+                    v.launch = { id: now.toString(36) + rnd(), t0: now, t1: now + C.ROCKET.DURATION, claims: {},
+                        by: { uid, name: cleanName(u.name || u.displayName || 'User'), avatar: String(u.avatar || u.photo || '').slice(0, 400) } };
+                    v.prog = v.prog % T; launched = true;
+                } else v.prog = T - 1;
+            }
+            t.set(rkRef(roomId), { v });
+            return Object.assign(rkOut(v, uid), { launched });
+        });
+    };
+    H.rocketClaim = async (data, uid) => {
+        const roomId = rkId(data);
+        return db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); if (!uS.exists) fail('NOT_FOUND');
+            const u = uS.data(); assertActive(u);
+            const s = await t.get(rkRef(roomId)); const now = Date.now();
+            const v = rkNorm(s.exists && s.data(), now), L = v.launch;
+            if (!L || now > L.t1 + C.ROCKET.GRACE) fail('NOT_READY');
+            L.claims = L.claims || {};
+            if (L.claims[uid] != null) fail('ALREADY_CLAIMED');
+            const P = C.ROCKET.PRIZES; let r = Math.random() * P.reduce((a, b) => a + b.w, 0), amount = 0;
+            for (const p of P){ if ((r -= p.w) < 0){ amount = p.v; break; } }
+            L.claims[uid] = amount;
+            t.set(rkRef(roomId), { v });
+            let balance = u.diamonds || 0;
+            if (amount > 0) balance = applyDelta(t, uid, u, { dia: amount, title: 'Room rocket gift', txType: 'reward' }).diamonds;
+            return { ok: true, amount, balance };
         });
     };
 

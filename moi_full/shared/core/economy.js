@@ -365,7 +365,6 @@ console.log('[MOI] economy.js loaded (client mode)');
     H.createLuckyBox = async (data, uid) => {
         const roomId = String(data.roomId || ''), total = Math.floor(Number(data.total)), qty = Math.floor(Number(data.qty)), timer = Math.floor(Number(data.timerMin));
         if (!roomId || !(total >= 10 && total <= 1000000) || !(qty >= 1 && qty <= 100) || ![0, 1, 3, 5, 10].includes(timer)) fail('INVALID');
-        if (!(await isRoomStaff(roomId, uid))) fail('PERMISSION_DENIED');
         const tax = Math.floor(total * C.LUCKY_TAX), pool = total - tax;
         const box = await db().runTransaction(async t => {
             const uS = await t.get(userRef(uid)); const u = uS.data(); assertActive(u);

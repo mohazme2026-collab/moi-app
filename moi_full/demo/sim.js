@@ -142,6 +142,51 @@ function roomSim(){
         }
     }, 90000, 180000, 60000);
 
+    /* ৮) PK — প্রথম ৬টা রুমে ঢুকলেই একটা PK চলতে থাকে; শ্রোতারা দুই পাশকে গিফট দিয়ে সাপোর্ট করে।
+          শেষ হলে একটু পরে নতুন জুটি নিয়ে আবার শুরু। (আপনি গিফট দিলে আসল গিফট সিস্টেমেই স্কোর/সাপোর্টার বাড়বে) */
+    const PK_ROOMS = D.ROOMS.slice(0, 6).map(r => r.id);       /* কোন কোন রুমে PK চলবে — সংখ্যা বদলাতে 6 বদলান */
+    const PK_MIN = 10;                                         /* PK কত মিনিটের */
+    const PK_GIFT_SEC = [2.5, 6];                              /* কত সেকেন্ড পরপর একটা গিফট (ন্যূনতম, সর্বোচ্চ) */
+    const PK_AMOUNTS = [[10, 30], [50, 25], [100, 20], [199, 12], [520, 8], [1000, 5]];   /* [💎, সম্ভাবনা] */
+    if (PK_ROOMS.indexOf(ROOM) >= 0) (function pkSim(){
+        const pkPath = () => base() + '/pkState';
+        let round = 0, fav = 'blue', favUntil = 0;
+        const pickAmt = () => { const tot = PK_AMOUNTS.reduce((a, g) => a + g[1], 0); let r = Math.random() * tot; for (const g of PK_AMOUNTS){ r -= g[1]; if (r <= 0) return g[0]; } return PK_AMOUNTS[0][0]; };
+        function giftPk(side, uid, amount){
+            const u = U(uid); if (!u) return;
+            rtdb().ref(pkPath() + '/' + side + '/score').transaction(v => (v || 0) + amount);
+            rtdb().ref(pkPath() + '/' + side + '/supporters/' + uid).transaction(v => ({ uid, name: u.name, avatar: u.photo, amount: ((v && v.amount) || 0) + amount }));
+        }
+        function simPkGift(){
+            const pk = M.rtGet(pkPath()); if (!pk || !pk.blue || !pk.red || pk.expiresAt <= Date.now()) return;
+            const skip = new Set([pk.blue.uid, pk.red.uid, meUid()]);
+            const pool = audNow().map(l => l.uid).concat(seatedNow().map(x => x.s.uid)).filter(u => !skip.has(u));
+            if (!pool.length) return;
+            if (Date.now() > favUntil){ fav = Math.random() < 0.5 ? 'blue' : 'red'; favUntil = Date.now() + rnd(25, 70) * 1000; }   /* মাঝেমধ্যে কে এগিয়ে তা বদলায় */
+            const side = Math.random() < 0.68 ? fav : (fav === 'blue' ? 'red' : 'blue');
+            giftPk(side, pick(pool), pickAmt());
+        }
+        function startPk(){
+            const seated = (state.seats || []).filter(s => s && s.uid && s.uid !== meUid() && U(s.uid));
+            if (seated.length < 2) return;
+            const a = seated[round % seated.length], b = seated[(round + 1) % seated.length]; round += 2;
+            const now = Date.now(), started = now - rnd(60, 240) * 1000;      /* ঢোকার সময় PK কিছুটা এগিয়ে থাকে */
+            const side = x => ({ uid: x.uid, name: x.name, avatar: x.avatar, score: 0 });
+            rtdb().ref(pkPath()).set({ blue: side(a), red: side(b), timerMin: PK_MIN, startedAt: started, expiresAt: started + PK_MIN * 60000 })
+                .then(() => { for (let q = 0; q < rnd(8, 12); q++) simPkGift(); });
+        }
+        function tick(){
+            const pk = M.rtGet(pkPath());
+            if (!pk || !pk.blue || !pk.red){ startPk(); return; }
+            if (pk.expiresAt <= Date.now()){
+                if (Date.now() - pk.expiresAt > 12000) rtdb().ref(pkPath()).set(null);     /* ১২ সেকেন্ড পর মুছে নতুন PK */
+                return;
+            }
+            simPkGift();
+        }
+        every(tick, PK_GIFT_SEC[0] * 1000, PK_GIFT_SEC[1] * 1000, 1200);
+    })();
+
     /* ৭) মাইকে ওঠা-নামা/মিউট-আনমিউট — বন্ধ: সব আইডি মিউট থাকবে, সিট স্থির */
 }
 

@@ -1,0 +1,85 @@
+/* room/pk/pk.css — নতুন PK প্যানেল (ছবির খালি জায়গাগুলোতে প্রোফাইল, সময়, মিটার, সাপোর্টার বসে)
+   সব মাপ ছবির (২১৩৮ × ৭৩৬) শতাংশে — তাই স্ক্রিন যত ছোট/বড়ই হোক, ঠিক জায়গায় থাকবে */
+
+#pkBanner.pk-banner{
+    left:6px; right:6px; padding:0; margin:0; border:0; border-radius:0;
+    background:none; box-shadow:none;
+    top:var(--pkTop,0px)!important; z-index:8;
+}
+.app-container.pk-active .seats-grid{ margin-top:var(--pkH,130px)!important; transform:none; }
+
+.pkp{ position:relative; width:100%; aspect-ratio:2138/736; container-type:inline-size; }
+.pkp > *{ position:absolute; box-sizing:border-box; }
+
+/* ছবির নিচের স্তর: প্রোফাইল, সময়, মিটার, সাপোর্টার (ছবির খালি জায়গা দিয়ে দেখা যায়) */
+.pkp-av{ width:11.8%; height:34.2%; border-radius:50%; overflow:hidden; z-index:1; cursor:pointer; background:#0b1230; }
+.pkp-av img{ width:100%; height:100%; object-fit:cover; display:block; }
+.pkp-av.L{ left:6.1%; top:33.8%; }
+.pkp-av.R{ left:82.2%; top:34.0%; }
+
+.pkp-time{
+    left:39.8%; width:20.7%; top:22.1%; height:8.6%; z-index:1;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg,#0a1030,#1b2150);
+    color:#ffe27a; font-weight:900; font-family:monospace; letter-spacing:.5px;
+    font-size:9px; font-size:2.5cqw; line-height:1;
+}
+
+.pkp-meter{ left:22.6%; width:55%; top:39.8%; height:13.8%; z-index:1; display:flex; overflow:hidden; background:#101428; }
+.pkp-meter .pk-tug-blue{ height:100%; background:linear-gradient(90deg,#0a5bd8,#35b6ff); transition:width .4s ease; width:50%; }
+.pkp-meter .pk-tug-red{ height:100%; background:linear-gradient(90deg,#ff3b5c,#b3002f); transition:width .4s ease; width:50%; }
+.pkp-meter .pk-white-line{ position:absolute; top:0; bottom:0; width:3px; margin-left:-1px; background:#fff; box-shadow:0 0 6px #fff,0 0 12px #fff; transition:left .4s ease; left:50%; z-index:2; }
+.pkp-meter .sc{ position:absolute; top:50%; transform:translateY(-50%); color:#fff; font-weight:800; z-index:3; text-shadow:0 1px 3px rgba(0,0,0,.9); font-size:7px; font-size:2.1cqw; line-height:1; }
+.pkp-meter .sc.b{ left:3%; }
+.pkp-meter .sc.r{ right:3%; }
+
+.pkp-sup{ top:58.8%; height:13.7%; z-index:1; display:flex; align-items:center; justify-content:space-around; }
+.pkp-sup.L{ left:24.3%; width:23.6%; }
+.pkp-sup.R{ left:52.2%; width:23.8%; }
+.pkp-sup .sl{ height:92%; aspect-ratio:1; border-radius:50%; overflow:hidden; cursor:pointer; flex:0 0 auto; }
+.pkp-sup .sl img{ width:100%; height:100%; object-fit:cover; display:block; }
+.pkp-sup .sl.e{ background:rgba(255,255,255,.07); border:1px dashed rgba(255,255,255,.22); cursor:default; }
+.pkp-sup.L .sl:not(.e){ border:1px solid #35b6ff; }
+.pkp-sup.R .sl:not(.e){ border:1px solid #ff5577; }
+.pkp-sup .sl.pop{ animation:pkSupPop .45s ease; }
+@keyframes pkSupPop{ 0%{transform:scale(.2);opacity:0} 70%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+
+/* ছবি (ফ্রেম) — সবার উপরে, কিন্তু টাচ নিচে চলে যায় */
+.pkp-frame{ left:0; top:0; width:100%; height:100%; z-index:2; pointer-events:none; display:block; }
+
+/* নাম (প্রোফাইলের নিচে) */
+.pkp-nm{
+    top:79.9%; height:7.9%; width:12.8%; z-index:3; display:flex; align-items:center; justify-content:center;
+    background:rgba(0,0,0,.55); border-radius:20px; color:#fff; font-weight:800;
+    font-size:8px; font-size:2.4cqw; line-height:1; padding:0 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.pkp-nm.L{ left:5.6%; }
+.pkp-nm.R{ left:81.6%; }
+
+/* ঘড়ি+ (সময় বাড়ানো) — শুধু Owner/Admin */
+.pkp-clock{ left:63.5%; top:6.8%; width:9.4%; height:27.2%; border-radius:50%; z-index:4; cursor:pointer; display:none; }
+.pk-admin .pkp-clock{ display:block; }
+.pkp-clock:active{ background:rgba(255,255,255,.18); }
+
+/* PK বন্ধ বাটন — শুধু Owner/Admin */
+.pkp-stop{ right:0; top:1%; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.35); color:#fff; font-size:10px; display:none; place-items:center; z-index:5; cursor:pointer; }
+.pk-admin .pkp-stop{ display:grid; }
+.pkp-stop:active{ transform:scale(.9); }
+
+/* ═════════ জয়-হার স্ক্রিন (৫ সেকেন্ড) ═════════ */
+.pk-result{ position:absolute; inset:0; z-index:400; display:none; align-items:center; justify-content:center; background:rgba(5,6,20,.88); backdrop-filter:blur(4px); }
+.pk-result.active{ display:flex; animation:fadeIn .3s ease; }
+.pkr-box{ display:flex; align-items:center; justify-content:center; gap:14px; animation:splashPop .6s cubic-bezier(.2,.8,.3,1.3); }
+.pkr-side{ display:flex; flex-direction:column; align-items:center; gap:8px; width:120px; position:relative; }
+.pkr-side img{ width:96px; height:96px; border-radius:50%; object-fit:cover; border:4px solid #fff; }
+.pkr-side .nm{ font-size:13px; font-weight:800; color:#fff; max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pkr-side .tag{ font-size:17px; font-weight:900; letter-spacing:1.5px; padding:5px 14px; border-radius:20px; }
+.pkr-side.win img{ border-color:#ffd54a; box-shadow:0 0 30px rgba(255,213,74,.9),0 0 60px rgba(255,213,74,.5); width:108px; height:108px; }
+.pkr-side.win .tag{ color:#3a2400; background:linear-gradient(135deg,#fff0a0,#ffb800); box-shadow:0 0 18px rgba(255,184,0,.8); }
+.pkr-side.win .crown{ font-size:30px; color:#ffd54a; text-shadow:0 0 14px #ffb800; animation:pkCrown 1.1s ease-in-out infinite alternate; }
+.pkr-side.lose img{ border-color:#7a7f95; filter:grayscale(.85) brightness(.75); }
+.pkr-side.lose .tag{ color:#d0d3e0; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); }
+.pkr-side.draw img{ border-color:#9fd0ff; box-shadow:0 0 20px rgba(159,208,255,.6); }
+.pkr-side.draw .tag{ color:#fff; background:linear-gradient(135deg,#3a7bd5,#7b4fd8); }
+.pkr-vs{ font-size:26px; font-weight:900; font-style:italic; color:var(--c3,#ffd54a); text-shadow:0 0 14px var(--c3,#ffd54a); }
+@keyframes pkCrown{ from{ transform:translateY(0) } to{ transform:translateY(-6px) } }

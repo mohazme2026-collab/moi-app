@@ -20,8 +20,8 @@
 <link rel="stylesheet" href="core/live.css">
 <link rel="stylesheet" href="core/room-v2.css">
 <link rel="stylesheet" href="rocket/rocket.css">
-<link rel="stylesheet" href="gifts/lb-ui.css">
 <link rel="stylesheet" href="menu/moi-ui.css">
+<link rel="stylesheet" href="pk/pk.css">
 <link rel="stylesheet" href="bag/bag.css">
 <link rel="stylesheet" href="social/moi-friend.css">
 <link rel="stylesheet" href="social/moi-report.css">
@@ -75,27 +75,24 @@
     </div>
 
     <div class="pk-banner" id="pkBanner">
-        <div class="pk-banner-top">
-            <div class="pk-banner-side">
-                <img id="pkBannerBlueImg" src="">
-                <span class="name" id="pkBannerBlueName">মহাজ</span>
+        <div class="pkp" id="pkPanel">
+            <div class="pkp-av L" onclick="pkOpenProfile('blue')"><img id="pkBannerBlueImg" src=""></div>
+            <div class="pkp-av R" onclick="pkOpenProfile('red')"><img id="pkBannerRedImg" src=""></div>
+            <div class="pkp-time" id="pkTimerText">10:00</div>
+            <div class="pkp-meter">
+                <div class="pk-tug-blue" id="pkTugBlue" style="width:50%"></div>
+                <div class="pk-tug-red" id="pkTugRed" style="width:50%"></div>
+                <div class="pk-white-line" id="pkWhiteLine" style="left:50%"></div>
+                <span class="sc b" id="pkScoreBlue">0</span>
+                <span class="sc r" id="pkScoreRed">0</span>
             </div>
-            <div style="display:flex;align-items:center;gap:8px">
-                <div class="pk-timer-box">
-                    <span class="txt" id="pkTimerText">PK 10:00</span>
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <div class="pk-power-btn" onclick="pkEnd(true)" style="position:static"><i class="fa-solid fa-power-off"></i></div>
-            </div>
-            <div class="pk-banner-side">
-                <span class="name" id="pkBannerRedName">পূর্ণিমা</span>
-                <img id="pkBannerRedImg" src="">
-            </div>
-        </div>
-        <div class="pk-tug-bar">
-            <div class="pk-tug-blue" id="pkTugBlue" style="width:50%"></div>
-            <div class="pk-tug-red" id="pkTugRed" style="width:50%"></div>
-            <div class="pk-white-line" id="pkWhiteLine" style="left:50%"></div>
+            <div class="pkp-sup L" id="pkSupBlue"></div>
+            <div class="pkp-sup R" id="pkSupRed"></div>
+            <img class="pkp-frame" src="pk/pk-panel.png" alt="">
+            <div class="pkp-nm L" id="pkBannerBlueName"></div>
+            <div class="pkp-nm R" id="pkBannerRedName"></div>
+            <div class="pkp-clock" onclick="pkOpenExtend()"></div>
+            <div class="pkp-stop" onclick="pkEnd(true)"><i class="fa-solid fa-power-off"></i></div>
         </div>
     </div>
 
@@ -419,6 +416,19 @@
         </div>
     </div>
 
+    <div class="pk-time-sheet" id="pkExtendSheet" onclick="if(event.target===this)closePKExtend()">
+        <div class="pk-time-sheet-inner">
+            <h3>সময় বাড়ান</h3>
+            <div class="pk-time-option" onclick="pkExtend(5)">+ ৫ মিনিট</div>
+            <div class="pk-time-option" onclick="pkExtend(10)">+ ১০ মিনিট</div>
+            <button class="pk-time-confirm" onclick="closePKExtend()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+
+    <div class="pk-result" id="pkResult">
+        <div class="pkr-box" id="pkResultBox"></div>
+    </div>
+
     <div class="pk-splash" id="pkSplash">
         <div class="pk-splash-content">
             <i class="fa-solid fa-fire pk-splash-fire" style="left:20%;color:var(--c2)"></i>
@@ -560,7 +570,6 @@
 <script src="core/actions.js"></script>
 <script src="core/ui.js"></script>
 <script src="gifts/gifts.js"></script>
-<script src="gifts/lb-ui.js"></script>
 <script src="gifts/luckybox.js"></script>
 <script src="pk/pk.js"></script>
 <script src="music/music.js"></script>

@@ -169,8 +169,15 @@ console.log('[MOI] economy.js loaded (client mode)');
             const pk = (await FB.rtdb.ref(base + '/pkState').get()).val();
             if (pk && pk.expiresAt > ts && pk.blue && pk.red){
                 for (const tg of targets){
-                    if (pk.blue.uid === tg.uid) await FB.rtdb.ref(base + '/pkState/blue/score').transaction(v => (v || 0) + unit * qty);
-                    if (pk.red.uid === tg.uid)  await FB.rtdb.ref(base + '/pkState/red/score').transaction(v => (v || 0) + unit * qty);
+                    const side = pk.blue.uid === tg.uid ? 'blue' : (pk.red.uid === tg.uid ? 'red' : '');
+                    if (!side) continue;
+                    const amt = unit * qty;
+                    await FB.rtdb.ref(base + '/pkState/' + side + '/score').transaction(v => (v || 0) + amt);
+                    /* এই PK-তে কে কোন দলকে কত 💎 গিফট দিল — সেরা ৪ জন প্যানেলের নিচে দেখায় */
+                    await FB.rtdb.ref(base + '/pkState/' + side + '/supporters/' + sender.uid).transaction(v => ({
+                        uid: sender.uid, name: sender.name || 'User', avatar: sender.avatar || '',
+                        amount: ((v && v.amount) || 0) + amt
+                    }));
                 }
             }
         } catch(e){ console.warn('liveEffects', e.message); }
@@ -210,7 +217,7 @@ console.log('[MOI] economy.js loaded (client mode)');
             }));
             return { sender: s, targets: tSnaps.map(x => x.data()), balance: r.diamonds };
         });
-        await liveEffects(roomId, { uid, name: res.sender.name }, res.targets, giftId, qty, unit);
+        await liveEffects(roomId, { uid, name: res.sender.name, avatar: res.sender.photo || '' }, res.targets, giftId, qty, unit);
         /* প্রোফাইলের Supporters / Contribution — যে যত 💎 গিফট দিল, প্রাপকের তালিকায় যোগ হয় */
         try {
             const sp = res.sender || {};
@@ -375,31 +382,6 @@ console.log('[MOI] economy.js loaded (client mode)');
         await FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/luckybox/' + box.id).set(box);
         return { ok: true, box };
     };
-    /* শুধু ডেমো: কয়েকজন বট বক্স খোলে (আসল Firebase-এ এটা চলবে না) */
-    H.lbBots = async (data, uid) => {
-        if (!window.__MOCK) fail('INVALID');
-        const roomId = String(data.roomId || ''), boxId = String(data.boxId || '');
-        const names = ['Rafi', 'Sumi', 'Tanvir', 'Nila', 'Hasan', 'Mim', 'Sakib', 'Priya'];
-        const ref = FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/luckybox/' + boxId);
-        const first = (await ref.get()).val(); if (!first) return { n: 0 };
-        const take = Math.max(0, Math.min(names.length, first.qty - 1));
-        for (let i = 0; i < take; i++){
-            await new Promise(r => setTimeout(r, 1500 + Math.random() * 2500));
-            const bid = 'bot_' + i + '_' + boxId;
-            await ref.transaction(box => {
-                if (!box) return box;
-                box.claimedBy = box.claimedBy ? Object.values(box.claimedBy) : [];
-                box.winners = box.winners ? Object.values(box.winners) : [];
-                if (box.winners.length >= box.qty - 1 || box.claimedBy.includes(bid)) return undefined;
-                box.claimedBy.push(bid);
-                const given = box.winners.reduce((s, w) => s + w.amount, 0), left = box.pool - given;
-                const amount = Math.max(1, Math.min(left, Math.floor(box.pool / (box.qty * 2) * (0.5 + Math.random()))));
-                box.winners.push({ uid: bid, name: names[i], avatar: 'https://i.pravatar.cc/80?u=' + names[i], amount, ts: Date.now() });
-                return box;
-            });
-        }
-        return { n: take };
-    };
     H.openLuckyBox = async (data, uid) => {
         const roomId = String(data.roomId || ''), boxId = String(data.boxId || '');
         if (!roomId || !boxId) fail('INVALID');
@@ -410,7 +392,7 @@ console.log('[MOI] economy.js loaded (client mode)');
             if (!box) return box;
             box.claimedBy = box.claimedBy ? Object.values(box.claimedBy) : [];
             box.winners = box.winners ? Object.values(box.winners) : [];
-            if (Date.now() < box.expiresAt || Date.now() > box.expiresAt + 300000 || box.claimedBy.includes(uid) || box.winners.length >= box.qty || box.senderUid === uid) return undefined;
+            if (Date.now() < box.expiresAt || Date.now() > box.expiresAt + 120000 || box.claimedBy.includes(uid) || box.winners.length >= box.qty || box.senderUid === uid) return undefined;
             box.claimedBy.push(uid);
             const given = box.winners.reduce((s, w) => s + w.amount, 0), left = box.pool - given;
             const slotsLeft = box.qty - box.winners.length;

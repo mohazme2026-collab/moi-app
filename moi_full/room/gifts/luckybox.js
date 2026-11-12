@@ -74,6 +74,7 @@ window.sendLuckyBox = async () => {
     toastMsg(`🎁 Lucky Box পাঠানো হয়েছে (${r.box.pool} 💎)`);
     try { if (window.MOIBroadcast) MOIBroadcast.lucky(r.box); } catch(e){}     /* সব রুমের উপরে পপআপ */
     pushActivityLuckyBox(r.box);
+    if (window.__MOCK){ setTimeout(function(){ MOIEco.call('lbBots', { roomId: ROOM_ID, boxId: r.box.id }).catch(function(){}); }, Math.max(0, r.box.expiresAt - Date.now()) + 800); }
     startLuckyBoxTimer();
 };
 
@@ -186,6 +187,7 @@ function startLuckyBoxTimer(){
 
 /* ═══ Message feed এ box inject ═══ */
 function injectLuckyBoxesIntoFeed(){
+    return;   /* এখন কার্ড render.js-এ মেসেজের সাথে মিশে যায় */
     const list = $('messagesList');
     if (!list) return;
     const boxes = getLuckyBoxes();

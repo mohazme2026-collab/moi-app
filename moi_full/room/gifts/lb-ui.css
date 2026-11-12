@@ -1,0 +1,70 @@
+/* room/gifts/lb-ui.css — লাকি বক্স: ফিড কার্ড, পপআপ, ফলাফল, List, ডান প্যানেল */
+.lb-gem{display:inline-block;width:1em;height:1em;vertical-align:-.14em;filter:drop-shadow(0 0 4px rgba(80,170,255,.9))}
+
+/* ফিডের কার্ড (বেগুনি) */
+.lbf{display:block!important;background:none!important;border:0!important;padding:4px 0!important}
+.lbf-card{position:relative;width:122px;margin-top:4px;cursor:pointer;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 6px 12px rgba(0,0,0,.45))}
+.lbf-card img{display:block;width:100%;height:auto;pointer-events:none}
+.lbf-amt{position:absolute;left:0;right:0;top:42%;display:flex;align-items:center;justify-content:center;gap:5px;font:900 19px/1 Figtree,sans-serif;color:#fff;text-shadow:0 2px 6px rgba(20,0,60,.9)}
+.lbf-amt .lb-gem{width:22px;height:22px}
+.lbf-st{position:absolute;left:20%;right:20%;top:62%;height:22px;line-height:22px;border-radius:12px;text-align:center;font:800 12px 'Figtree',sans-serif;letter-spacing:.06em;color:#e9d9ff;background:rgba(15,5,50,.6);border:1px solid rgba(255,212,90,.5)}
+.lbf-st.ready{color:#3b1a00;background:linear-gradient(#fff1a8,#ffc83a);border-color:#fff;animation:lbPulse 1s ease-in-out infinite}
+.lbf-st.opened,.lbf-st.taken,.lbf-st.ended{opacity:.7}
+@keyframes lbPulse{0%,100%{box-shadow:0 0 0 rgba(255,210,70,0)}50%{box-shadow:0 0 12px rgba(255,210,70,.95)}}
+/* জেতার লাইন: Open 🧧 Wins 💎 × N */
+.lbw{display:block!important;background:none!important;border:0!important;padding:3px 0!important}
+.lbw-pill{display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:7px 14px;border-radius:14px;background:rgba(0,0,0,.45);font:700 17px 'Figtree',sans-serif;color:#ffcf6a}
+.lbw-pill{color:#ffd78a}.lbw-env{display:inline-block;width:22px;height:26px;border-radius:5px;background:linear-gradient(#ff5a3c,#c4161c);border:1px solid #ffcf6a;box-shadow:0 0 6px rgba(255,90,40,.6)}
+.lbw-pill .lb-gem{width:19px;height:19px}
+
+/* পপআপ (লাল খাম / সোনালি ফলাফল) */
+.lbp{position:absolute;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;background:rgba(5,3,18,.62);animation:lbFade .2s ease-out}
+@keyframes lbFade{from{opacity:0}}
+.lbp-card{position:relative;width:min(74vw,310px);aspect-ratio:560/709;animation:lbPop .35s cubic-bezier(.2,1.25,.3,1)}
+@keyframes lbPop{from{transform:scale(.6);opacity:0}}
+.lbp-av{position:absolute;left:49.8%;top:24.3%;width:44%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;object-fit:cover;background:#2a1d55}
+.lbp-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lbp-name{position:absolute;left:8%;right:8%;top:42%;text-align:center;font:800 17px 'Figtree','Hind Siliguri',sans-serif;color:#ffe9c0;text-shadow:0 2px 4px rgba(90,10,0,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbp-amt{position:absolute;left:0;right:0;top:51%;display:flex;align-items:center;justify-content:center;gap:6px;font:900 40px/1 'Figtree',sans-serif;color:#fff1d2;text-shadow:0 3px 8px rgba(110,10,0,.85)}
+.lbp-amt .lb-gem{width:34px;height:34px}
+.lbp-sub{position:absolute;left:0;right:0;top:67%;text-align:center;font:700 12px 'Figtree','Hind Siliguri',sans-serif;color:#ffd9a0;opacity:.9}
+.lbp-btn{position:absolute;left:10%;top:78.5%;width:80%;height:14.5%;border-radius:30px;display:flex;align-items:center;justify-content:center;font:900 22px 'Figtree',sans-serif;letter-spacing:.06em;color:#fff;cursor:pointer}
+.lbp-btn.timer,.lbp-btn.mine,.lbp-btn.opened,.lbp-btn.taken,.lbp-btn.ended{background:linear-gradient(#b8452c,#8a2a1c);border:2px solid rgba(255,214,120,.45);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);cursor:default}
+.lbp-btn.ready{animation:lbPulse 1s ease-in-out infinite}
+/* ফলাফল ফ্রেম */
+.lbr-card{aspect-ratio:560/677}
+.lbr-card .lbp-name{top:44.5%;font-size:15px;color:#6a3a00;text-shadow:none}
+.lbr-card.win .lbp-name{top:45%}
+.lbr-amt{position:absolute;left:0;right:0;top:57%;display:flex;align-items:center;justify-content:center;gap:6px;font:900 42px/1 'Figtree',sans-serif;color:#d1540a;text-shadow:0 2px 0 #fff3c0,0 0 14px rgba(255,200,60,.8);animation:lbPop .5s cubic-bezier(.2,1.4,.3,1)}
+.lbr-amt .lb-gem{width:34px;height:34px}
+.lbr-list{position:absolute;left:12%;top:73.5%;width:76%;height:15.5%;cursor:pointer}
+.lbc{position:absolute;top:-6%;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7b0,#ffc72e 55%,#c78200);border:1px solid #fff0a0;box-shadow:0 0 6px rgba(255,200,60,.9);animation:lbCoin 2.2s ease-in infinite;pointer-events:none}
+@keyframes lbCoin{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(420px) rotate(540deg);opacity:0}}
+
+/* List প্যানেল */
+.lbl{position:absolute;inset:0;z-index:410;background:rgba(5,3,18,.6);display:flex;align-items:flex-end;animation:lbFade .2s}
+.lbl-sheet{width:100%;max-height:70%;display:flex;flex-direction:column;border-radius:22px 22px 0 0;background:linear-gradient(180deg,#2b1a5e,#120c2e);border-top:1.5px solid rgba(255,212,90,.6);color:#fff;animation:lbUp .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes lbUp{from{transform:translateY(40px);opacity:0}}
+.lbl-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.lbl-head>img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #ffd45a}
+.lbl-head>div{flex:1;min-width:0}.lbl-t{font:800 15px 'Figtree','Hind Siliguri',sans-serif}.lbl-s{font:700 12px 'Figtree',sans-serif;color:#ffd45a;margin-top:2px}
+.lbl-x{border:0;background:rgba(255,255,255,.12);color:#fff;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer}
+.lbl-body{overflow-y:auto;padding:10px 14px 18px;display:flex;flex-direction:column;gap:7px}
+.lbl-row{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:14px;background:rgba(255,255,255,.07)}
+.lbl-rk{width:20px;text-align:center;font:900 13px 'Figtree',sans-serif;color:#ffd45a}
+.lbl-row img{width:34px;height:34px;border-radius:50%;object-fit:cover}
+.lbl-nm{flex:1;min-width:0;font:700 14px 'Figtree','Hind Siliguri',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbl-row b{font:900 15px 'Figtree',sans-serif;color:#ffd45a;white-space:nowrap}.lbl-row b .lb-gem{width:15px;height:15px}
+.lbl-none{text-align:center;padding:22px;color:#b7aee0;font:700 13px 'Hind Siliguri',sans-serif}
+
+/* ডানের লাকি বক্স প্যানেল: বক্স থাকলে অ্যাড ও রকেট ছোট হয় */
+.lb-on .room-ads{transform:scale(.62);transform-origin:100% 100%}
+.lb-on .rk-fab{transform:scale(.62);transform-origin:100% 100%}
+.lbs{position:absolute;right:8px;bottom:268px;width:62px;max-height:222px;z-index:62;display:flex;flex-direction:column;gap:7px;overflow-y:auto;padding:2px 0;scrollbar-width:none}
+.lbs::-webkit-scrollbar{display:none}
+.lbs-card{position:relative;flex:0 0 auto;width:60px;aspect-ratio:560/709;cursor:pointer;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));animation:lbPop .35s cubic-bezier(.2,1.25,.3,1)}
+.lbs-av{position:absolute;left:49.8%;top:24.3%;width:44%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;object-fit:cover;background:#2a1d55}
+.lbs-fr{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lbs-amt{position:absolute;left:0;right:0;top:51%;text-align:center;font:900 13px/1 'Figtree',sans-serif;color:#fff1d2;text-shadow:0 1px 3px rgba(110,10,0,.9)}
+.lbs-st{position:absolute;left:12%;top:79%;width:76%;height:14%;border-radius:10px;display:flex;align-items:center;justify-content:center;font:900 9px 'Figtree',sans-serif;color:#fff;background:linear-gradient(#b8452c,#8a2a1c);border:1px solid rgba(255,214,120,.5)}
+.lbs-card.ready .lbs-st{background:transparent;border-color:transparent;color:transparent;animation:lbPulse 1s ease-in-out infinite}

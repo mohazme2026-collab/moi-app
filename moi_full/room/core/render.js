@@ -175,14 +175,19 @@ const ROOM_ENTER_TS = Date.now();
 function renderMessageFeed(){
     $('topicText').textContent = state.topic || 'কোনো টপিক নেই';
     const list = $('messagesList');
-    const fresh = state.messages.filter(m => m && (m.ts || 0) >= ROOM_ENTER_TS);
+    let fresh = state.messages.filter(m => m && (m.ts || 0) >= ROOM_ENTER_TS);
+    let bx = [];
+    try { if (window.LB) bx = getLuckyBoxes().filter(b => LB.visible(b) && (b.createdAt || 0) >= ROOM_ENTER_TS).map(b => ({ type: 'lbox', box: b, ts: b.createdAt || 0, id: b.id })); } catch(e){}
+    fresh = fresh.concat(bx).sort((a, b) => (a.ts || 0) - (b.ts || 0));
     if (!fresh.length){
         list.innerHTML = `<div class="msg-empty">এখনো কোনো মেসেজ নেই...</div>`;
         return;
     }
     list.innerHTML = fresh.slice(-60).map(m => {
         let inner = null;
-        if (m.type === 'image' && m.img) inner = `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span><img class="msg-img" src="${esc(m.img)}" alt="" onclick="chatViewImg(this.src)"></div>`;
+        if (m.type === 'lbox') inner = LB.feedHTML(m.box);
+        else if (m.type === 'lbwin') inner = LB.winHTML(m);
+        if (inner === null && m.type === 'image' && m.img) inner = `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span><img class="msg-img" src="${esc(m.img)}" alt="" onclick="chatViewImg(this.src)"></div>`;
         if (inner === null && window.MOIChatFx){ const h = MOIChatFx.row(m); if (h) inner = h; }   /* SVIP চ্যাট ব্যানার */
         if (inner === null) inner = m.type === 'gift' ? `<div class="msg-item gift-msg">🎁 <span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>` : `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;
         return `<div class="mw" data-mid="${esc(m.id || '')}">${inner}</div>`;

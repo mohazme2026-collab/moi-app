@@ -95,6 +95,7 @@ window.playMusicFile = (index) => {
     const url = URL.createObjectURL(file);
     _mpAudio = new Audio(url);
     _mpAudio.loop = _mpIsLooping;
+    if (window.MPFx) window.MPFx.attach(_mpAudio);
 
     _mpAudio.onended = () => {
         if (_mpIsLooping) return;

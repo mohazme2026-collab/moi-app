@@ -149,13 +149,14 @@ function rtBuildSeat(idx, sizePx){
     var coins = (s && s.coins) ? s.coins : 0;
 
     var div = document.createElement('div');
-    div.className = 'seat';
+    var skinHTML = (window.RTSkin ? window.RTSkin.seatHTML(idx) : '');
+    div.className = 'seat' + (skinHTML ? ' skin-on' : '');
     div.dataset.seat = idx;
     div.dataset.uid = (s && s.uid) ? s.uid : '';
     div.style.width = sizePx + 'px';
     div.style.maxWidth = sizePx + 'px';
     div.style.flexShrink = '0';
-    div.innerHTML = ''
+    div.innerHTML = skinHTML
         + '<div class="' + cls + '" onclick="openSeatSheet(' + idx + ')" style="width:' + sizePx + 'px;height:' + sizePx + 'px;max-width:' + sizePx + 'px;aspect-ratio:1/1;border-radius:50%">'
         +   '<div class="seat-bg moi-seat-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg><em>MOI</em></div>'
         +   contentHTML + muteHTML + lockHTML
@@ -201,6 +202,7 @@ function rtRenderBody(){
     var body = document.getElementById('rtBody');
     if (!body) return;
 
+    if (_rtTab === 'skin' && window.RTSkin){ window.RTSkin.render(body); return; }
     if (_rtTab === 'skin'){
         body.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#7a6a8f;font-size:13px">'
             + '<i class="fa-solid fa-palette" style="font-size:36px;opacity:.4;margin-bottom:14px;display:block"></i>'

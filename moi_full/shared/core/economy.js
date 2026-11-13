@@ -577,6 +577,41 @@ console.log('[MOI] economy.js loaded (client mode)');
         return { ok: true };
     };
 
+    /* ═══════════ রুম থিম স্কিন (শুধু রুম Owner) ═══════════
+       buyRoomSkin: { roomId, skinId, days:7|30 } — ৭ দিন ১০০০ 💎, ৩০ দিন ২০০০ 💎 (মেয়াদ থাকতে কিনলে আগের শেষ থেকে যোগ)
+       useRoomSkin: { roomId, skinId } — skinId '' দিলে স্কিন খুলে কোম্পানির ডিজাইনে ফেরে */
+    const ROOM_SKINS = ['skin1', 'skin2', 'skin3', 'skin4'], SKIN_PRICE = { 7: 1000, 30: 2000 };
+    H.buyRoomSkin = async (data, uid) => {
+        const roomId = String(data.roomId || ''), skinId = String(data.skinId || ''), days = Number(data.days);
+        if (!ROOM_SKINS.includes(skinId) || !SKIN_PRICE[days]) fail('INVALID');
+        const r = await db().collection('rooms').doc(roomId).get(); if (!r.exists) fail('NOT_FOUND');
+        if (r.data().ownerUid !== uid) fail('PERMISSION_DENIED');
+        const ref = FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/skinOwn/' + skinId);
+        const cur = (await ref.get()).val() || 0, now = Date.now();
+        const until = Math.max(cur, now) + days * 86400000;
+        const price = SKIN_PRICE[days];
+        const res = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); if (!uS.exists) fail('NOT_FOUND');
+            const u = uS.data(); assertActive(u);
+            if ((u.diamonds || 0) < price) fail('INSUFFICIENT_DIAMONDS');
+            return { balance: applyDelta(t, uid, u, { dia: -price, xp: 10, title: 'Room skin: ' + skinId + ' ' + days + 'd', txType: 'spend' }).diamonds };
+        });
+        await ref.set(until);
+        return { until, balance: res.balance };
+    };
+    H.useRoomSkin = async (data, uid) => {
+        const roomId = String(data.roomId || ''), skinId = String(data.skinId || '');
+        const r = await db().collection('rooms').doc(roomId).get(); if (!r.exists) fail('NOT_FOUND');
+        if (r.data().ownerUid !== uid) fail('PERMISSION_DENIED');
+        const sk = FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/skin');
+        if (!skinId){ await sk.set(null); return { skin: '' }; }
+        if (!ROOM_SKINS.includes(skinId)) fail('INVALID');
+        const until = (await FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/skinOwn/' + skinId).get()).val() || 0;
+        if (until < Date.now()) fail('EXPIRED');
+        await sk.set({ id: skinId });
+        return { skin: skinId };
+    };
+
     /* ═══════════ স্টোর: ফ্রেম ও মুকুট ═══════════ */
     H.buyFrame = async (data, uid) => {
         const id = String(data.id || ''), price = C.FRAMES[id];

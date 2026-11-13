@@ -178,6 +178,7 @@ function renderMessageFeed(){
     let fresh = state.messages.filter(m => m && (m.ts || 0) >= ROOM_ENTER_TS);
     let bx = [];
     try { if (window.LB) bx = getLuckyBoxes().filter(b => LB.visible(b) && (b.createdAt || 0) >= ROOM_ENTER_TS).map(b => ({ type: 'lbox', box: b, ts: b.createdAt || 0, id: b.id })); } catch(e){}
+    try { if (window.LB) getLuckyBoxes().forEach(b => b.winners.forEach(w => { if (w.name && (w.ts || 0) >= ROOM_ENTER_TS) bx.push({ type: 'lbwin', name: w.name, avatar: w.avatar, amt: w.amount, ts: w.ts, id: 'lw_' + b.id + '_' + w.uid }); })); } catch(e){}
     fresh = fresh.concat(bx).sort((a, b) => (a.ts || 0) - (b.ts || 0));
     if (!fresh.length){
         list.innerHTML = `<div class="msg-empty">এখনো কোনো মেসেজ নেই...</div>`;

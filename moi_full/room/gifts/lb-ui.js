@@ -26,7 +26,6 @@
         if (p && b.claimedBy.indexOf(p.uid) > -1) return 'opened';
         if (full(b)) return 'taken';
         if (now > b.expiresAt + WINDOW) return 'ended';
-        if (p && b.senderUid === p.uid) return now < b.expiresAt ? 'timer' : 'mine';
         return now < b.expiresAt ? 'timer' : 'ready';
     }
     function label(b, st, now){
@@ -44,7 +43,7 @@
             '<div class="lbf-st ' + st + '" data-lbst="' + esc(b.id) + '">' + label(b, st, now) + '</div></div></div>';
     }
     function winHTML(m){
-        return '<div class="msg-item lbw"><span class="msg-name">' + esc(m.name) + '</span>' +
+        return '<div class="msg-item lbw"><span class="lbw-who"><img src="' + av(m.avatar) + '" alt=""><span class="msg-name">' + esc(m.name) + '</span></span>' +
             '<div class="lbw-pill">Open <i class="lbw-env"></i> Wins ' + GEM + ' × ' + (m.amt || 0) + '</div></div>';
     }
 
@@ -54,7 +53,7 @@
         var btn = document.querySelector('#lbPop .lbp-btn'); if (!btn) return;
         var now = Date.now(), st = status(b, now);
         btn.className = 'lbp-btn ' + st;
-        btn.textContent = st === 'ready' ? '' : label(b, st, now);
+        btn.textContent = st === 'ready' ? 'Open' : label(b, st, now);
     }
     function open(id){
         var b = find(id); if (!b) return;
@@ -85,7 +84,6 @@
         var b = find(id) || {};
         closePop();
         if (r.won > 0){
-            try { pushMessage({ uid: p.uid, name: p.name, avatar: p.avatar, text: '', type: 'lbwin', amt: r.won, boxId: id }); } catch(e){}
             try { giftUpdateBalance(); } catch(e){}
         }
         result(id, r.won, b);
@@ -130,32 +128,57 @@
     var sig = '';
     function panelBoxes(){
         var now = Date.now();
-        return boxes().filter(function(b){ var st = status(b, now); return visible(b, now) && st !== 'opened' && st !== 'taken' && st !== 'ended'; });
+        return boxes().filter(function(b){ var st = status(b, now); return st !== 'opened' && st !== 'taken' && st !== 'ended'; });
+    }
+    function minLabel(list, now){
+        var rdy = list.some(function(b){ return status(b, now) === 'ready'; });
+        if (rdy) return 'OPEN';
+        return mmss(Math.min.apply(null, list.map(function(b){ return b.expiresAt - now; })));
+    }
+    function gridHTML(list, now){
+        return list.map(function(b){
+            var st = status(b, now);
+            return '<div class="lbg-card" onclick="LB.open(\'' + esc(b.id) + '\')"><img class="lbp-av" src="' + av(b.senderAvatar) + '" alt=""><img class="lbp-frame" src="' + IMG + 'frame_open.png" alt="">' +
+                '<div class="lbp-name">' + esc(b.senderName) + '</div><div class="lbp-amt">' + b.pool + ' ' + GEM + '</div>' +
+                '<div class="lbp-btn ' + st + '" data-lbg="' + esc(b.id) + '">' + (st === 'ready' ? 'Open' : label(b, st, now)) + '</div></div>';
+        }).join('');
+    }
+    function gridOpen(){
+        var g = $('lbGrid');
+        if (g){ g.remove(); return; }
+        var list = panelBoxes(); if (!list.length) return;
+        g = document.createElement('div'); g.id = 'lbGrid'; g.className = 'lbp lbg';
+        g.innerHTML = '<div class="lbg-wrap">' + gridHTML(list, Date.now()) + '</div>';
+        g.addEventListener('click', function(e){ if (e.target === g || e.target.classList.contains('lbg-wrap')) g.remove(); });
+        (document.querySelector('.app-container') || document.body).appendChild(g);
+        g.dataset.sig = list.map(function(b){ return b.id; }).join('|');
     }
     function refresh(){
         var app = document.querySelector('.app-container'); if (!app) return;
         var now = Date.now(), list = panelBoxes();
-        var s = list.map(function(b){ return b.id + ':' + status(b, now); }).join('|');
         var side = $('lbSide');
         app.classList.toggle('lb-on', list.length > 0);
-        if (!list.length){ if (side) side.remove(); sig = ''; return; }
-        if (!side){ side = document.createElement('div'); side.id = 'lbSide'; side.className = 'lbs'; app.appendChild(side); }
-        if (s !== sig){
-            sig = s;
-            side.innerHTML = list.map(function(b){
-                var st = status(b, now);
-                return '<div class="lbs-card ' + st + '" onclick="LB.open(\'' + esc(b.id) + '\')"><img class="lbs-av" src="' + av(b.senderAvatar) + '" alt=""><img class="lbs-fr" src="' + IMG + 'frame_open.png" alt="">' +
-                    '<div class="lbs-amt">' + b.pool + '</div><div class="lbs-st" data-lbs="' + esc(b.id) + '">' + label(b, st, now) + '</div></div>';
-            }).join('');
-        } else {
-            list.forEach(function(b){
-                var e = side.querySelector('[data-lbs="' + b.id + '"]'); if (e) e.textContent = label(b, status(b, now), now);
-            });
+        if (!list.length){ if (side) side.remove(); var g0 = $('lbGrid'); if (g0) g0.remove(); sig = ''; }
+        else {
+            if (!side){
+                side = document.createElement('div'); side.id = 'lbSide'; side.className = 'lbs'; side.onclick = gridOpen;
+                side.innerHTML = '<img class="lbs-fr" src="' + IMG + 'frame_open.png" alt=""><div class="lbs-cnt"></div><div class="lbs-st"></div>';
+                app.appendChild(side);
+            }
+            side.querySelector('.lbs-cnt').textContent = list.length;
+            var ml = minLabel(list, now), st = side.querySelector('.lbs-st');
+            st.textContent = ml; side.classList.toggle('ready', ml === 'OPEN');
+            var g = $('lbGrid');
+            if (g){
+                var gs = list.map(function(b){ return b.id + status(b, now); }).join('|');
+                if (g.dataset.s !== gs){ g.dataset.s = gs; g.querySelector('.lbg-wrap').innerHTML = gridHTML(list, now); }
+                else list.forEach(function(b){ var e = g.querySelector('[data-lbg="' + b.id + '"]'); if (e) e.textContent = status(b, now) === 'ready' ? 'Open' : label(b, status(b, now), now); });
+            }
         }
         /* ফিডের কার্ডের টাইমার */
         document.querySelectorAll('[data-lbst]').forEach(function(el){
             var b = find(el.getAttribute('data-lbst')); if (!b) return;
-            var st = status(b, now); el.className = 'lbf-st ' + st; el.textContent = label(b, st, now);
+            var st2 = status(b, now); el.className = 'lbf-st ' + st2; el.textContent = label(b, st2, now);
         });
     }
     setInterval(refresh, 1000);

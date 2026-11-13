@@ -46,8 +46,7 @@
 .bc-gem{flex:0 0 auto;width:21px;height:21px;fill:url(#bcGemG);filter:drop-shadow(0 0 5px rgba(110,210,255,.95)) drop-shadow(0 1px 0 rgba(0,40,100,.65))}
 .bc-amt{font:900 17px/1 Poppins,system-ui,sans-serif;color:#ffe27a;letter-spacing:.2px;text-shadow:0 1px 0 rgba(90,45,0,.85),0 0 8px rgba(255,205,60,.5);white-space:nowrap}
 /* লাকি বক্সের প্যাকেট */
-.bc-pkt{flex:0 0 auto;width:24px;height:31px;border-radius:6px;background:linear-gradient(160deg,#ff6a6a,#c4151f 60%,#8c0c14);border:1.5px solid #ffd76a;position:relative;box-shadow:0 3px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.35)}
-.bc-pkt::after{content:"★";position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c2,#ffd23a 60%,#c47a00);color:#8a4b00;font:900 8px/13px sans-serif;text-align:center}
+.bc-pkt{flex:0 0 auto;width:38px;height:38px;background:url(lb_gem.png) center/contain no-repeat;filter:drop-shadow(0 2px 6px rgba(40,120,255,.7))}
 /* গিফট: প্রাপকের ছোট ছবি, গিফটের ছবি, ×সংখ্যা */
 .bc-to{flex:0 0 auto;width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,226,140,.85);background:#2a1d55;box-shadow:0 0 8px rgba(255,214,90,.45)}
 .bc-gico{flex:0 0 auto;width:46px;height:46px;display:grid;place-items:center;font-size:25px;overflow:hidden}

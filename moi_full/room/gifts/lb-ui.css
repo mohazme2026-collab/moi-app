@@ -60,11 +60,19 @@
 /* ডানের লাকি বক্স প্যানেল: বক্স থাকলে অ্যাড ও রকেট ছোট হয় */
 .lb-on .room-ads{transform:scale(.62);transform-origin:100% 100%}
 .lb-on .rk-fab{transform:scale(.62);transform-origin:100% 100%}
-.lbs{position:absolute;right:8px;bottom:268px;width:62px;max-height:222px;z-index:62;display:flex;flex-direction:column;gap:7px;overflow-y:auto;padding:2px 0;scrollbar-width:none}
-.lbs::-webkit-scrollbar{display:none}
-.lbs-card{position:relative;flex:0 0 auto;width:60px;aspect-ratio:560/709;cursor:pointer;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));animation:lbPop .35s cubic-bezier(.2,1.25,.3,1)}
-.lbs-av{position:absolute;left:49.8%;top:24.3%;width:44%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;object-fit:cover;background:#2a1d55}
+.lbs{position:absolute;right:12px;bottom:262px;width:44px;aspect-ratio:560/709;z-index:62;cursor:pointer;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));animation:lbPop .35s cubic-bezier(.2,1.25,.3,1)}
 .lbs-fr{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.lbs-amt{position:absolute;left:0;right:0;top:51%;text-align:center;font:900 13px/1 'Figtree',sans-serif;color:#fff1d2;text-shadow:0 1px 3px rgba(110,10,0,.9)}
-.lbs-st{position:absolute;left:12%;top:79%;width:76%;height:14%;border-radius:10px;display:flex;align-items:center;justify-content:center;font:900 9px 'Figtree',sans-serif;color:#fff;background:linear-gradient(#b8452c,#8a2a1c);border:1px solid rgba(255,214,120,.5)}
-.lbs-card.ready .lbs-st{background:transparent;border-color:transparent;color:transparent;animation:lbPulse 1s ease-in-out infinite}
+.lbs-cnt{position:absolute;left:0;right:0;top:20%;text-align:center;font:900 20px/1 'Figtree',sans-serif;color:#ffe9b0;text-shadow:0 2px 4px rgba(110,10,0,.9)}
+.lbs-st{position:absolute;left:8%;top:70%;width:84%;height:18%;border-radius:9px;display:flex;align-items:center;justify-content:center;font:900 10px 'Figtree',sans-serif;color:#fff;background:linear-gradient(#b8452c,#8a2a1c);border:1px solid rgba(255,214,120,.5)}
+.lbs.ready .lbs-st{background:linear-gradient(#fff1a8,#ffc83a);color:#6a1a00;animation:lbPulse 1s ease-in-out infinite}
+/* বক্সের গ্রিড (প্যানেলে ট্যাপ) */
+.lbg{align-items:flex-start;overflow-y:auto;padding:70px 0 90px}
+.lbg-wrap{width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 14px;max-height:100%}
+.lbg-card{position:relative;width:100%;aspect-ratio:560/709;cursor:pointer}
+.lbg-card .lbp-name{top:41%;font-size:14px}
+.lbg-card .lbp-amt{top:50%;font-size:26px}
+.lbg-card .lbp-amt .lb-gem{width:22px;height:22px}
+.lbg-card .lbp-btn{font-size:16px;pointer-events:none}
+.lbg-card .lbp-btn.ready{background:linear-gradient(#fff1a8,#ffc83a);color:#6a1a00;border:1px solid #fff}
+.lbw-who{display:flex;align-items:center;gap:6px}.lbw-who img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.lbp-btn.ready{background:linear-gradient(#fff1a8,#ffc83a);color:#6a1a00;border:2px solid #fff;cursor:pointer}

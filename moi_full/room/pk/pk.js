@@ -194,6 +194,33 @@ function pkPlace(){
     }
     banner.style.setProperty('--pkTop', _pkBaseTop + 'px');
     app.style.setProperty('--pkH', (banner.offsetHeight + 4) + 'px');
+    pkFit();
+}
+
+/* ═══ PK চলার সময় সিটের ঘর ছোট করা — যাতে নিচের মেসেজ বক্স স্ক্রিনের ~৩৮% জায়গা পায় ═══ */
+const PK_FEED_START = 0.62;     /* মেসেজ বক্স স্ক্রিনের এই অংশ থেকে শুরু (০.৬২ = উপরের ৬২% বাদ, নিচের ৩৮% মেসেজের) */
+const PK_MIN_ZOOM = 0.58;       /* ঘর এর চেয়ে বেশি ছোট হবে না */
+let _pkFitSig = '';
+function pkFit(force){
+    const app = document.querySelector('.app-container');
+    const grid = $('seatsGrid');
+    if (!app || !grid) return;
+    if (!state.pk){ grid.style.zoom = ''; app.style.removeProperty('--pkMt'); _pkFitSig = ''; return; }
+    const sig = grid.children.length + '|' + app.clientHeight + '|' + (app.style.getPropertyValue('--pkH') || '');
+    if (!force && sig === _pkFitSig) return;
+    _pkFitSig = sig;
+    const pkH = parseFloat(app.style.getPropertyValue('--pkH')) || 130;
+    grid.style.zoom = '1';
+    app.style.setProperty('--pkMt', pkH + 'px');
+    const H = app.clientHeight;
+    const gh = grid.offsetHeight;
+    const top = grid.offsetTop;
+    if (!gh || !H) return;
+    let z = (PK_FEED_START * H - top - 14) / gh;
+    z = Math.max(PK_MIN_ZOOM, Math.min(1, z));
+    /* zoom করলে margin-ও ছোট হয়, তাই আগে থেকে বাড়িয়ে রাখি — প্যানেলের নিচে জায়গা ঠিক থাকবে */
+    app.style.setProperty('--pkMt', (pkH / z) + 'px');
+    grid.style.zoom = String(z);
 }
 
 function pkRenderBanner(pk){
@@ -218,7 +245,7 @@ function pkRenderBanner(pk){
     setTimeout(pkPlace, 120);
 }
 
-window.addEventListener('resize', () => { if (state.pk) pkPlace(); });
+window.addEventListener('resize', () => { if (state.pk){ _pkFitSig = ''; pkPlace(); } });
 
 /* ═══ টাইমার ═══ */
 function pkStartTimer(){
@@ -271,6 +298,7 @@ function pkUpdateTug(){
     if (sr) sr.innerText = rs.toLocaleString();
 
     pkRenderSupporters();
+    pkFit();
 }
 
 /* যে দলকে যারা বেশি গিফট দিয়েছে তাদের সেরা ৪ জন — বেশি দেওয়া জন মাঝের দিকে */
@@ -362,6 +390,7 @@ function pkFinish(pk){
     if (sheet) sheet.classList.remove('active');
     _pkBaseTop = null;
     _pkSupSig = '';
+    pkFit();
     if ($('pkSupBlue')) $('pkSupBlue').innerHTML = '';
     if ($('pkSupRed')) $('pkSupRed').innerHTML = '';
     if (pk) pkShowResult(pk);

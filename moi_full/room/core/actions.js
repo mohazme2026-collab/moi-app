@@ -311,6 +311,7 @@ window.canManageUser = canManageUser;
 /* ═══ Mic নেওয়া / ছাড়া / লক / আনলক ═══ */
 function takeMic(i){
     if (!myProfile) return;
+    if (window.RIPerm && !RIPerm.can('mic')){ toastMsg('🚫 ' + RIPerm.why('mic')); closeSheet(); return; }
     if (myProfile.isGuest){ toastMsg('গেস্ট মাইকে উঠতে পারে না — লগইন করুন'); closeSheet(); return; }
     const prev = state.seats[i];
     if (prev && prev.uid && prev.uid !== myProfile.uid){ toastMsg('সিটটি আগে থেকেই নেওয়া'); closeSheet(); return; }

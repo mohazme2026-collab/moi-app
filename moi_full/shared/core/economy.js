@@ -237,6 +237,8 @@ console.log('[MOI] economy.js loaded (client mode)');
                     sd[tu] = sd[tu] || {}; sd[tu][uid] = (sd[tu][uid] || 0) + unit * qty;
                 });
                 SS.set(fk, fd); SS.set(sk, sd);
+                /* CP-র দুজনের গিফট CP পয়েন্টে যোগ */
+                try { const cc = SS.get('moi_rel_cp', {}) || {}; let ch = false; targetUids.forEach(tu => { const k = uid < tu ? uid + '|' + tu : tu + '|' + uid; if (cc[k]){ cc[k].pts = (cc[k].pts || 0) + unit * qty; ch = true; } }); if (ch) SS.set('moi_rel_cp', cc); } catch(e){}
             }
         } catch(e){}
         const names = res.targets.length === 1 ? res.targets[0].name : res.targets.length + ' জন';
@@ -941,6 +943,38 @@ console.log('[MOI] economy.js loaded (client mode)');
             const fS = await t.get(userRef(r.from)); if (!fS.exists) return;
             applyDelta(t, r.from, fS.data(), { dia: r.cost, title: 'Refund: relationship', txType: 'reward' });
         });
+        return { ok: true };
+    };
+
+    /* ═══════════ CP: লেভেলের 💎 জমানো ও CP ভাঙা ═══════════ */
+    const cpFind = uid => { const c = relGet('moi_rel_cp', {}); for (const k in c) if (c[k].a === uid || c[k].b === uid) return { key: k, c, rec: c[k] }; return null; };
+    H.cpBoost = async (data, uid) => {
+        const amount = Math.floor(Number(data.amount));
+        if (!(amount >= 10 && amount <= 100000)) fail('INVALID');
+        const f = cpFind(uid); if (!f) throw new Error('আপনার CP নেই');
+        const me = await getUserDoc(uid); assertActive(me);
+        const bal = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < amount) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -amount, title: 'CP level up', txType: 'spend' }).diamonds;
+        });
+        f.rec.pts = (f.rec.pts || 0) + amount; relSet('moi_rel_cp', f.c);
+        return { ok: true, pts: f.rec.pts, balance: bal };
+    };
+    /* CP ভাঙা: চাপলে ২ ঘণ্টার কাউন্টডাউন শুরু; সময়ের ভিতরে বাতিল করা যায়; শেষ হলে CP মুছে যায় */
+    H.cpBreak = async (data, uid) => {
+        const f = cpFind(uid); if (!f) throw new Error('আপনার CP নেই');
+        if (!f.rec.brk) { f.rec.brk = Date.now() + 2 * 3600 * 1000; relSet('moi_rel_cp', f.c); }
+        return { ok: true, brk: f.rec.brk };
+    };
+    H.cpBreakCancel = async (data, uid) => {
+        const f = cpFind(uid); if (!f) throw new Error('আপনার CP নেই');
+        delete f.rec.brk; relSet('moi_rel_cp', f.c);
+        return { ok: true };
+    };
+    H.cpBreakDone = async (data, uid) => {
+        const f = cpFind(uid); if (!f) return { ok: true };
+        if (f.rec.brk && f.rec.brk <= Date.now()) { delete f.c[f.key]; relSet('moi_rel_cp', f.c); }
         return { ok: true };
     };
 

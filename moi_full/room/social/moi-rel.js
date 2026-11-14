@@ -42,6 +42,7 @@
     }
     /* কাপল কার্ড — প্রোফাইল ও সিটের হার্ট-শিট দুই জায়গাতেই */
     function cpCard(owner, cp, mine){
+        if (window.CPUI && window.CPBoard) return CPUI.cardHTML(owner);
         var A = who(owner), t = '', lv = 0;
         if (cp){ lv = cpLevel(cp); t = ' t' + tier(lv); }
         var B = cp ? who(cp.a === owner ? cp.b : cp.a) : null;

@@ -50,19 +50,7 @@
 
     /* CP ও Special ঘর (রুমের সম্পর্ক ব্যবস্থা থেকে) */
     function relations(p, avatar){
-        $('cpMe').src = avatar; $('cpMe').onerror = function(){ this.onerror = null; this.src = ph(p.name); };
-        $('cpMeN').textContent = p.name || '';
-        const cps = S().get('moi_rel_cp', {}) || {}; let partner = null;
-        Object.keys(cps).forEach(k => { const r = cps[k]; if (r && (r.a === p.uid || r.b === p.uid)) partner = r.a === p.uid ? r.b : r.a; });
-        if (partner){
-            const u = userOf(partner);
-            $('cpOther').innerHTML = '<div class="av"><img src="' + esc(u.photo || ph(u.name)) + '" alt=""></div><small>' + esc(u.name || 'CP') + '</small>';
-            $('cpLv').textContent = 'Lv.1'; $('cpTx').textContent = 'My CP';
-        } else {
-            $('cpOther').innerHTML = '<div class="plus" id="cpPlus">+</div>';
-            $('cpLv').textContent = 'Lv.0'; $('cpTx').textContent = 'Invite CP';
-            const pl = $('cpPlus'); if (pl) pl.onclick = () => toast('রুমে কারো প্রোফাইল থেকে CP অনুরোধ পাঠান');
-        }
+        if (window.CPUI && !$('cpHost').__m){ $('cpHost').__m = 1; CPUI.mount($('cpHost'), p.uid); }
         const frs = S().get('moi_rel_fr', {}) || {}, mine = [];
         Object.keys(frs).forEach(k => { const r = frs[k]; if (r && (r.a === p.uid || r.b === p.uid)) mine.push({ uid: r.a === p.uid ? r.b : r.a, type: r.type }); });
         let h = '';

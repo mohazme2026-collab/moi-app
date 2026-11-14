@@ -167,12 +167,7 @@ window.openEmojiSheet = () => {
         toastMsg('লগইন করুন');
         return;
     }
-    const seatIdx = state.seats.findIndex(s => s && s.uid === myProfile.uid);
-    if (seatIdx === -1){
-        toastMsg('আগে একটা সিটে উঠুন 🎤');
-        return;
-    }
-    closeSheet();
+    closeSheet();   /* লিসেনারও ইমোজি দিতে পারে — শুধু চ্যাটে দেখায় */
     buildEmojiCategories();
     renderEmojiGrid();
     $('sheetBackdrop').classList.add('active');
@@ -182,16 +177,15 @@ window.openEmojiSheet = () => {
 window.sendEmojiReaction = (code) => {
     if (!myProfile) return;
     const idx = state.seats.findIndex(s => s && s.uid === myProfile.uid);
-    if (idx === -1){
-        toastMsg('আগে একটা সিটে উঠুন');
-        return;
-    }
     const src = isMeme(code) ? MOIStore.memeSrc(code) : EMOJI_BASE + code + '/512.gif';
     closeSheet();
-    showSeatReaction(idx, code, src);
-    logActivity('react', idx);
-    /* সিটের ইমোজি রুমের চ্যাটেও দেখায় (নাম + প্রোফাইল + ইমোজি) */
+    /* চ্যাটে সবসময় দেখায় (নাম + প্রোফাইল + ইমোজি) */
     pushMessage({ uid: myProfile.uid, name: myProfile.name || 'User', avatar: myProfile.avatar, text: '', img: src, type: 'emoji' });
+    /* সিটে বসা থাকলে সিটের উপরেও ভেসে ওঠে — চ্যাট রি-রেন্ডারের পরে, যাতে মুছে না যায় */
+    if (idx !== -1){
+        setTimeout(() => showSeatReaction(idx, code, src), 60);
+        logActivity('react', idx);
+    }
 };
 
 /* ═══════════════════════════════════════════════════════════════

@@ -370,7 +370,7 @@ window.renderMembers = () => {
 /* ═══ Seat Reaction (emoji ভেসে ওঠা) ═══ */
 function showSeatReaction(seatIndex, code, src){
     if (seatIndex < 0 || seatIndex >= 10) return;
-    const layer = $('reactLayer' + seatIndex);
+    let layer = $('reactLayer' + seatIndex);
     if (!layer) return;
 
     const burst = document.createElement('div');
@@ -393,6 +393,7 @@ function showSeatReaction(seatIndex, code, src){
                 div.textContent = emojiFallback(code);
                 img.replaceWith(div);
             };
+            layer = $('reactLayer' + seatIndex) || layer;
             layer.appendChild(img);
             setTimeout(() => img.remove(), 2400);
         }, i * 80);

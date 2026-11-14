@@ -188,6 +188,7 @@ function renderMessageFeed(){
         let inner = null;
         if (m.type === 'lbox') inner = LB.feedHTML(m.box);
         else if (m.type === 'lbwin') inner = LB.winHTML(m);
+        if (m.type === 'emoji' && m.img) inner = `<div class="msg-item msg-emo">${m.avatar ? `<img class="msg-emo-av" src="${esc(m.avatar)}" alt="" onerror="this.style.display='none'">` : ''}<span class="msg-name">${esc(m.name)}</span><img class="msg-emo-img" src="${esc(m.img)}" alt=""></div>`;
         if (inner === null && m.type === 'image' && m.img) inner = `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span><img class="msg-img" src="${esc(m.img)}" alt="" onclick="chatViewImg(this.src)"></div>`;
         if (inner === null && window.MOIChatFx){ const h = MOIChatFx.row(m); if (h) inner = h; }   /* SVIP চ্যাট ব্যানার */
         if (inner === null) inner = m.type === 'gift' ? `<div class="msg-item gift-msg">🎁 <span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>` : `<div class="msg-item"><span class="msg-name">${esc(m.name)}</span>${esc(m.text)}</div>`;

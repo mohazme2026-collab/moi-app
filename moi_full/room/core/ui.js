@@ -190,6 +190,8 @@ window.sendEmojiReaction = (code) => {
     closeSheet();
     showSeatReaction(idx, code, src);
     logActivity('react', idx);
+    /* সিটের ইমোজি রুমের চ্যাটেও দেখায় (নাম + প্রোফাইল + ইমোজি) */
+    pushMessage({ uid: myProfile.uid, name: myProfile.name || 'User', avatar: myProfile.avatar, text: '', img: src, type: 'emoji' });
 };
 
 /* ═══════════════════════════════════════════════════════════════

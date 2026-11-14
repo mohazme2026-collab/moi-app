@@ -133,13 +133,12 @@
 
     <!-- MOI নিচের বাটন বার: কাজ আগের ফাংশনেই, চেহারা moi-ui.css -এ -->
     <div class="moi-dock" id="moiDock">
-        <button class="md-btn md-chat" onclick="openMessageInput()" aria-label="চ্যাট"><i class="fa-solid fa-comment-dots"></i></button>
-        <button class="md-btn md-emoji md-mic-only" onclick="openEmojiSheet()" aria-label="ইমোজি"><i class="fa-solid fa-face-smile"></i></button>
         <button class="md-btn md-mic md-mic-only" id="micToggleBtn" onclick="toggleMyMicFromBar()" aria-label="মাইক"><i class="fa-solid fa-microphone"></i></button>
-        <button class="md-btn md-gift" onclick="openGiftPanel()" aria-label="গিফট"><i class="fa-solid fa-gift"></i></button>
+        <div class="md-input" id="mdInput" onclick="openMessageInput()" role="button" aria-label="চ্যাট"><span class="md-ph">হাই বলুন...</span><button class="md-btn md-emoji" onclick="event.stopPropagation();openEmojiSheet()" aria-label="ইমোজি"><i class="fa-solid fa-face-smile"></i></button></div>
         <button class="md-btn md-game" onclick="openGameSheet()" aria-label="গেম"><i class="fa-solid fa-gamepad"></i></button>
         <button class="md-btn md-menu" onclick="openSettingsMenu()" aria-label="মেনু"><i class="fa-solid fa-table-cells-large"></i></button>
         <button class="md-btn md-dm" onclick="openChatSheet()" aria-label="মেসেজ"><i class="fa-solid fa-envelope"></i></button>
+        <button class="md-btn md-gift" onclick="openGiftPanel()" aria-label="গিফট"><i class="fa-solid fa-gift"></i></button>
     </div>
 
     <div class="yellow-glow"></div>

@@ -45,13 +45,13 @@
 .moi-dock .md-btn{width:42px;height:48px;border-radius:0;background:transparent center/contain no-repeat;box-shadow:none;font-size:0;color:transparent;
   filter:drop-shadow(0 6px 8px rgba(0,0,0,.45));overflow:visible}
 .moi-dock .md-btn i{display:none}
-.moi-dock .md-chat{background-image:url(../dock/chat.png)}
-.moi-dock .md-emoji{background-image:url(../dock/emoji.png)}
-.moi-dock .md-mic,.moi-dock .md-mic.mic-on,.moi-dock .md-mic.mic-off{background-image:url(../dock/mic.png);background-color:transparent;background-size:contain;background-position:center;background-repeat:no-repeat}
-.moi-dock .md-gift{width:60px;height:75px;margin-top:-26px;background-image:url(../dock/gift.png);background-color:transparent;box-shadow:none}
-.moi-dock .md-game{background-image:url(../dock/game.png)}
-.moi-dock .md-menu{background-image:url(../dock/menu.png)}
-.moi-dock .md-dm{background-image:url(../dock/dm.png)}
+.moi-dock .md-chat{background-image:url(../dock/chat.webp)}
+.moi-dock .md-emoji{background-image:url(../dock/emoji.webp)}
+.moi-dock .md-mic,.moi-dock .md-mic.mic-on,.moi-dock .md-mic.mic-off{background-image:url(../dock/mic.webp);background-color:transparent;background-size:contain;background-position:center;background-repeat:no-repeat}
+.moi-dock .md-gift{width:60px;height:75px;margin-top:-26px;background-image:url(../dock/gift.webp);background-color:transparent;box-shadow:none}
+.moi-dock .md-game{background-image:url(../dock/game.webp)}
+.moi-dock .md-menu{background-image:url(../dock/menu.webp)}
+.moi-dock .md-dm{background-image:url(../dock/dm.webp)}
 /* মাইক বন্ধ: ছবি ধূসর + লাল কাটা দাগ */
 .moi-dock .md-mic.mic-off{background-color:transparent;filter:grayscale(.85) brightness(.75) drop-shadow(0 6px 8px rgba(0,0,0,.45))}
 .moi-dock .md-mic.mic-off::after{content:'';position:absolute;left:50%;top:50%;width:3px;height:78%;background:#ff4d6d;border-radius:2px;transform:translate(-50%,-50%) rotate(40deg);box-shadow:0 0 6px rgba(255,77,109,.8)}

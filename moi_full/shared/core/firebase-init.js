@@ -1,3 +1,26 @@
+/* ═══ ছবি ডিকোড ব্যাকগ্রাউন্ডে (স্ক্রল/ট্যাপ আটকায় না) ═══ */
+(function(){
+    try {
+        function fix(n){ if (n && n.nodeType === 1){ if (n.tagName === 'IMG' && !n.decoding) n.decoding = 'async'; else if (n.querySelectorAll){ var l = n.querySelectorAll('img'); for (var i = 0; i < l.length; i++) if (!l[i].decoding) l[i].decoding = 'async'; } } }
+        new MutationObserver(function(ms){ for (var i = 0; i < ms.length; i++){ var a = ms[i].addedNodes; for (var j = 0; j < a.length; j++) fix(a[j]); } }).observe(document.documentElement, { childList: true, subtree: true });
+    } catch(e){}
+})();
+
+/* ═══ লোকাল অ্যাভাটার: বাইরের সাইট ছাড়া ছবি (assets/av/b001..b100, g001..g100) ═══
+   MOI_AVATAR(seed, gender) → একই seed সবসময় একই ছবি দেয়। gender: 'm'/'f' বা না দিলে seed থেকে। */
+(function(){
+    var base = '';
+    try { base = new URL('../../assets/av/', document.currentScript.src).href; } catch(e){ base = location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/, '') + 'assets/av/'; }
+    function h(str){ var x = 2166136261; str = String(str == null ? '' : str); for (var i = 0; i < str.length; i++){ x ^= str.charCodeAt(i); x = Math.imul(x, 16777619); } return x >>> 0; }
+    window.MOI_AV_BASE = base;
+    window.MOI_AVATAR = function(seed, gender){
+        var n = h(seed);
+        var g = gender ? String(gender).toLowerCase().charAt(0) : (n & 1 ? 'f' : 'm');
+        var idx = (Math.floor(n / 2) % 100) + 1;
+        return base + (g === 'f' ? 'g' : 'b') + ('00' + idx).slice(-3) + '.webp';
+    };
+})();
+
 /* ═══ সত্যিকারের দেখা উচ্চতা (স্ট্যাটাস বার/নেভ বার বাদ) → --app-h ═══ */
 (function(){
     function setH(){ try { document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px'); } catch(e){} }
@@ -128,8 +151,9 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
     let bulkUntil = 0;
     function persist(now){
         dirty = true;
-        if (now || Date.now() >= bulkUntil){ doPersist(); return; }
-        if (!pTimer) pTimer = setTimeout(doPersist, 250);
+        if (now){ doPersist(); return; }
+        /* স্পিড: সব লেখা এক সাথে করে ৭০০ms-এ একবার সেভ (আগে প্রতিটা লেখায় ১ MB+ সেভ হতো — ফোন আটকে যেত) */
+        if (!pTimer) pTimer = setTimeout(doPersist, Date.now() < bulkUntil ? 250 : 700);
     }
     window.addEventListener('pagehide', () => { if (dirty) doPersist(); });
     window.addEventListener('beforeunload', () => { if (dirty) doPersist(); });

@@ -1,3 +1,4 @@
+var MOI_EXT=(function(){try{return new URL('../assets/ext/',document.currentScript.src).href}catch(e){return location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/,'')+'assets/ext/'}})();
 /* demo/broadcast-sim.js — ডেমোর বটরা সত্যিকারের কাজ করে: বিভিন্ন রুমে গিফট দেয়, লাকি বক্স ছাড়ে, গেমে জেতে
    → সঙ্গে সঙ্গে সব পেজের উপরে ব্যানার আসে, ট্যাপ করলে ওই রুমে যাওয়া যায়, আর ঢুকে দেখা যায় জিনিসটা সত্যিই আছে:
      • গিফট  : ওই রুমের চ্যাটে বার্তা, সিটের কয়েন বাড়া, গিফট-ইতিহাস
@@ -21,16 +22,17 @@
     const LUCKY_QTY = [5, 10, 20];
     const LUCKY_TIMER_MIN = 1;                  /* লাকি বক্সের টাইমার (১ মিনিট পর Open করা যায়) */
     const SPEED = Number((new URLSearchParams(location.search)).get('botspeed')) || 1;
+    if (/[?&]bots=0/.test(location.search)) return;   /* ?bots=0 → বট বন্ধ (স্পিড টেস্টের জন্য) */
 
     /* গিফটের তালিকা — room/gifts.js এর সাথে একই লিংক ও দাম */
     const GIFTS = [
-        { id: 'rose', name: 'ফুল', price: 1, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/88185067b0fbcd2f71506e0ae8b30b94427c996f/rose.json', filter: '', w: 26, q: [1, 1, 3, 5, 10] },
-        { id: 'kiss', name: 'চুমু', price: 1, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/5e7a3520d96a28bd05cd5249ff24223022019cac/kiss%20heart.json', filter: '', w: 16, q: [1, 5, 10, 20] },
-        { id: 'present', name: 'প্রেজেন্ট পটি', price: 5, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/881e25d092b54ef588413c1c89cbd29c95d35dfa/Present%20poop.json', filter: '', w: 14, q: [1, 5, 10] },
-        { id: 'diamond', name: 'ডায়মন্ড', price: 5, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/adf7bc4019f616641b0a2b2e391a4ba705d7eabb/gift%20(Diamond).json', filter: '', w: 12, q: [1, 5, 10, 20] },
-        { id: 'cake', name: 'কেক', price: 10, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/43f9fccc28fd603902525a0caadbe28e4344f2e0/%230101J_S_07.json', filter: '', w: 14, q: [1, 5, 10, 20] },
-        { id: 'treasure', name: 'গোল্ড বক্স', price: 15, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/92930e19f61b4e877ff1829552d75068b3d7bea4/Treasure%20Chest.json', filter: '', w: 10, q: [1, 10, 20, 66] },
-        { id: 'diamond_v3', name: 'ডায়মন্ড প্লাটিনাম', price: 10, url: 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/adf7bc4019f616641b0a2b2e391a4ba705d7eabb/gift%20(Diamond).json', filter: 'Pillow|Layer 1|shadow', w: 8, q: [1, 10, 66, 99] }
+        { id: 'rose', name: 'ফুল', price: 1, url: (MOI_EXT+'gift_1e3519dc.json'), filter: '', w: 26, q: [1, 1, 3, 5, 10] },
+        { id: 'kiss', name: 'চুমু', price: 1, url: (MOI_EXT+'gift_fc700648.json'), filter: '', w: 16, q: [1, 5, 10, 20] },
+        { id: 'present', name: 'প্রেজেন্ট পটি', price: 5, url: (MOI_EXT+'gift_250e346a.json'), filter: '', w: 14, q: [1, 5, 10] },
+        { id: 'diamond', name: 'ডায়মন্ড', price: 5, url: (MOI_EXT+'gift_27dfe25a.json'), filter: '', w: 12, q: [1, 5, 10, 20] },
+        { id: 'cake', name: 'কেক', price: 10, url: (MOI_EXT+'gift_70c509d6.json'), filter: '', w: 14, q: [1, 5, 10, 20] },
+        { id: 'treasure', name: 'গোল্ড বক্স', price: 15, url: (MOI_EXT+'gift_662cd6fd.json'), filter: '', w: 10, q: [1, 10, 20, 66] },
+        { id: 'diamond_v3', name: 'ডায়মন্ড প্লাটিনাম', price: 10, url: (MOI_EXT+'gift_27dfe25a.json'), filter: 'Pillow|Layer 1|shadow', w: 8, q: [1, 10, 66, 99] }
     ];
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));

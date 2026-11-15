@@ -35,7 +35,7 @@
     }
 
     /* ─ নোটিফিকেশন (টোস্ট) ─ */
-    function userOf(id){ try { const u = (S().get('moi_demo_users', {}) || {})[id]; return u || null; } catch(e){ return null; } }
+    function userOf(id){ try { const u = S().getIn ? S().getIn('moi_demo_users', id, null) : (S().get('moi_demo_users', {}) || {})[id]; return u || null; } catch(e){ return null; } }
     function toast(icon, title, text, onTap){
         if (IN_CHAT) return;
         const old = document.querySelector('.cb-toast'); if (old) old.remove();

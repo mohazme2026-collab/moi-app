@@ -79,6 +79,6 @@
 
 /* রকেট ছাড়ার ব্যানার: আগুন-কমলা */
 .bc-rocket{--t1:rgba(255,128,36,.72);--t2:rgba(150,28,28,.74);--glow:rgba(255,170,60,.6);--edge:rgba(255,226,140,.9)}
-.bc-rk{flex:0 0 auto;width:34px;height:44px;margin:-6px 0;background:url(../../room/rocket/rocket-s.png) center/contain no-repeat;filter:drop-shadow(0 0 8px rgba(255,200,60,.95));animation:bcRk .7s ease-in-out infinite alternate}
+.bc-rk{flex:0 0 auto;width:34px;height:44px;margin:-6px 0;background:url(../../room/rocket/rocket-s.webp) center/contain no-repeat;filter:drop-shadow(0 0 8px rgba(255,200,60,.95));animation:bcRk .7s ease-in-out infinite alternate}
 @keyframes bcRk{from{transform:translateY(2px) rotate(-6deg)}to{transform:translateY(-3px) rotate(6deg)}}
 .bc-rkt{flex:0 0 auto;font:italic 900 15px/1 Poppins,system-ui,sans-serif;background:linear-gradient(180deg,#fff7c2,#ffd23a 55%,#d98300);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.5px #7a4300;filter:drop-shadow(0 2px 0 rgba(90,40,0,.8))}

@@ -8,29 +8,29 @@ const T = ms => new M.Timestamp(ms);
 const NOW = Date.now();
 
 /* ───────── মানুষের তালিকা (১২৫ জন) ───────── */
-const FEMALE_FIRST = ['Aisha','Fatima','Layla','Noor','Maryam','Sara','Hana','Yasmin','Zainab','Amira','Lina','Dina','Rania','Salma','Huda','Reem','Jana','Leen','Emma','Olivia','Sophia','Mia','Chloe','Emily','Grace','Hannah','Lily','Ella','Anna','Julia','Siti','Aina','Farah','Dayana','Elif','Zeynep','Camila','Valentina','Sofia','Isabella','Yuki','Mina','Sakura','Anya','Katya','Lucia','Marta','Nora','Jasmine','Chloé','Amber','Zoe','Ivy','Maya','Leyla','Selin','Carla','Elena','Rosa','Alina'];
-const MALE_FIRST = ['Omar','Ahmed','Khalid','Yusuf','Hamza','Ali','Ibrahim','Zayed','Faisal','Tariq','Sami','Karim','Bilal','Hassan','Rashid','Adam','Daniel','Ryan','Liam','Noah','Lucas','Ethan','Jack','Leo','Mateo','Rizal','Hafiz','Amir','Emre','Burak','Mehmet','Carlos','Diego','Javier','Marco','Luca','Matteo','Hiroshi','Kenji','Min-jun','Dmitri','Ivan','Oliver','Henry','Jacob','Samuel','Nathan','Tom','Ben','Max','Felix','Jonas','Pierre','Hugo','Andre','Rafael','Joshua','Aaron','Sultan','Majed'];
-const LAST = ['Al Mansoori','Hassan','Al Farsi','Smith','Brown','Tan','Lim','Rossi','Silva','Müller','Garcia','Lopez','Kim','Sato','Ivanov','Jones','Taylor','Wilson','Dubois','Yilmaz'];
-const STYLE = ['{f} {l}','{f}','{f} 🌸','{f}_{l}','{f} ❤','{f} {l}','{f} ✨','{f}♡','{f} {l}','{f} 🎧'];
-const BN = ['ليلى','عمر','نور','سارة','خالد','هند','يوسف','مريم','فيصل','ريم','حمزة','لينا','سلطان','دانة'];
-const COUNTRIES = ['UAE','Saudi Arabia','Qatar','Kuwait','Malaysia','Singapore','UK','USA','Canada','Australia','Turkey','Egypt','Italy','Germany','France','Spain','Japan','South Korea','Philippines','Brazil'];
+const FEMALE_FIRST = ["আফিয়া", "আয়েশা", "অদিতি", "অনন্যা", "অর্পিতা", "আরিবা", "আরিশা", "আসমা", "ইরা", "ইশরাত", "উমাইরা", "ঐশী", "কেয়া", "খুশি", "জান্নাত", "জারা", "জেরিন", "তানহা", "তানিয়া", "তাসনিম", "দিয়া", "নাবিলা", "নাদিয়া", "নাফিসা", "নুসরাত", "নওরীন", "পায়েল", "প্রিয়া", "প্রজ্ঞা", "ফারিহা", "ফারজানা", "ফারিয়া", "মাহিয়া", "মাহিরা", "মারিয়া", "মিম", "মিশু", "মুনতাহা", "মুনিয়া", "মৌ", "রাইসা", "রাইमा", "রিমি", "রিমা", "রুবাইয়া", "রুবিনা", "রূপা", "লাবণ্য", "লিমা", "সাদিয়া", "সামিয়া", "সায়রা", "সায়মা", "সারা", "সানজিদা", "সানজানা", "সাবা", "সাবরিনা", "সাফা", "সাফিয়া", "সুমাইয়া", "সুরাইয়া", "সুহানা", "স্নিগ্ধা", "স্বর্ণা", "স্বাতী", "হাফসা", "হুমায়রা", "হৃদিতা", "ঐন্দ্রিলা", "অন্তরা", "অভ্রা", "অমৃতা", "আলভীনা", "আলিয়া", "ইফফাত", "ইলমা", "উর্মি", "কনিকা", "কুহু", "চৈতি", "জুঁই", "তৃষা", "দোলা", "দিশা", "নীরা", "পূজা", "বৃষ্টি", "মেঘলা", "মৌসুমী", "রেশমি", "শারমিন", "শীলা", "শ্রেয়া", "সেঁজুতি", "সোহানা", "তুবা", "তুলিকা", "ঊর্মিলা", "নাইমা"];
+const MALE_FIRST = ["আরিফ", "সাকিব", "তামিম", "রায়হান", "নাফিস", "ইমরান", "ফাহিম", "সিয়াম", "আদনান", "রিফাত", "মাহির", "আবরার", "আয়ান", "নিহাল", "সাদমান", "তানভীর", "মুশফিক", "রাকিব", "নাবিল", "সাফওয়ান", "আশিক", "মেহেদী", "সোহান", "শাওন", "জুবায়ের", "ফারহান", "ইয়াসিন", "আলভী", "রিদওয়ান", "মাহমুদ", "হাসান", "হোসাইন", "আব্দুল্লাহ", "আহমেদ", "আনাস", "আতিক", "আসিফ", "বাশার", "বিপ্লব", "চয়ন", "দিহান", "ইফতেখার", "এহসান", "ফয়সাল", "গালিব", "হৃদয়", "জাহিদ", "জিসান", "কামরুল", "লাবিব", "মাহফুজ", "মারুফ", "মাসুদ", "মোস্তাফিজ", "নাঈম", "নওশাদ", "ওমর", "পারভেজ", "প্রান্ত", "প্রতীক", "কৌশিক", "সাজিদ", "সামি", "সামিউল", "সানজিদ", "সায়েম", "সোহেল", "সুমন", "তৌহিদ", "উজ্জ্বল", "আকাশ", "অনিক", "অর্ণব", "অয়ন", "বর্ণ", "দুর্জয়", "ঋদ্ধ", "জয়", "নীল", "রুদ্র", "শুভ", "শুভ্র", "সৌরভ", "সৌমিক", "তন্ময়", "তুষার", "উদয়", "বাপ্পী", "নিরব", "রনি", "ইমন", "রাহাত", "রাশেদ", "শরীফ", "সাব্বির", "সাদ", "সাফি", "তাসিন", "ইশতিয়াক", "জাওয়াদ"];
+const LAST = [''];
+const STYLE = ['{f}','{f}','{f}','{f} 🌸','{f}','{f}_{f}','{f}','{f}♡','{f}','{f} 🎧','{f}','{f} ✨'];
+const BN = [];
+const COUNTRIES = ['Bangladesh','Bangladesh','Bangladesh','Bangladesh','Bangladesh','Bangladesh','Bangladesh','UAE','Saudi Arabia','Qatar','Malaysia','Singapore','Kuwait','Bangladesh','Bangladesh','Bangladesh','Oman','UK','Bangladesh','Italy'];
 const VIPS = [1,1,1,0,1,1,0,1,1,1,0,1,1,1];   /* কার role = vip (মুকুট এখন ভিডিও-সিস্টেমে — user.crown = মুকুটের আইডি, যেমন 'svip1') */
 const FRAMES = ['basic','basic','aurora','basic','flame','basic','ocean','royal','basic','galaxy'];
 const BIOS = ['Music lover 🎶','Looking for new friends','Chill & vibes ✨','Stay positive','Music is life 🎧','Good vibes only','Be kind 🌿','','',''];
 
+const AVB = (function(){ try { return new URL('../assets/av/', document.currentScript.src).href; } catch(e){ return location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/, '') + 'assets/av/'; } })();
 function mkUser(i0, gender, pass){
     const i = i0 + (pass || 0) * 29;
     const list = gender === 'f' ? FEMALE_FIRST : MALE_FIRST;
-    const first = list[i % list.length], last = LAST[(i * 7 + (gender === 'f' ? 3 : 5)) % LAST.length];
-    let name = STYLE[(i * 3 + (gender === 'f' ? 1 : 0)) % STYLE.length].replace('{f}', first).replace('{l}', last);
-    if (i % 11 === 4) name = BN[(i + (gender === 'f' ? 1 : 3)) % BN.length];
-    const idx = i0;                                           /* randomuser পোর্ট্রেটের নম্বর (০–৯৮) */
+    const first = list[i0 % list.length];
+    let name = STYLE[(i0 * 3 + (gender === 'f' ? 1 : 0)) % STYLE.length].split('{f}').join(first);
     const level = 3 + ((i * 13 + (gender === 'f' ? 5 : 11)) % 58);
-    return { gender, name, photo: 'https://randomuser.me/api/portraits/' + (gender === 'f' ? 'women' : 'men') + '/' + idx + '.jpg', level };
+    /* ছবি: assets/av (b001..b100 ছেলে, g001..g100 মেয়ে) — নাম ও ছবি সবসময় একই জোড়া */
+    return { gender, name, photo: AVB + (gender === 'f' ? 'g' : 'b') + ('00' + (i0 + 1)).slice(-3) + '.webp', level };
 }
 const people = [];
-for (let pass = 0; pass < 2; pass++){
-    for (let i = 0; i < 99; i++){ people.push(mkUser(i, 'f', pass)); people.push(mkUser(i, 'm', pass)); }
+for (let pass = 0; pass < 1; pass++){
+    for (let i = 0; i < 100; i++){ people.push(mkUser(i, 'f', pass)); people.push(mkUser(i, 'm', pass)); }
 }
 
 /* ইউনিক ৬-সংখ্যার UID (= MOI ID) */
@@ -58,7 +58,7 @@ people.forEach((p, i) => {
 
 /* ───────── আপনি (ডেমো ভিউয়ার) ───────── */
 const ME = {
-    uid: '582104', moiId: '582104', name: 'MOI Demo', photo: 'https://randomuser.me/api/portraits/men/75.jpg', bio: 'ডেমো অ্যাকাউন্ট',
+    uid: '582104', moiId: '582104', name: 'MOI Demo', photo: AVB + 'b075.webp', bio: 'ডেমো অ্যাকাউন্ট',
     country: 'UAE', gender: 'Male', birthday: '', voice: '', role: 'user', isGuest: false, badges: [], crown: '', ownedCrowns: [], frame: 'basic',
     diamonds: 50000, level: 12, xp: 2600, giftsSent: 0, giftsReceived: 0, myRoomUid: '', myRoomId: '', distributorId: null,
     isBanned: false, banReason: null, banExpiresAt: null, profileComplete: true, createdAt: T(NOW - 40 * 86400000), lastSeen: T(NOW), lastActiveRoomId: ''
@@ -116,7 +116,7 @@ ROOMS.forEach((R, ri) => {
     R.offset = Math.max(0, R.members - (seated.length + audience.length));
 
     M.seedDoc('rooms/' + R.id, {
-        id: R.id, name: R.name, logo: (ri % 2 === 0 ? owner.photo : 'https://picsum.photos/seed/moi-' + R.id + '/300/300'), country: R.country, language: 'bn', category: R.category, topic: R.topic,
+        id: R.id, name: R.name, logo: owner.photo, country: R.country, language: 'bn', category: R.category, topic: R.topic,
         owner: { uid: owner.uid, name: owner.name, avatar: owner.photo }, ownerUid: owner.uid, ownerName: owner.name, ownerAvatar: owner.photo,
         admins, level: 3 + ri, points: 20000 + ri * 15000, micSeatCount: 10, isLive: true,
         createdAt: T(NOW - (ri === 2 ? 2 : 30 + ri * 9) * 86400000), rules: [], mutedUsers: [], bannedUsers: []

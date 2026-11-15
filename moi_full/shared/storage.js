@@ -62,9 +62,9 @@ function getAllUsers(){
 /* একজন ইউজার পাওয়া uid দিয়ে */
 function getUser(uid){
     if (!uid) return null;
-    const all = getAllUsers();
-    if (!all[uid] && window.MOISync && MOISync.wantUser) MOISync.wantUser(uid);   /* ক্যাশে নেই → পেছনে এনে দেবে */
-    return all[uid] || null;
+    const u = window.MOISync && MOISync.getIn ? MOISync.getIn(KEY.demoUsers, uid, null) : (getAllUsers()[uid] || null);
+    if (!u && window.MOISync && MOISync.wantUser) MOISync.wantUser(uid);   /* ক্যাশে নেই → পেছনে এনে দেবে */
+    return u || null;
 }
 
 /* একজন ইউজার সেভ/আপডেট করা */

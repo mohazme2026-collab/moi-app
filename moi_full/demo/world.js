@@ -115,6 +115,7 @@ const TOPICS = ['Late night chill 🎶', 'গান ও আড্ডা 🌸', '
 const MORE_TEXT = ['Hi everyone 👋', 'কেমন আছো সবাই?', 'Nice room ✨', 'গানটা দারুণ 🔥', 'Welcome 🤗', 'Salam all', 'Love this vibe ❤', 'কে কে জেগে আছো? 😄', 'Who is from UAE? 🇦🇪', 'ধন্যবাদ সবাইকে 🌹', 'Good night all 🌙', 'Mashallah 😍', 'হা হা হা 😂', 'Great energy!', 'Hello from Malaysia 🇲🇾'];
 
 function roomWorld(){
+    if (/[?&]bots=0/.test(location.search)) return;   /* ?bots=0 → বট বন্ধ */
     const ROOM = (typeof ROOM_ID !== 'undefined') ? ROOM_ID : (new URLSearchParams(location.search)).get('room');
     const R = D.ROOM_BY_ID[ROOM]; if (!R) return;
     const base = () => LIVE() + '/rooms/' + ROOM;

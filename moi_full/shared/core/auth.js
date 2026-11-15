@@ -64,7 +64,7 @@ console.log('[MOI] auth.js loaded');
                     t.set(ref, {
                         uid: u.uid, moiId,
                         name: (u.displayName || '').replace(/[<>]/g, '').trim().slice(0, 24) || (isGuest ? 'Guest ' : 'User ') + moiId.slice(-4),
-                        photo: u.photoURL || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + encodeURIComponent(u.uid),
+                        photo: u.photoURL || (window.MOI_AVATAR ? MOI_AVATAR(u.uid) : ''),
                         bio: '', country: '', gender: '', birthday: '', voice: '',
                         role: isGuest ? 'guest' : 'user', isGuest,
                         badges: [], crown: '', ownedCrowns: [], frame: 'basic',

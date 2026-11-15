@@ -22,7 +22,7 @@
     function build(){
         var a = app(); if (!a || els.fab) return;
         var fab = document.createElement('div'); fab.className = 'rk-fab'; fab.id = 'rkFab';
-        fab.innerHTML = '<img src="rocket/rocket-s.png" alt=""><div class="rk-fab-bar"><i id="rkFabBar"></i></div>';
+        fab.innerHTML = '<img src="rocket/rocket-s.webp" alt=""><div class="rk-fab-bar"><i id="rkFabBar"></i></div>';
         fab.addEventListener('click', openSheet);
         a.appendChild(fab); els.fab = fab;
 
@@ -30,7 +30,7 @@
         wrap.innerHTML =
             '<div class="rk-sheet-bk"></div><div class="rk-sheet">' +
             '<button class="rk-x" type="button" aria-label="close">✕</button>' +
-            '<div class="rk-hero" id="rkHero"><img src="rocket/rocket.png" alt=""></div>' +
+            '<div class="rk-hero" id="rkHero"><img src="rocket/rocket.webp" alt=""></div>' +
             '<div class="rk-meter"><div class="rk-left"><span id="rkLeft">0</span><span>💎</span></div>' +
             '<div class="rk-bar"><i id="rkBar"></i></div><div class="rk-bar-l"><span id="rkBarL">0</span><span id="rkBarR">1,000</span></div></div>' +
             '</div>';
@@ -56,7 +56,7 @@
         var d = document.createElement('div'); d.className = 'rk-big'; d.id = 'rkBig';
         d.innerHTML = '<div class="rk-fx"><i class="rk-fl l"></i><i class="rk-fl r"></i><i class="rk-fl m"></i><div class="rk-smoke"></div></div>' +
             '<div class="rk-hint">TAP THE ROCKET!</div>' +
-            '<div class="rk-body"><img src="rocket/rocket.png" alt=""><div class="rk-count">10</div></div>';
+            '<div class="rk-body"><img src="rocket/rocket.webp" alt=""><div class="rk-count">10</div></div>';
         /* চাপলে শুধু নাম লেখানো — স্ক্রিনে কিছু বদলায় না */
         d.querySelector('.rk-body').addEventListener('click', join);
         a.appendChild(d); els.big = d; lastSec = -1; puffAt = 0;

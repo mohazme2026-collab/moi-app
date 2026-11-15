@@ -8,6 +8,7 @@ console.log('[MOI] sync.js loaded');
 (function(){
     'use strict';
     const cache = Object.create(null);     /* key → মান */
+    const sc = Object.create(null);        /* key → JSON লেখা (পড়ার সময় একবারই parse — স্পিড) */
     const subs  = Object.create(null);     /* key → বন্ধ করার ফাংশন */
     const routes = [];
     const pending = new Set();
@@ -43,12 +44,13 @@ console.log('[MOI] sync.js loaded');
     /* রুট ইঞ্জিন → ক্যাশে নতুন মান ঢোকানো */
     function push(key, val){
         if (val === null || val === undefined){
-            if (cache[key] !== undefined){ delete cache[key]; schedule(key); }
+            if (cache[key] !== undefined){ delete cache[key]; delete sc[key]; schedule(key); }
             else schedule(key);          /* প্রথম "খালি" স্ন্যাপশটও জানাই */
             return;
         }
-        if (same(cache[key], val)) return;
-        cache[key] = clone(val);
+        const sv = JSON.stringify(val);
+        if (sc[key] === sv || (sc[key] === undefined && same(cache[key], val))) return;
+        sc[key] = sv; cache[key] = JSON.parse(sv);
         schedule(key);
     }
 
@@ -81,15 +83,28 @@ console.log('[MOI] sync.js loaded');
             if (!m) return local.get(key, fb === undefined ? null : fb);
             ensure(key, m);
             const v = cache[key];
-            return v === undefined ? (fb === undefined ? null : fb) : clone(v);
+            if (v === undefined) return fb === undefined ? null : fb;
+            if (sc[key] === undefined) sc[key] = JSON.stringify(v);
+            return JSON.parse(sc[key]);
+        },
+        /* সুবিধা: বড় তালিকা (যেমন সব ইউজার) থেকে শুধু একটা অংশ — পুরো তালিকা কপি না করে */
+        getIn(key, sub, fb){
+            const m = matchRoute(key);
+            if (!m){ const all = local.get(key, null); const v = all && all[sub]; return v === undefined ? (fb === undefined ? null : fb) : v; }
+            ensure(key, m);
+            const all = cache[key];
+            const v = all == null ? undefined : all[sub];
+            if (v === undefined) return fb === undefined ? null : fb;
+            return (v !== null && typeof v === 'object') ? JSON.parse(JSON.stringify(v)) : v;
         },
         set(key, val){
             const m = matchRoute(key);
             if (!m){ const was = local.get(key, undefined); local.set(key, val); if (!same(was, val)) schedule(key); return; }
             const prev = cache[key];
-            const next = clone(val);
-            if (next === undefined) return;
-            cache[key] = next;
+            const sv = JSON.stringify(val);
+            if (sv === undefined) return;
+            const next = JSON.parse(sv);
+            sc[key] = sv; cache[key] = next;
             if (myUid && m.r.write){
                 try { m.r.write(key, m.ctx, next, prev); } catch(e){ console.warn('[sync] write failed', key, e); }
             }
@@ -97,7 +112,7 @@ console.log('[MOI] sync.js loaded');
         remove(key){
             const m = matchRoute(key);
             if (!m){ const had = local.get(key, undefined) !== undefined; local.remove(key); if (had) schedule(key); return; }
-            const prev = cache[key]; delete cache[key];
+            const prev = cache[key]; delete cache[key]; delete sc[key];
             if (myUid && m.r.remove){ try { m.r.remove(key, m.ctx, prev); } catch(e){ console.warn('[sync] remove failed', key, e); } }
         },
         /* ক্যাশে সরাসরি ঢোকানো (রুট ইঞ্জিন বা একটানা লিসেনারের জন্য) */
@@ -128,7 +143,7 @@ console.log('[MOI] sync.js loaded');
         stop(){
             Object.keys(subs).forEach(k => { try { if (typeof subs[k] === 'function') subs[k](); } catch(e){} delete subs[k]; });
             stopFns.splice(0).forEach(f => { try { f(); } catch(e){} });
-            Object.keys(cache).forEach(k => delete cache[k]);
+            Object.keys(cache).forEach(k => { delete cache[k]; delete sc[k]; });
             myUid = null;
         },
         /* এক-লাইনে রুম/চ্যাট ওপেন হলে লাইভ সাবস্ক্রিপশন নিশ্চিত করা */

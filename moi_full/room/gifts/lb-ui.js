@@ -38,7 +38,7 @@
         var now = Date.now(), st = status(b, now);
         return '<div class="msg-item lbf"><span class="msg-name">' + esc(b.senderName) + '</span>' +
             '<div class="lbf-card" data-lbf="' + esc(b.id) + '" onclick="LB.open(\'' + esc(b.id) + '\')">' +
-            '<img src="' + IMG + 'card_feed.png" alt="">' +
+            '<img src="' + IMG + 'card_feed.webp" alt="">' +
             '<div class="lbf-amt">' + GEM + '<b>' + b.pool + '</b></div>' +
             '<div class="lbf-st ' + st + '" data-lbst="' + esc(b.id) + '">' + label(b, st, now) + '</div></div></div>';
     }
@@ -60,7 +60,7 @@
         closePop(); openId = id;
         var d = document.createElement('div'); d.id = 'lbPop'; d.className = 'lbp';
         d.innerHTML = '<div class="lbp-card"><img class="lbp-av" src="' + av(b.senderAvatar) + '" alt="">' +
-            '<img class="lbp-frame" src="' + IMG + 'frame_open.png" alt="">' +
+            '<img class="lbp-frame" src="' + IMG + 'frame_open.webp" alt="">' +
             '<div class="lbp-name">' + esc(b.senderName) + '</div>' +
             '<div class="lbp-amt">' + b.pool + ' ' + GEM + '</div>' +
             '<div class="lbp-sub">' + b.qty + ' জন · ' + (b.timerMin ? b.timerMin + ' min' : 'No timer') + '</div>' +
@@ -96,7 +96,7 @@
         var p = me() || {}, win = won > 0;
         var d = document.createElement('div'); d.id = 'lbRes'; d.className = 'lbp lbr';
         d.innerHTML = '<div class="lbp-card lbr-card ' + (win ? 'win' : 'lose') + '"><img class="lbp-av" src="' + av(p.avatar) + '" alt="">' +
-            '<img class="lbp-frame" src="' + IMG + (win ? 'frame_list.png' : 'frame_lose.png') + '" alt="">' +
+            '<img class="lbp-frame" src="' + IMG + (win ? 'frame_list.webp' : 'frame_lose.webp') + '" alt="">' +
             '<div class="lbp-name">' + esc(p.name || 'You') + '</div>' +
             (win ? '<div class="lbr-amt">+' + won + ' ' + GEM + '</div>' : '') +
             '<div class="lbr-list" role="button"></div>' +
@@ -138,7 +138,7 @@
     function gridHTML(list, now){
         return list.map(function(b){
             var st = status(b, now);
-            return '<div class="lbg-card" onclick="LB.open(\'' + esc(b.id) + '\')"><img class="lbp-av" src="' + av(b.senderAvatar) + '" alt=""><img class="lbp-frame" src="' + IMG + 'frame_open.png" alt="">' +
+            return '<div class="lbg-card" onclick="LB.open(\'' + esc(b.id) + '\')"><img class="lbp-av" src="' + av(b.senderAvatar) + '" alt=""><img class="lbp-frame" src="' + IMG + 'frame_open.webp" alt="">' +
                 '<div class="lbp-name">' + esc(b.senderName) + '</div><div class="lbp-amt">' + b.pool + ' ' + GEM + '</div>' +
                 '<div class="lbp-btn ' + st + '" data-lbg="' + esc(b.id) + '">' + (st === 'ready' ? 'Open' : label(b, st, now)) + '</div></div>';
         }).join('');
@@ -162,7 +162,7 @@
         else {
             if (!side){
                 side = document.createElement('div'); side.id = 'lbSide'; side.className = 'lbs'; side.onclick = gridOpen;
-                side.innerHTML = '<img class="lbs-fr" src="' + IMG + 'frame_open.png" alt=""><div class="lbs-cnt"></div><div class="lbs-st"></div>';
+                side.innerHTML = '<img class="lbs-fr" src="' + IMG + 'frame_open.webp" alt=""><div class="lbs-cnt"></div><div class="lbs-st"></div>';
                 app.appendChild(side);
             }
             side.querySelector('.lbs-cnt').textContent = list.length;

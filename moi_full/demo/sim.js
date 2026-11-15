@@ -14,6 +14,7 @@ const SHOW_CHAT_TEXT = false;        /* true দিলে সাধারণ ম
 const SHOW_SPEAKING_RING = false;    /* সব মিউট তাই বন্ধ */
 const SHOW_HEARTS = false;           /* ভাসমান ❤ বন্ধ */
 const SPEED = Number((new URLSearchParams(location.search)).get('speed')) || 1;
+if (/[?&]bots=0/.test(location.search)) return;   /* ?bots=0 → বট বন্ধ (স্পিড টেস্টের জন্য) */
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const every = (fn, min, max, first) => {

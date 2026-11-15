@@ -20,7 +20,7 @@
     }
 
     /* গিফটের Lottie ছবি — room পেজে lottie আগে থেকেই আছে, অন্য পেজে দরকার হলে নিজে লোড করে */
-    const LOTTIE_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
+    const LOTTIE_SRC = (function(){ try { return new URL('../../assets/lib/lottie.min.js', document.currentScript.src).href; } catch(e){ return location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/,'') + 'assets/lib/lottie.min.js'; } })();
     const jsonCache = {};
     let lottieP = null;
     function needLottie(){

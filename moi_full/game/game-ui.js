@@ -157,7 +157,7 @@ function renderWinList(winnerIdx){
     <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(60,20,100,.4);padding:8px;border-radius:12px;border:1px solid rgba(168,85,247,.3);margin-bottom:6px">
       <div style="display:flex;align-items:center;gap:8px">
         <span>${medals[i] || ''}</span>
-        <img src="${u.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name)}" style="width:28px;height:28px;border-radius:50%;border:1px solid #facc15;object-fit:cover">
+        <img src="${u.photo || (window.MOI_AVATAR?MOI_AVATAR(u.name):'')}" style="width:28px;height:28px;border-radius:50%;border:1px solid #facc15;object-fit:cover">
         <span style="color:#fff;font-weight:700;font-size:12px">${esc(u.name)}</span>
       </div>
       <span style="color:#67e8f9;font-weight:900;font-size:12px">💎 ${u.amt.toLocaleString()}</span>
@@ -192,7 +192,7 @@ function renderTopAvatars(list){
   c.innerHTML = list.map((u, i) => `
     <div style="position:relative">
       <span style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:12px">${medals[i]}</span>
-      <img src="${u.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name||'')}" style="width:${sizes[i]};height:${sizes[i]};border-radius:50%;border:2px solid ${borders[i]};object-fit:cover">
+      <img src="${u.photo || (window.MOI_AVATAR?MOI_AVATAR(u.name||''):'')}" style="width:${sizes[i]};height:${sizes[i]};border-radius:50%;border:2px solid ${borders[i]};object-fit:cover">
       <span style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;font-size:8px;font-weight:800;color:#fde047;white-space:nowrap">💎${fmtAmt(u.amount)}</span>
     </div>
   `).join('') + '<div style="width:36px;height:36px;border-radius:16px;background:linear-gradient(135deg,#f59e0b,#b45309);display:flex;align-items:center;justify-content:center;border:1px solid #fcd34d"><i class="fa-solid fa-trophy" style="color:#fef3c7;font-size:12px"></i></div>';
@@ -219,7 +219,7 @@ async function openTopModal(){
     <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(60,20,100,.4);padding:8px;border-radius:12px;border:1px solid rgba(168,85,247,.3);margin-bottom:6px">
       <div style="display:flex;align-items:center;gap:8px;min-width:0">
         <span style="width:22px;text-align:center;color:#c4b5fd;font-weight:800;font-size:12px">${medals[i] || (i + 1)}</span>
-        <img src="${u.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name || '')}" style="width:28px;height:28px;border-radius:50%;border:1px solid #facc15;object-fit:cover">
+        <img src="${u.photo || (window.MOI_AVATAR?MOI_AVATAR(u.name || ''):'')}" style="width:28px;height:28px;border-radius:50%;border:1px solid #facc15;object-fit:cover">
         <span style="color:#fff;font-weight:700;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(u.name || 'User')}</span>
       </div>
       <span style="color:#67e8f9;font-weight:900;font-size:12px;white-space:nowrap">💎 ${(u.amount || 0).toLocaleString()}</span>

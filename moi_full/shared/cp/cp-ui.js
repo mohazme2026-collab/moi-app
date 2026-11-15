@@ -12,7 +12,7 @@
     var meId = function(){ var p = window.MOIAuth && MOIAuth.profile; return p && p.uid ? p.uid : null; };
     function g1(x){ x = String(x || '').toLowerCase(); return x[0] === 'f' ? 'f' : x[0] === 'm' ? 'm' : ''; }
     function user(uid){
-        var u = (get('moi_demo_users', {}) || {})[uid] || {}, p = window.MOIAuth && MOIAuth.profile;
+        var u = (S().getIn ? S().getIn('moi_demo_users', uid, null) : (get('moi_demo_users', {}) || {})[uid]) || {}, p = window.MOIAuth && MOIAuth.profile;
         if (p && p.uid === uid) u = Object.assign({}, u, p);
         return { uid: uid, name: u.name || 'User', avatar: u.photo || u.avatar || '', gender: g1(u.gender), moiId: u.moiId || '' };
     }

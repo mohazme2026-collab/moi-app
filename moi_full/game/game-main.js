@@ -35,7 +35,7 @@ async function startGame(){
     return;
   }
   const me = GameData.me;
-  $('user-avatar').src = me.photo || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(me.name || 'U');
+  $('user-avatar').src = me.photo || (window.MOI_AVATAR?MOI_AVATAR(me.name || 'U'):'');
   showBalance();
   setInterval(() => { if (GameData.syncBalance()) showBalance(); }, 600);
 

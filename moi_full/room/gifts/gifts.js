@@ -1,17 +1,18 @@
+var MOI_EXT=(function(){try{return new URL('../../assets/ext/',document.currentScript.src).href}catch(e){return location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/,'')+'assets/ext/'}})();
 /* ═══════════════════════════════════════════════════════════
    room/gifts.js — Gift System (Part 1/3)
    ═══════════════════════════════════════════════════════════ */
 
 console.log('[ROOM] gifts.js loaded');
 
-var GIFT_URL_DIAMOND_OLD = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/adf7bc4019f616641b0a2b2e391a4ba705d7eabb/gift%20(Diamond).json';
-var GIFT_URL_DIAMOND_NEW = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/45c1e03df3058c40d91ccab3faf3fe7d07a0e493/Diamond%20(1).json';
-var GIFT_URL_CAKE        = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/43f9fccc28fd603902525a0caadbe28e4344f2e0/%230101J_S_07.json';
-var GIFT_URL_POOP        = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/81cbc0d2d09adb279fd61348b54160368d6a46a4/Poop%20Emoji.json';
-var GIFT_URL_KISS        = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/5e7a3520d96a28bd05cd5249ff24223022019cac/kiss%20heart.json';
-var GIFT_URL_PRESENT     = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/881e25d092b54ef588413c1c89cbd29c95d35dfa/Present%20poop.json';
-var GIFT_URL_ROSE        = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/88185067b0fbcd2f71506e0ae8b30b94427c996f/rose.json';
-var GIFT_URL_TREASURE    = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/92930e19f61b4e877ff1829552d75068b3d7bea4/Treasure%20Chest.json';
+var GIFT_URL_DIAMOND_OLD = (MOI_EXT+'gift_27dfe25a.json');
+var GIFT_URL_DIAMOND_NEW = (MOI_EXT+'gift_2a5fd04e.json');
+var GIFT_URL_CAKE        = (MOI_EXT+'gift_70c509d6.json');
+var GIFT_URL_POOP        = (MOI_EXT+'gift_ba256578.json');
+var GIFT_URL_KISS        = (MOI_EXT+'gift_fc700648.json');
+var GIFT_URL_PRESENT     = (MOI_EXT+'gift_250e346a.json');
+var GIFT_URL_ROSE        = (MOI_EXT+'gift_1e3519dc.json');
+var GIFT_URL_TREASURE    = (MOI_EXT+'gift_662cd6fd.json');
 
 var GIFT_CATALOG = {
     hot: [

@@ -1,3 +1,4 @@
+var MOI_EXT=(function(){try{return new URL('../assets/ext/',document.currentScript.src).href}catch(e){return location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/,'')+'assets/ext/'}})();
 /* game/game-config.js — গেমের স্থির মান: সময়, আইটেম, ছবি, জেতার নিয়ম */
 const EPOCH = 1700000000000;
 const ROUND_DURATION = 30000;
@@ -7,11 +8,11 @@ const MAX_ROUNDS = 1300;
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-const IMG_45 = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/main/IMG_%E0%A7%A8%E0%A7%A6%E0%A7%A8%E0%A7%AC%E0%A7%A7%E0%A7%A6%E0%A7%A6%E0%A7%AD_%E0%A7%A6%E0%A7%A8%E0%A7%AA%E0%A7%AA%E0%A7%A9%E0%A7%A9.png';
-const IMG_25 = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/main/IMG_%E0%A7%A8%E0%A7%A6%E0%A7%A8%E0%A7%AC%E0%A7%A7%E0%A7%A6%E0%A7%A6%E0%A7%AD_%E0%A7%A6%E0%A7%A8%E0%A7%AA%E0%A7%A9%E0%A7%A9%E0%A7%AE.png';
-const IMG_15 = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/main/IMG_%E0%A7%A8%E0%A7%A6%E0%A7%A8%E0%A7%AC%E0%A7%A7%E0%A7%A6%E0%A7%A6%E0%A7%AD_%E0%A7%A6%E0%A7%A8%E0%A7%AA%E0%A7%A8%E0%A7%A9%E0%A7%AB.jpg';
-const IMG_10 = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Gift/main/IMG_%E0%A7%A8%E0%A7%A6%E0%A7%A8%E0%A7%AC%E0%A7%A7%E0%A7%A6%E0%A7%A6%E0%A7%AD_%E0%A7%A6%E0%A7%A8%E0%A7%AA%E0%A7%A7%E0%A7%AB%E0%A7%AB.jpg';
-const IMG_X5 = 'https://raw.githubusercontent.com/farjanaaktar1173-boop/Game/main/IMG_%E0%A7%A8%E0%A7%A6%E0%A7%A8%E0%A7%AC%E0%A7%A7%E0%A7%A6%E0%A7%A6%E0%A7%AD_%E0%A7%A6%E0%A7%A8%E0%A7%A8%E0%A7%AD%E0%A7%A7%E0%A7%A6.jpg';
+const IMG_45 = (MOI_EXT+'gift_617cd664.webp');
+const IMG_25 = (MOI_EXT+'gift_73d90815.webp');
+const IMG_15 = (MOI_EXT+'gift_942f27ea.webp');
+const IMG_10 = (MOI_EXT+'gift_99e92b84.webp');
+const IMG_X5 = (MOI_EXT+'game_b1764363.webp');
 const IMG_5 = IMG_X5;   /* মূল ফাইলে নাম মেলেনি (IMG_5 / IMG_X5) — ঠিক করা হয়েছে */
 
 const ITEMS = [

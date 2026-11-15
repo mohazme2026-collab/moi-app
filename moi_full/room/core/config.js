@@ -125,7 +125,7 @@ function roleBadgeHTML(r, size){ return roleIconHTML(r, size); }
 
 /* ═══ User helpers ═══ */
 function getAllUsers(){ return ls_get('moi_demo_users', {}) || {}; }
-function getUser(uid){ if (!uid) return null; const all = getAllUsers(); if (!all[uid] && window.MOISync && MOISync.wantUser) MOISync.wantUser(uid); return all[uid] || null; }
+function getUser(uid){ if (!uid) return null; const u = window.MOISync && MOISync.getIn ? MOISync.getIn('moi_demo_users', uid, null) : (getAllUsers()[uid] || null); if (!u && window.MOISync && MOISync.wantUser) MOISync.wantUser(uid); return u || null; }
 function getCurrentUser(){ return ls_get('moi_user', null); }
 function saveUser(uid, data){
     if (!uid) return;

@@ -136,7 +136,7 @@ console.log('[MOI] economy.js loaded (client mode)');
             const name = cleanName(data.name) || (isGuest ? 'Guest ' : 'User ') + moiId.slice(-4);
             t.set(ref, {
                 uid, moiId, name,
-                photo: okUrl(data.photo) || 'https://api.dicebear.com/7.x/adventurer/svg?seed=' + encodeURIComponent(uid),
+                photo: okUrl(data.photo) || (window.MOI_AVATAR ? MOI_AVATAR(uid) : ''),
                 bio: '', country: '', gender: '', birthday: '', voice: '',
                 role: isGuest ? 'guest' : 'user', isGuest,
                 badges: [], crown: '', ownedCrowns: [], frame: 'basic',
@@ -410,7 +410,7 @@ console.log('[MOI] economy.js loaded (client mode)');
                 box.claimedBy.push(bid);
                 const given = box.winners.reduce((s, w) => s + w.amount, 0), left = box.pool - given;
                 const amount = Math.max(1, Math.min(left, Math.floor(box.pool / (box.qty * 2) * (0.5 + Math.random()))));
-                box.winners.push({ uid: bid, name: names[i], avatar: 'https://i.pravatar.cc/80?u=' + names[i], amount, ts: Date.now() });
+                box.winners.push({ uid: bid, name: names[i], avatar: (window.MOI_AVATAR ? MOI_AVATAR(names[i]) : ''), amount, ts: Date.now() });
                 return box;
             });
         }

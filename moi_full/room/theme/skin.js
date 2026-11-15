@@ -15,7 +15,8 @@
     function isOwner(){ try { return state.myRole === 'owner'; } catch(e){ return false; } }
     function left(id){ return (own[id] || 0) - Date.now(); }
     function activeId(){ return cur && left(cur) > 0 ? cur : ''; }
-    function url(id){ return DIR + id + '.png'; }
+    function url(id){ return DIR + id + '.webp'; }
+    function absUrl(id){ try { return new URL(url(id), document.baseURI).href; } catch(e){ return url(id); } }
     function dur(ms){
         var d = Math.floor(ms / 86400000), h = Math.floor(ms % 86400000 / 3600000), m = Math.floor(ms % 3600000 / 60000);
         return d > 0 ? d + ' দিন ' + h + ' ঘণ্টা' : (h > 0 ? h + ' ঘণ্টা ' + m + ' মিনিট' : Math.max(1, m) + ' মিনিট');
@@ -25,7 +26,7 @@
     /* সিটের উপরে বসানোর HTML (theme.js থেকে ডাকা হয়) */
     function seatHTML(idx){
         var id = activeId(); if (!id) return '';
-        return '<div class="seat-skinbox" style="--sk:url(' + url(id) + ');--d:' + ((idx % 7) * 0.35).toFixed(2) + 's"><img src="' + url(id) + '" alt=""></div>';
+        return '<div class="seat-skinbox" style="--sk:url(' + absUrl(id) + ');--d:' + ((idx % 7) * 0.35).toFixed(2) + 's"><img src="' + url(id) + '" alt=""></div>';
     }
 
     /* Skin ট্যাব */

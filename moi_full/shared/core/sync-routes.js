@@ -64,7 +64,7 @@ console.log('[MOI] sync-routes.js loaded');
 
     /* ───────── ২) rooms ───────── */
     const ROOM_WRITABLE = ['id','name','logo','wallpaper','country','language','owner','ownerUid','ownerName','ownerAvatar',
-        'topic','tags','category','micSeatCount','rules','isLive','mutedUsers','bannedUsers'];
+        'topic','tags','category','micSeatCount','rules','isLive','mutedUsers','bannedUsers','xp','frameUse','perms'];
     S.addRoute({
         match: k => k === 'moi_demo_rooms' ? {} : null,
         sub(key, ctx, push){

@@ -49,8 +49,12 @@ function demo(){
     return d;
 }
 function putDemo(d){ try { localStorage.setItem('ri_demo_' + ROOM_ID, JSON.stringify(d)); } catch(e){} }
-function level(){ var i = (getRoomInfo(ROOM_ID) || {}); return typeof i.level === 'number' ? i.level : (window.ROOM_LEVELS && window.ROOM_LEVELS[ROOM_ID]) || demo().level; }
-function tier(lv){ return lv >= 50 ? ['#ff5ad6','#ffd36b'] : lv >= 30 ? ['#ffd36b','#ff9a3d'] : lv >= 15 ? ['#cfe4ff','#8ab4ff'] : ['#e6c9a8','#c8935a']; }
+var PER = 1000, MAXLV = 70, TIERS = [20,30,40,50,60,70];
+function xp(){ return ((getRoomInfo(ROOM_ID) || {}).xp) || 0; }
+function level(){ return Math.min(MAXLV, Math.floor(xp() / PER)); }
+function tierOf(lv){ var t = 0; TIERS.forEach(function(x){ if (lv >= x) t = x; }); return t; }
+function used(){ var u = (getRoomInfo(ROOM_ID) || {}).frameUse; return typeof u === 'number' ? u : 0; }
+var AS = '../home/rooms/assets/lv/';
 var TARGETS = [[400000,36000],[600000,54000],[800000,72000],[1000000,90000],[1400000,126000],[2000000,180000],[3000000,270000],[4000000,360000],[5000000,450000],[6000000,540000],[8000000,720000],[12000000,1080000]];
 function fmt(n){ return Number(n).toLocaleString('en-US'); }
 
@@ -91,14 +95,14 @@ function rulesText(){
 function renderInfo(){
     build();
     var el = $('riInfo'); if (!el) return;
-    var lv = level(), t = tier(lv), d = demo();
-    var next = Math.ceil((d.flow + 1) / 50000) * 50000, pc = Math.max(4, Math.min(100, Math.round(d.flow / next * 100)));
+    var lv = level(), tr = tierOf(lv), x = xp();
+    var nextN = lv >= MAXLV ? 0 : (lv + 1) * PER, pc = lv >= MAXLV ? 100 : Math.max(3, Math.round((x - lv * PER) / PER * 100));
     var canInfo = adminOK('info'), r = role();
     var members = (state.listeners || []).length;
     el.innerHTML =
-      '<div class="ri-lv"><div class="ri-crown" style="--c1:' + t[0] + ';--c2:' + t[1] + '"><i class="fa-solid fa-crown"></i></div>'
-    +   '<div class="ri-lv-body"><div class="ri-lv-top"><b>Lv.' + lv + '</b><span>এই মাসে ' + fmt(d.flow) + ' / ' + fmt(next) + ' 💎</span></div>'
-    +   '<div class="ri-bar"><i style="width:' + pc + '%"></i></div></div></div>'
+      '<div class="ri-lv" onclick="RoomInfo.levels()"><img class="ri-badge' + (tr ? '' : ' off') + '" src="' + AS + 'b' + (tr || 20) + '.webp" alt="">'
+    +   '<div class="ri-lv-body"><div class="ri-lv-top"><b>Lv.' + lv + '</b><span>' + (lv >= MAXLV ? 'সর্বোচ্চ লেভেল' : fmt(x - lv * PER) + ' / ' + fmt(PER) + ' 💎') + '</span></div>'
+    +   '<div class="ri-bar"><i style="width:' + pc + '%"></i></div><div class="ri-lv-hint">ফ্রেম ও লেভেলের তালিকা দেখুন ›</div></div></div>'
     + '<div class="ri-card"><div class="ri-h">টপিক' + (canInfo ? '<button class="ri-edit" onclick="editTopic()"><i class="fa-solid fa-pen"></i></button>' : '') + '</div><div class="ri-t">' + E(state.topic || 'কোনো টপিক নেই') + '</div></div>'
     + '<div class="ri-card"><div class="ri-h">নিয়ম' + (canInfo ? '<button class="ri-edit" onclick="RXLive.editRules()"><i class="fa-solid fa-pen"></i></button>' : '') + '</div><div class="ri-t">' + rulesText().slice(0, 4).map(function(x, i){ return (i + 1) + '. ' + E(x); }).join('<br>') + '</div></div>'
     + '<div class="ri-stats"><div><b>' + members + '</b><span>মেম্বার</span></div><div><b>' + E(r === 'owner' ? 'মালিক' : r === 'admin' ? 'অ্যাডমিন' : 'ইউজার') + '</b><span>আপনি</span></div></div>'
@@ -222,7 +226,44 @@ function wrapAll(){
     }
 }
 
-window.RoomInfo = { open: open, render: renderInfo, settings: settings, rewards: rewards, level: level };
+
+/* ══════════ লেভেল ও ফ্রেমের প্যানেল ══════════ */
+function levels(){
+    var lv = level(), owner = role() === 'owner', cur = used(), x = xp();
+    var b = ov('riLv', 'Room Level', function(){ renderInfo(); });
+    var left = lv >= MAXLV ? 0 : (lv + 1) * PER - x;
+    var h = '<div class="lv-top"><img class="lv-bd' + (tierOf(lv) ? '' : ' off') + '" src="' + AS + 'b' + (tierOf(lv) || 20) + '.webp" alt=""><div><b>Lv.' + lv + '</b><span>'
+      + (lv >= MAXLV ? 'সর্বোচ্চ লেভেলে আছেন 🎉' : 'পরের লেভেলে আর ' + fmt(left) + ' 💎 লাগবে') + '</span></div></div>'
+      + '<div class="lv-rule">রুমে প্রতি ' + fmt(PER) + ' 💎 গিফট = ১ লেভেল। নির্দিষ্ট লেভেলে পৌঁছালে নতুন ফ্রেম আনলক হয়।</div>';
+    h += '<div class="lv-tl">';
+    h += step('Lv.1 – 19', 'শুধু লেভেল বাড়ে (ফ্রেম নেই)', lv >= 1, null);
+    TIERS.forEach(function(t, i){
+        var ok = lv >= t, nextT = TIERS[i + 1];
+        var rng = 'Lv.' + t + (nextT ? ' – ' + (nextT - 1) : '+');
+        h += '<div class="lv-it' + (ok ? ' ok' : '') + '"><div class="lv-dot"></div>'
+           + '<div class="lv-card" data-t="' + t + '"><div class="lv-fr"><img src="' + AS + 'f' + t + '.webp" alt="Lv ' + t + '">' + (ok ? '' : '<div class="lv-lock">🔒</div>') + '<img class="lv-b2" src="' + AS + 'b' + t + '.webp" alt=""></div>'
+           + '<div class="lv-info"><b>' + rng + '</b><span>' + (ok ? 'আনলক ✅' : 'Lv.' + t + ' এ আনলক — আর ' + fmt(Math.max(0, t * PER - x)) + ' 💎') + '</span>'
+           + (ok && owner ? '<button class="lv-use' + (cur === t ? ' on' : '') + '" data-t="' + t + '">' + (cur === t ? 'Unuse' : 'Use') + '</button>' : '<em>ছবিতে চেপে দেখুন</em>') + '</div></div></div>';
+    });
+    h += '</div>';
+    b.innerHTML = h;
+    b.querySelectorAll('.lv-use').forEach(function(u){ u.onclick = function(e){
+        e.stopPropagation();
+        var t = +u.dataset.t, on = used() === t;
+        saveRoomInfo(ROOM_ID, { frameUse: on ? 0 : t });
+        toastMsg(on ? 'ফ্রেম সরানো হয়েছে' : '✨ ফ্রেম হোমপেজে বসেছে');
+        levels();
+    }; });
+    b.querySelectorAll('.lv-card').forEach(function(c){ c.onclick = function(){
+        var t = +c.dataset.t;
+        pop('Lv.' + t + ' ফ্রেম', '<div class="lv-big"><img src="' + AS + 'f' + t + '.webp" alt=""><img class="lv-b2" src="' + AS + 'b' + t + '.webp" alt=""></div><div class="ri-note" style="text-align:center">'
+          + (lv >= t ? 'আপনার আনলক করা ফ্রেম ✅' : 'এটা প্রিভিউ — Lv.' + t + ' এ পৌঁছালে পাবেন 🔒') + '</div><button class="ri-opt cancel">বন্ধ</button>')
+          .querySelector('.cancel').onclick = function(){ this.closest('.ri-pop').remove(); };
+    }; });
+}
+function step(t, d, ok){ return '<div class="lv-it' + (ok ? ' ok' : '') + '"><div class="lv-dot"></div><div class="lv-plain"><b>' + t + '</b><span>' + d + '</span></div></div>'; }
+
+window.RoomInfo = { open: open, render: renderInfo, settings: settings, rewards: rewards, levels: levels, level: level };
 document.addEventListener('DOMContentLoaded', function(){ build(); setTimeout(wrapAll, 0); });
 setTimeout(function(){ build(); wrapAll(); }, 1200);
 /* মডাল খোলার সময় ইনফো ঝালাই */

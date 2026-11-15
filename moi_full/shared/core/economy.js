@@ -202,7 +202,7 @@ console.log('[MOI] economy.js loaded (client mode)');
             if ((s.diamonds || 0) < total) fail('INSUFFICIENT_DIAMONDS');
             const r = applyDelta(t, uid, s, { dia: -total, xp: Math.floor(total / 2), extra: { giftsSent: FV.increment(total) }, title: 'Gift: ' + giftId + ' ×' + qty, txType: 'gift' });
             tSnaps.forEach(x => t.update(x.ref, { giftsReceived: FV.increment(unit * qty) }));
-            if (room.exists) t.update(roomRef, { points: FV.increment(total) });   /* রুমের ডক না থাকলেও গিফট আটকাবে না */
+            if (room.exists) t.update(roomRef, { points: FV.increment(total), xp: FV.increment(total) });   /* xp = রুমের লেভেলের হিসাব (১০০০ 💎 = ১ লেভেল) */   /* রুমের ডক না থাকলেও গিফট আটকাবে না */
             targetUids.forEach((tu, i) => {
                 const hv = hostNorm(hSnaps[i].exists && hSnaps[i].data().v);
                 hv.dia += unit * qty;
@@ -383,6 +383,13 @@ console.log('[MOI] economy.js loaded (client mode)');
         });
         await FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/luckybox/' + box.id).set(box);
         return { ok: true, box };
+    };
+    /* শুধু ডেমো: বট ইউজার আসল হ্যান্ডলার চালায় (গিফট, রকেট, লাকি বক্স…) — তাই হিসাব, XP, রুম-লেভেল সব আসলের মতোই আপডেট হয় */
+    H.asBot = async (data) => {
+        if (!window.__MOCK) fail('INVALID');
+        const bot = String(data.as || ''), fn = String(data.fn || '');
+        if (!bot || fn === 'asBot' || !H[fn]) fail('INVALID');
+        return H[fn](data.args || {}, bot);
     };
     /* শুধু ডেমো: কয়েকজন বট বক্স খোলে (আসল Firebase-এ এটা চলবে না) */
     H.lbBots = async (data, uid) => {

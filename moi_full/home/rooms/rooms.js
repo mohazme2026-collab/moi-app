@@ -63,6 +63,8 @@ function allRooms(){
         ownerName: (r.owner && r.owner.name) || r.ownerName || '',
         createdAt: r.createdAt || 0,
         pk: !!r.pkActive,
+        xp: typeof r.xp === 'number' ? r.xp : undefined,
+        frameUse: typeof r.frameUse === 'number' ? r.frameUse : undefined,
         listeners: MOISync.roomCount(r.id),
         uids: presence[r.id] || []
     }));
@@ -140,7 +142,10 @@ function hotCardHTML(r, idx){
     const flag = getFlag(r.country);
     const cname = cleanCountry(r.country) || 'Unknown';
     const live = r.listeners > 0;
-    const tier = levelTier(roomLevel(r, idx)), T = LV_TIERS[tier];
+    /* নতুন নিয়ম: xp/frameUse আছে এমন রুমে মালিক যে ফ্রেম 'Use' করেছেন শুধু সেটাই দেখায় (০ = কোনো ফ্রেম নয়) */
+    const tier = (typeof r.xp === 'number' || typeof r.frameUse === 'number')
+        ? (LV_TIERS[r.frameUse] && Math.min(70, Math.floor((r.xp || 0) / 1000)) >= r.frameUse ? r.frameUse : 0)
+        : levelTier(roomLevel(r, idx)), T = LV_TIERS[tier];
     const cntHTML = `<div class="cnt">${HIC.userSm}${formatCount(r.listeners)}</div>`;
     const frm = T ? ` frm t${tier}" style="--pl:${T.hole[0]}%;--pr:${T.hole[1]}%;--pt:${Math.round(FRAME_H * T.hole[2] / 100)}px;--pb:${Math.round(FRAME_H * T.hole[3] / 100)}px;--fr:url(rooms/assets/lv/f${tier}.webp);--mk:url(rooms/assets/lv/m${tier}.png);--gl:${T.gl};--rg:${T.rg}` : '';
     return `

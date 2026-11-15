@@ -6,7 +6,7 @@ let hotQuery = '';
 let activeCat = 'all';
 let exploreCountry = 'all';
 let feedCountry = 'all';
-const DEMO_RANK = {};            /* ডেমো: কার্ডের ক্রম স্থির রাখা — স্ক্রল করার সময় কার্ড যেন লাফ না দেয় */
+const DEMO_RANK = {}; setInterval(() => { for (const k in DEMO_RANK) delete DEMO_RANK[k]; }, 45000);   /* ৪৫ সেকেন্ড পরপর শ্রোতা অনুযায়ী ক্রম নতুন হয় */            /* ডেমো: কার্ডের ক্রম স্থির রাখা — স্ক্রল করার সময় কার্ড যেন লাফ না দেয় */
 let feedLoops = 1;
 let shuffleOrder = null;          /* শাফেল বাটন চাপলে র‍্যান্ডম ক্রম */
 

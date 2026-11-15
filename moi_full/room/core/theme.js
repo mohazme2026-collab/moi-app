@@ -149,7 +149,7 @@ function rtBuildSeat(idx, sizePx){
     var coins = (s && s.coins) ? s.coins : 0;
 
     var div = document.createElement('div');
-    var skinHTML = (window.RTSkin ? window.RTSkin.seatHTML(idx) : '');
+    var skinHTML = (window.RTSkin && !(s && s.uid) ? window.RTSkin.seatHTML(idx) : '');   /* থিম শুধু খালি সিটে — বসা মানুষের ছবি পুরো সাইজে */
     div.className = 'seat' + (skinHTML ? ' skin-on' : '');
     div.dataset.seat = idx;
     div.dataset.uid = (s && s.uid) ? s.uid : '';

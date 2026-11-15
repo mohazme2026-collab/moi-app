@@ -16,7 +16,7 @@
     window.MOI_AVATAR = function(seed, gender){
         var n = h(seed);
         var g = gender ? String(gender).toLowerCase().charAt(0) : (n & 1 ? 'f' : 'm');
-        var idx = (Math.floor(n / 2) % 100) + 1;
+        var idx = (Math.floor(n / 2) % (g === 'f' ? 129 : 101)) + 1;
         return base + (g === 'f' ? 'g' : 'b') + ('00' + idx).slice(-3) + '.webp';
     };
 })();
@@ -79,7 +79,8 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
         seed: false                    /* ডেমো ডেটা আসে demo/seed.js থেকে (৫০টা রুম) */
     };
 
-    const DB_KEY = 'moi_demo_db_v1', AUTH_KEY = 'moi_demo_auth_v1';
+    const DB_KEY = 'moi_demo_db_v2', AUTH_KEY = 'moi_demo_auth_v1';
+    try { localStorage.removeItem('moi_demo_db_v1'); } catch(e){}
     const LIVE = 'moi-live';
 
     /* ═══════════════ ছোট হেল্পার ═══════════════ */
@@ -709,4 +710,15 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
         reset(){ try { localStorage.removeItem(DB_KEY); localStorage.removeItem(AUTH_KEY); localStorage.removeItem('moi_user'); localStorage.removeItem('moi_demo_guest_uid'); } catch(e){} location.reload(); },
         dump(){ return cloneJ(DB); }
     };
+})();
+
+/* ═══ তাৎক্ষণিক ট্যাপ: ৩০০ms ডেলে নেই, ট্যাপে সাথে সাথে চাপার ফিডব্যাক ═══ */
+(function(){
+    try {
+        var st = document.createElement('style');
+        st.textContent = 'html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}' +
+            'button,a,[onclick],[role=button],.tab,.nav-item{touch-action:manipulation;-webkit-user-select:none;user-select:none}' +
+            'button:active,[onclick]:active,[role=button]:active{transform:scale(.96);opacity:.88;transition:transform .05s,opacity .05s}';
+        (document.head || document.documentElement).appendChild(st);
+    } catch(e){}
 })();

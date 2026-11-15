@@ -19,19 +19,21 @@ const FRAMES = ['basic','basic','aurora','basic','flame','basic','ocean','royal'
 const BIOS = ['Music lover 🎶','Looking for new friends','Chill & vibes ✨','Stay positive','Music is life 🎧','Good vibes only','Be kind 🌿','','',''];
 
 const AVB = (function(){ try { return new URL('../assets/av/', document.currentScript.src).href; } catch(e){ return location.href.split('?')[0].replace(/[^\/]*\/[^\/]*$/, '') + 'assets/av/'; } })();
+const SUR_M = ['আহমেদ','হোসেন','ইসলাম','রহমান','চৌধুরী','খান','মিয়া','সরকার','উদ্দিন','আলম','হক','শেখ','মন্ডল','তালুকদার','বিশ্বাস','সিকদার','ভুঁইয়া','প্রামানিক','মোল্লা','দেওয়ান','ফকির','মাহমুদ','কবির','হাসান','আজাদ','সরদার','পাটোয়ারী','বেপারী','মজুমদার','সাহা','দাস','রায়','ঢালী','গাজী','মাতুব্বর','খন্দকার','সৈয়দ','জমাদার','হালদার','মৃধা'];
+const SUR_F = ['আক্তার','খাতুন','বেগম','সুলতানা','জাহান','পারভীন','আফরিন','ইয়াসমিন','নূর','রহমান','চৌধুরী','তাবাসসুম','মিম','ইসলাম','হোসেন','শিকদার','সরকার','আহমেদ','নাহার','জান্নাত','কবির','মাহমুদ','হক','আলম','সিদ্দিকা','রানী','দাস','সাহা','রায়','মণ্ডল','ফেরদৌসী','তাসনিম','লিজা','ববি','শারমিন','রুবি','পপি','মৌ','তৃপ্তি','ঝুমুর'];
+const N_F = 600, N_M = 400;   /* মোট ১০০০ বট: মেয়ে ৬০০, ছেলে ৪০০ (প্রতিটা নাম আলাদা) */
 function mkUser(i0, gender, pass){
     const i = i0 + (pass || 0) * 29;
-    const list = gender === 'f' ? FEMALE_FIRST : MALE_FIRST;
-    const first = list[i0 % list.length];
-    let name = STYLE[(i0 * 3 + (gender === 'f' ? 1 : 0)) % STYLE.length].split('{f}').join(first);
+    const list = gender === 'f' ? FEMALE_FIRST : MALE_FIRST, sur = gender === 'f' ? SUR_F : SUR_M;
+    const first = list[i0 % list.length], r = Math.floor(i0 / list.length);
+    const name = r === 0 ? STYLE[(i0 * 3 + (gender === 'f' ? 1 : 0)) % STYLE.length].split('{f}').join(first) : first + ' ' + sur[(r * 13 + i0 % list.length) % 40];
     const level = 3 + ((i * 13 + (gender === 'f' ? 5 : 11)) % 58);
-    /* ছবি: assets/av (b001..b100 ছেলে, g001..g100 মেয়ে) — নাম ও ছবি সবসময় একই জোড়া */
-    return { gender, name, photo: AVB + (gender === 'f' ? 'g' : 'b') + ('00' + (i0 + 1)).slice(-3) + '.webp', level };
+    /* ছবি: assets/av (b001..b101 ছেলে, g001..g129 মেয়ে) — নাম ও ছবি সবসময় একই জোড়া */
+    const cnt = gender === 'f' ? 129 : 101;
+    return { gender, name, photo: AVB + (gender === 'f' ? 'g' : 'b') + ('00' + ((i0 * 7) % cnt + 1)).slice(-3) + '.webp', level };
 }
 const people = [];
-for (let pass = 0; pass < 1; pass++){
-    for (let i = 0; i < 100; i++){ people.push(mkUser(i, 'f', pass)); people.push(mkUser(i, 'm', pass)); }
-}
+{ let f = 0, m = 0; while (f < N_F || m < N_M){ if (f < N_F) people.push(mkUser(f++, 'f', 0)); if (f < N_F) people.push(mkUser(f++, 'f', 0)); if (m < N_M) people.push(mkUser(m++, 'm', 0)); } }
 
 /* ইউনিক ৬-সংখ্যার UID (= MOI ID) */
 let seq = 0;
@@ -68,35 +70,67 @@ Object.keys(USERS).forEach(u => { M.seedDoc('users/' + u, USERS[u]); M.seedDoc('
 
 /* ───────── রুম ───────── */
 /* seats = কোন সিটে (০–৯) কে বসা, aud = শ্রোতা কতজন (সিটে বসাদের বাইরে) */
-const ROOMS = [
-    { id: 'S1001', name: 'Dubai Nights 🌃',     country: 'UAE',          category: 'music', topic: 'Late night chill & music 🎶',          seatIdx: [0, 1, 2, 3, 4, 5],             aud: 20 },
-    { id: 'S1002', name: 'Majlis Riyadh ☕',     country: 'Saudi Arabia', category: 'chat',  topic: 'Evening talks — everyone is welcome',   seatIdx: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], aud: 30 },
-    { id: 'S1003', name: 'Ludo Club 🎲',         country: 'Malaysia',     category: 'game',  topic: 'Find a Ludo partner',                   seatIdx: [0, 3],                         aud: 6 },
-    { id: 'S1004', name: 'Arena Pro ⚔️',        country: 'UK',           category: 'game',  topic: 'Squad up & rank push 🔥',               seatIdx: [0, 1, 2, 3, 4, 5, 6, 7],       aud: 22 },
-    { id: 'S1005', name: 'Doha FM Vibes 📻',     country: 'Qatar',        category: 'music', topic: 'Lo-fi, Arabic & pop hits',              seatIdx: [0, 1, 4, 6],                   aud: 12 }
+const ROOMS = [];
+const ROOM_DEFS = [
+ ['আড্ডাখানা ☕','Bangladesh','chat','সন্ধ্যার আড্ডা — সবার জন্য খোলা'],
+ ['গানের আসর 🎶','Bangladesh','music','পুরনো দিনের গান আর নতুন সুর'],
+ ['সুরের মেলা 🎤','Bangladesh','music','মাইকে আসুন, গান শোনান'],
+ ['মজার আড্ডা 😄','Bangladesh','chat','হাসি-ঠাট্টা আর গল্প'],
+ ['রাতের পাখি 🌙','Bangladesh','chat','রাত জাগা বন্ধুদের ঠিকানা'],
+ ['লুডু ক্লাব 🎲','Bangladesh','game','লুডু খেলার সঙ্গী খুঁজুন'],
+ ['ফ্রি ফায়ার স্কোয়াড 🔥','Bangladesh','game','ডুও আর স্কোয়াড চাই'],
+ ['পাবজি টিম 🎯','Bangladesh','game','রাঙ্ক পুশ করব একসাথে'],
+ ['বন্ধুর ঠিকানা 💞','Bangladesh','chat','নতুন বন্ধু বানান'],
+ ['মেঘলা দিনের গান ☁️','Bangladesh','music','বৃষ্টির দিনের প্লেলিস্ট'],
+ ['কবিতার আসর 📖','Bangladesh','chat','কবিতা পড়া ও শোনা'],
+ ['গল্পের ঝুলি 📚','Bangladesh','chat','গল্প বলুন, গল্প শুনুন'],
+ ['ঢাকা আড্ডা 🏙️','Bangladesh','chat','ঢাকার বন্ধুদের জমজমাট আড্ডা'],
+ ['চট্টগ্রামের পাহাড়ি সুর ⛰️','Bangladesh','music','পাহাড় আর সমুদ্রের গান'],
+ ['সিলেটের চা বাগান 🍃','Bangladesh','chat','চায়ের কাপে গল্প'],
+ ['খুলনা ক্লাব 🌿','Bangladesh','chat','সুন্দরবনের দেশের মানুষ'],
+ ['রাজশাহীর আম 🥭','Bangladesh','chat','মিষ্টি কথা, মিষ্টি আড্ডা'],
+ ['বরিশাল বন্ধু 🛶','Bangladesh','chat','নদীর দেশের গল্প'],
+ ['রংপুর রঙ্গ 🎭','Bangladesh','chat','হাসি আর গান'],
+ ['কুমিল্লা কাফে ☕','Bangladesh','chat','খাদির দেশের আড্ডা'],
+ ['প্রবাসী ভাইবোন ✈️','Bangladesh','chat','দূর দেশ থেকে দেশের গল্প'],
+ ['দুবাই বাংলা মজলিস 🌃','UAE','chat','প্রবাসীদের সন্ধ্যার আসর'],
+ ['সৌদি প্রবাসী 🕌','Saudi Arabia','chat','মরুর দেশে বাংলা আড্ডা'],
+ ['মালয়েশিয়া বাংলা 🌴','Malaysia','chat','কুয়ালালামপুরের বাঙালি আড্ডা'],
+ ['ক্যারাওকে নাইট 🎤','Bangladesh','music','গানের সাথে গলা মেলান'],
+ ['রবীন্দ্রসংগীত 🌸','Bangladesh','music','গুরুদেবের গান'],
+ ['নজরুলগীতি 🎻','Bangladesh','music','বিদ্রোহী কবির গান'],
+ ['লোকগীতি বাউল 🪕','Bangladesh','music','মাটির গান, প্রাণের সুর'],
+ ['আধুনিক বাংলা গান 🎧','Bangladesh','music','নব্বইয়ের গান আর নতুন হিট'],
+ ['লো-ফাই চিল 🌙','Bangladesh','music','শান্ত সুরে রাত কাটাই'],
+ ['ইসলামিক গজল 🕋','Bangladesh','music','মন ভালো করা গজল'],
+ ['বৃষ্টি বিলাস 🌧️','Bangladesh','chat','বৃষ্টি হলেই চলে আসুন'],
+ ['কফি ও কথা ☕','Bangladesh','chat','এক কাপ কফি, অনেক কথা'],
+ ['ভোরের আলো 🌅','Bangladesh','chat','শুভ সকালের আড্ডা'],
+ ['বিকেলের চা 🍵','Bangladesh','chat','চা-নাস্তা আর গল্প'],
+ ['মধ্যরাতের মজলিস 🌌','Bangladesh','chat','জেগে থাকা মানুষদের আসর'],
+ ['ছাদের আড্ডা 🪁','Bangladesh','chat','খোলা ছাদে খোলা মনে'],
+ ['গ্রামের মাঠ 🌾','Bangladesh','chat','গ্রামের স্মৃতি, গ্রামের গল্প'],
+ ['নদীর পাড় 🌊','Bangladesh','chat','ভাটিয়ালি গান আর গল্প'],
+ ['শিক্ষার্থী আড্ডা 🎓','Bangladesh','chat','পড়াশোনা আর ক্যারিয়ার আলোচনা'],
+ ['ক্রিকেট ফ্যান 🏏','Bangladesh','chat','বাংলাদেশ টাইগার্স নিয়ে আলোচনা'],
+ ['ফুটবল প্রেমী ⚽','Bangladesh','chat','ম্যাচ নিয়ে জমজমাট তর্ক'],
+ ['ইফুটবল ক্লাব 🕹️','Bangladesh','game','ম্যাচ খেলি, রাঙ্ক বাড়াই'],
+ ['লুডু কিং 👑','Bangladesh','game','টুর্নামেন্ট চলছে'],
+ ['দাবা ও ক্যারম ♟️','Bangladesh','game','ব্লিটজ আর র‍্যাপিড'],
+ ['মোবাইল লেজেন্ডস 🛡️','Bangladesh','game','র‍্যাঙ্ক স্কোয়াড খুঁজছি'],
+ ['পার্টি নাইট 🎉','Bangladesh','music','নাচ-গানে মাতোয়ারা'],
+ ['হাসির আসর 😂','Bangladesh','chat','জোকস আর মজার গল্প'],
+ ['ভালোবাসার গান 💕','Bangladesh','music','প্রেমের গান শুনি একসাথে'],
+ ['একাকী মন 🍂','Bangladesh','chat','মন খুলে কথা বলুন']
 ];
-/* বাকি ৪৫টা: [নাম, দেশ, ধরন, টপিক] — বাংলাদেশ/ভারত/পাকিস্তান ইচ্ছে করেই নেই (ওগুলো আসল ইউজারদের রুমের জন্য) */
-const EXTRA = [
- ['Istanbul Café ☕','Turkey','chat','Coffee, tea & good talks'],['Cairo Nights 🌙','Egypt','chat','Late night stories'],['Berlin Beats 🎧','Germany','music','Electronic & house'],['Paris Lounge 🥐','France','chat','Bonjour, friends'],
- ['Rome Aperitivo 🍷','Italy','chat','Evening chat'],['Madrid Fiesta 🎉','Spain','music','Latin hits all night'],['Tokyo Lo-fi 🗼','Japan','music','Lo-fi study beats'],['Seoul Karaoke 🎤','South Korea','music','Sing along with us'],
- ['Toronto Hangout 🍁','Canada','chat','Chill with new friends'],['New York Talks 🗽','USA','chat','City that never sleeps'],['Sydney Chill 🏖️','Australia','chat','Easy going chat'],['Kuala Lumpur Vibes 🌃','Malaysia','chat','Good vibes only'],
- ['Singapore Social 🦁','Singapore','chat','Meet people from everywhere'],['Manila Friends 🌴','Philippines','chat','Kumusta, everyone!'],['Bangkok Nights 🌆','Thailand','music','Chill music & talks'],['Jakarta Mix 🎶','Indonesia','music','Pop & chill'],
- ['Kuwait Majlis 🌙','Kuwait','chat','Relaxed evening majlis'],['Abu Dhabi Beats 🎵','UAE','music','Top hits tonight'],['Jeddah Talk 🌊','Saudi Arabia','chat','Sea breeze & conversations'],['Mexico Fiesta 🌮','Mexico','music','Latin party'],
- ['Rio Carnival 🥁','Brazil','music','Samba & more'],['Moscow Winter ❄️','Russia','chat','Warm talks, cold weather'],['Hanoi Café 🍜','Vietnam','chat','Coffee & chat'],['Shanghai Skyline 🏙️','China','chat','Night view talks'],
- ['PUBG Squad 🎯','USA','game','Find your squad'],['eFootball Club ⚽','Spain','game','Weekend matches'],['Mobile Legends 🛡️','Indonesia','game','MLBB ranked squad'],['Free Fire Squad 🔥','Brazil','game','Duo & squad wanted'],
- ['Ludo King 👑','UAE','game','Ludo tournament'],['Ludo Night 🌙','Turkey','game','Late night Ludo'],['COD Warzone 🎮','Canada','game','Drop in, squad up'],['Chess Masters ♟️','Russia','game','Blitz & rapid'],
- ['Valorant Lobby 🕹️','Germany','game','Ranked grind'],['Karaoke Night 🎤','Philippines','music','Mic is open'],['Acoustic Café 🎸','Australia','music','Acoustic sessions'],['Pop Hits 🎧','USA','music','Top charts'],
- ['Retro 80s 📼','UK','music','Classic hits'],['Latin Beats 💃','Spain','music','Salsa & reggaeton'],['K-Pop Zone 💜','South Korea','music','K-pop all day'],['Arabic Tarab 🎻','Egypt','music','Classic Arabic songs'],
- ['Sunset Lounge 🌅','UAE','chat','Golden hour chat'],['Weekend Party 🎉','Italy','music','Party mood on'],['Book Club 📚','UK','chat','Talk books & stories'],['Travel Stories ✈️','France','chat','Share your trips'],
- ['Gulf Chill 🌴','Qatar','chat','Easygoing majlis']
-];
-const MEMBERS = [5000, 3200, 640, 1500, 1000, 500, 800, 2000, 2500, 3500, 1200, 4000, 750, 1800, 3000, 520, 900, 1100, 2200, 600, 1400, 2800, 550, 1700, 4500];
-EXTRA.forEach((e, k) => {
-    const sc = 2 + ((k * 5 + 3) % 9), seatIdx = [], pool = [0,1,2,3,4,5,6,7,8,9];
+/* ৫০টা রুম: প্রতিটায় মোট ৪৫ জন (সিটে বসা + শ্রোতা) */
+ROOM_DEFS.forEach((e, k) => {
+    const sc = k < 5 ? [10, 6, 2, 8, 4][k] : 2 + ((k * 5 + 3) % 9), seatIdx = [], pool = [0,1,2,3,4,5,6,7,8,9];
     for (let q = 0; q < sc; q++) seatIdx.push(pool.splice((k * 3 + q * 7) % pool.length, 1)[0]);
     seatIdx.sort((a, b) => a - b);
-    ROOMS.push({ id: 'S' + (1006 + k), name: e[0], country: e[1], category: e[2], topic: e[3], seatIdx, aud: 3 + ((k * 11 + 7) % 36) });
+    ROOMS.push({ id: 'S' + (1001 + k), name: e[0], country: e[1], category: e[2], topic: e[3], seatIdx, aud: 45 - sc });
 });
+const MEMBERS = [5000, 3200, 640, 1500, 1000, 500, 800, 2000, 2500, 3500, 1200, 4000, 750, 1800, 3000, 520, 900, 1100, 2200, 600, 1400, 2800, 550, 1700, 4500];
 /* জয়েনিং সংখ্যা (রুমে যে নাম্বার দেখায়) — ৫০০ / ১০০০ / ৫০০০ ইত্যাদি। বদলাতে চাইলে MEMBERS তালিকা বদলান */
 ROOMS.forEach((R, i) => { R.members = MEMBERS[i % MEMBERS.length] + (i >= MEMBERS.length ? 100 : 0); R.muted = R.seatIdx.slice(); });
 

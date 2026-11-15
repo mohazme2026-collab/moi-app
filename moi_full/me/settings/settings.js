@@ -252,7 +252,7 @@
             if (d){ await d.collection('users').doc(uid).delete(); if (moiId) await d.collection('moiIds').doc(String(moiId)).delete().catch(() => {}); }
         } catch(e){ console.warn('[settings] delete', e); }
         saveAccounts(accounts().filter(a => a.uid !== uid));                       /* অ্যাকাউন্ট তালিকা থেকেও বাদ */
-        try { Object.keys(localStorage).forEach(k => { if (k !== AUTH_KEY && k !== ACC_KEY && k !== 'moi_lang' && k !== 'moi_theme' && k !== 'moi_demo_db_v1' && k.indexOf(uid) >= 0) localStorage.removeItem(k); }); } catch(e){}
+        try { Object.keys(localStorage).forEach(k => { if (k !== AUTH_KEY && k !== ACC_KEY && k !== 'moi_lang' && k !== 'moi_theme' && k !== 'moi_demo_db_v2' && k.indexOf(uid) >= 0) localStorage.removeItem(k); }); } catch(e){}
         try { await MOIAuth.signOut(); } catch(e){ location.href = '../login/index.html'; }
     }
 

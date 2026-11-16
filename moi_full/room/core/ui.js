@@ -350,7 +350,7 @@ window.openGameSheet = () => {
     let pk = document.getElementById('gamePicker');
     if (!pk) {
         pk = document.createElement('div'); pk.id = 'gamePicker';
-        pk.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center';
+        pk.style.cssText = 'position:fixed;inset:0;z-index:2147483050;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center';
         pk.innerHTML = '<div style="width:100%;max-width:520px;background:linear-gradient(#2a1458,#14082e);border-radius:22px 22px 0 0;padding:16px 14px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.5)">'
           + '<div style="color:#fff;font:700 17px sans-serif;text-align:center;margin-bottom:14px">🎮 গেম</div>'
           + '<div style="display:flex;gap:12px">'

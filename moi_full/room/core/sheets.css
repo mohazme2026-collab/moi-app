@@ -111,4 +111,4 @@
 .emoji-grid-item img{width:100%;height:100%;object-fit:contain;pointer-events:none}
 
 #giftPickerSheet .target-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid rgba(255,255,255,.05);cursor:pointer}
-#giftPickerSheet .target-item img{width:42px;height:42px;border-radius:50%;border:2px solid var(--c3);object-fit:cover}
+#giftPickerSheet .target-item img{width:42px;height:42px;border-radius:50%;border:2px solid var(--c3);object-fit:cover}#gameSheet{z-index:2147483100 !important}#sheetBackdrop.active{z-index:159}

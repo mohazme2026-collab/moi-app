@@ -87,3 +87,4 @@ body{background:linear-gradient(#120838 0%,#24105c 18%,#37106e 55%,#2a0b58 80%,#
 #loading.off{display:none}
 .sp{width:70px;height:70px;border:8px solid #ffffff30;border-top-color:#ffd21f;border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+#ping{position:absolute;left:0;right:0;top:56px;text-align:center;font:900 20px Figtree,system-ui,sans-serif;color:#ffe629;-webkit-text-stroke:3px #1b1000;paint-order:stroke fill;letter-spacing:-.5px;white-space:nowrap}

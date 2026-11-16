@@ -10,7 +10,23 @@ var ITEMIMG = ['img/melonhalf.webp', 'img/s77.webp', 'img/plum_s.webp'];
 var DM = '<svg class="dm" viewBox="0 0 24 24"><use href="#dmI"/></svg>';
 
 function info(){ var el = Date.now() - F.EPOCH, idx = Math.floor(el / F.ROUND), into = el % F.ROUND; return { idx: idx, into: into, phase: into < F.BET ? 'BET' : (into < F.SPIN ? 'SPIN' : 'RES') }; }
-function wedgeOf(idx){ var x = (idx * 2654435761) >>> 0; x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13; return (x >>> 0) % 9; }
+function fOut(idx){
+  function mb(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var B = 24, b = Math.floor(idx / B), pos = idx - b * B, r = mb(b * 9301 + 49297), q = r(), n = q < .1 ? 0 : q < .45 ? 1 : q < .9 ? 2 : 3, sl = [];
+  while (sl.length < n){ var p = Math.floor(r() * B); if (sl.indexOf(p) < 0) sl.push(p); }
+  var h = mb(idx * 2654435 + 12345); h(); h();
+  if (sl.indexOf(pos) >= 0){
+    var t = h(), o = h();
+    if (t < .3) return { wedge: 4, wins: [1], hl: [4], strip: 1 };
+    if (t < .85){ var m = o < .5; return { wedge: 4, wins: m ? [0, 1] : [1, 2], hl: m ? [4, 5] : [3, 4], strip: 1 }; }
+    return { wedge: 4, wins: [0, 1, 2], hl: [3, 4, 5], strip: 1 };
+  }
+  var rr = mb(b * 7717 + 31), f = rr() < .5 ? 0 : 2, k = 0, L = [1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6];
+  for (;;){ var len = L[Math.floor(rr() * L.length)]; if (pos < k + len) break; k += len; f = f === 0 ? 2 : 0; }
+  var W = f === 0 ? [0, 2, 5, 7] : [1, 3, 6, 8], w = W[Math.floor(h() * 4)];
+  return { wedge: w, wins: [f], hl: [w], strip: f };
+}
+function wedgeOf(idx){ return fOut(idx).wedge; }
 function restAng(idx){ return (360 - 40 * wedgeOf(idx)) % 360; }
 function rng(seed){ var s = (seed >>> 0) % 2147483647 || 1; return function(){ return (s = s * 48271 % 2147483647) / 2147483647; }; }
 function fmt(n){ n = Math.round(n); return n.toLocaleString('en-US'); }
@@ -135,6 +151,7 @@ function showBal(){ $('balN').textContent = fmt(me.dia); }
 function bet(i, chipIdx, e, amtOverride){
   var inf = info(); if (inf.phase !== 'BET'){ toast('⏳ এখন বাজি ধরার সময় নয়'); return; }
   var amt = amtOverride || CHIPS[chipIdx];
+  if (!mine[i] && mine.filter(function(v){ return v > 0; }).length >= 2){ toast('⚠️ সর্বোচ্চ ২টা ঘরে বাজি ধরা যাবে'); beep(180, .2); return; }
   if (me.dia < amt){ toast('❌ যথেষ্ট ডায়মন্ড নেই'); beep(180, .2); return; }
   var idx = inf.idx; me.dia -= amt; mine[i] += amt; pending++; showBal(); renderTotals(); beep(660, .08); flyMine(i, amt, e);
   window.MOIEco.call('fruitBet', { idx: idx, item: i, chip: amt }).then(function(r){ pending--; if (typeof r.balance === 'number' && pending === 0) me.dia = r.balance; showBal(); })
@@ -148,7 +165,7 @@ function repeatBets(){
 }
 
 /* ─── ফলের ইতিহাস ─── */
-function resultItem(idx){ return F.WEDGE[wedgeOf(idx)]; }
+function resultItem(idx){ return fOut(idx).strip; }
 function renderStrip(idx, animate){
   var h = ''; for (var k = 1; k <= 9; k++){ h += '<img class="' + (animate && k === 1 ? 'n' : '') + '" src="' + ITEMIMG[resultItem(idx - k)] + '" alt="">'; }
   $('stripIn').innerHTML = h;
@@ -207,23 +224,23 @@ function frame(){
 
 /* ─── ফল ─── */
 function showResult(idx){
-  var w = wedgeOf(idx), item = F.WEDGE[w];
-  var hl = $('hl' + w); if (hl) hl.setAttribute('opacity', .9);
-  for (var i = 0; i < 3; i++) $('bx' + i).classList.add(i === item ? 'win' : 'dim');
+  var o = fOut(idx), item = o.strip, wins3 = o.wins;
+  o.hl.forEach(function(w){ var hl = $('hl' + w); if (hl) hl.setAttribute('opacity', .9); });
+  for (var i = 0; i < 3; i++) $('bx' + i).classList.add(wins3.indexOf(i) >= 0 ? 'win' : 'dim');
   /* বটদের জয় */
-  var sum = {}; sched.forEach(function(b){ if (b.item === item){ var k = b.u.uid; sum[k] = sum[k] || { u: b.u, bet: 0 }; sum[k].bet += b.amt; } });
-  var wins = Object.keys(sum).map(function(k){ return { name: sum[k].u.name, photo: sum[k].u.photo, bet: sum[k].bet, win: sum[k].bet * MULT[item] }; });
+  var sum = {}; sched.forEach(function(b){ if (wins3.indexOf(b.item) >= 0){ var k = b.u.uid; sum[k] = sum[k] || { u: b.u, bet: 0 }; sum[k].bet += b.amt; } });
+  var wins = Object.keys(sum).map(function(k){ return { name: sum[k].u.name, photo: sum[k].u.photo, bet: sum[k].bet, win: sum[k].bet * MULT[wins3[0] === 1 && wins3.length > 1 ? 1 : wins3[0]] }; });
   var myBetSum = mine[0] + mine[1] + mine[2], myBets = mine.slice(), myReward = 0;
   var done = function(r){
     if (r){ myReward = r.reward; if (typeof r.balance === 'number') me.dia = r.balance; showBal(); }
     var rec = { t: Date.now(), bet: myBetSum, res: item, rev: myReward - myBetSum }; try { var L = JSON.parse(localStorage.getItem('moi_fruit_my') || '[]'); L.unshift(rec); localStorage.setItem('moi_fruit_my', JSON.stringify(L.slice(0, 40))); } catch(e){}
     if (myBetSum > 0) lastMine = myBets;
     if (myReward > 0){ beep(880, .15, .08); setTimeout(function(){ beep(1175, .25, .08); }, 150); floatWin(myReward); try { if (window.MOIBroadcast && window.MOIBroadcast.game) MOIBroadcast.game(myReward, new URLSearchParams(location.search).get('room') || ''); } catch(e){} }
-    if (myReward > 0) wins.push({ name: me.name, photo: me.photo, bet: myBets[item], win: myReward, me: true });
+    if (myReward > 0) wins.push({ name: me.name, photo: me.photo, bet: wins3.reduce(function(a, w){ return a + myBets[w]; }, 0), win: myReward, me: true });
     wins.sort(function(a, b){ return b.win - a.win; });
     setTimeout(function(){ if (info().idx === idx) showGoodLuck(wins.slice(0, 3), myBetSum, myReward); }, 1300);
   };
-  if (myBetSum > 0){ window.MOIEco.call('fruitClaim', { idx: idx }).then(done).catch(function(){ myReward = mine[item] * MULT[item]; done(null); }); } else done(null);
+  if (myBetSum > 0){ window.MOIEco.call('fruitClaim', { idx: idx }).then(done).catch(function(){ myReward = wins3.reduce(function(a, w){ return a + mine[w] * MULT[w]; }, 0); done(null); }); } else done(null);
 }
 function floatWin(v){ var f = $('fly'), el = document.createElement('div'); el.className = 'fw'; el.style.left = '250px'; el.style.top = '930px'; el.textContent = '+' + fmt(v); f.appendChild(el); requestAnimationFrame(function(){ el.style.transform = 'translateY(-160px) scale(1.25)'; el.style.opacity = '0'; }); setTimeout(function(){ el.remove(); }, 1500); }
 
@@ -248,7 +265,7 @@ function showHistory(){
   openModal('Game History', h);
 }
 function showHow(){
-  openModal('How to play', '<div class="how"><p>১. তরমুজ, জাম বা ৭৭ — যেকোনো ঘরে বাজি ধরুন (বাজি ধরার সময় ১০ সেকেন্ড)।</p><p>২. নিচ থেকে চিপ বেছে ঘরে ট্যাপ করলেই বাজি হবে। বাজির ডায়মন্ড সাথে সাথে কেটে যাবে।</p><p>৩. চাকা থামলে ওপরের ফিতা (V) যে ফলের ওপর থাকবে সেটাই জয়ী।</p><p>৪. জিতলে বাজি × গুণক ডায়মন্ড ফেরত পাবেন: তরমুজ x২, জাম x২, ৭৭ x৮।</p><p>৫. "Repeat" চাপলে আগের রাউন্ডের বাজি আবার ধরা হয়। ইতিহাসে আগের ফল দেখুন।</p></div>');
+  openModal('How to play', '<div class="how"><p>১. তরমুজ, জাম বা ৭৭ — যেকোনো ২টা ঘরে বাজি ধরুন (বাজি ধরার সময় ১০ সেকেন্ড)।</p><p>২. নিচ থেকে চিপ বেছে ঘরে ট্যাপ করলেই বাজি হবে। বাজির ডায়মন্ড সাথে সাথে কেটে যাবে।</p><p>৩. চাকা থামলে ওপরের ফিতা (V) যে ফলের ওপর থাকবে সেটাই জয়ী।</p><p>৪. জিতলে বাজি × গুণক ডায়মন্ড ফেরত পাবেন: তরমুজ x২, জাম x২, ৭৭ x৮।</p><p>৫. "Repeat" চাপলে আগের রাউন্ডের বাজি আবার ধরা হয়। ইতিহাসে আগের ফল দেখুন।</p></div>');
 }
 function showRank(){
   var n = new Date(), seed = n.getFullYear() * 400 + n.getMonth() * 31 + n.getDate(), r = rng(seed * 31 + 7), seen = {}, L = [];
@@ -259,11 +276,18 @@ function showRank(){
 }
 
 /* ─── চালু ─── */
+var pingV = 60;
+function pingTick(){
+  var t0 = performance.now(), el = $('ping'), ok = false;
+  try { fetch('../sw.js?p=' + Date.now(), { method: 'HEAD', cache: 'no-store' }).then(function(){ ok = true; pingV = Math.round(performance.now() - t0); }).catch(function(){}).then(function(){
+    if (!ok || pingV > 900) pingV = Math.max(25, Math.min(180, pingV + Math.round((Math.random() - .5) * 24)));
+    if (el) el.textContent = pingV + 'ms'; }); } catch(e){ pingV = Math.max(25, Math.min(180, pingV + Math.round((Math.random() - .5) * 24))); if (el) el.textContent = pingV + 'ms'; }
+}
 function start(){
   Promise.resolve(window.MOIReady).then(function(){
     var p = window.MOIAuth && MOIAuth.profile; if (!p || !p.uid){ $('loading').innerHTML = '<div style="color:#fff;font:800 28px system-ui">ভয়েস ক্লাব থেকে খুলুন</div>'; setTimeout(back, 1800); return; }
     me = { uid: p.uid, name: p.name || 'User', photo: p.photo || '', dia: p.diamonds || 0 };
-    USERS = pool(); buildUI();
+    USERS = pool(); buildUI(); pingTick(); setInterval(pingTick, 3000);
     $('av').src = me.photo || (window.MOI_AVATAR ? MOI_AVATAR(me.name, 'm') : ''); $('mname').textContent = me.name; showBal();
     setInterval(function(){ var q = window.MOIAuth && MOIAuth.profile; if (q && !pending && typeof q.diamonds === 'number' && q.diamonds !== me.dia){ me.dia = q.diamonds; showBal(); } }, 600);
     setInterval(tick, 100); tick(); requestAnimationFrame(frame);

@@ -890,13 +890,32 @@ console.log('[MOI] economy.js loaded (client mode)');
         const el = Date.now() - F.EPOCH, idx = Math.floor(el / F.ROUND), into = el % F.ROUND;
         return { idx, phase: into < F.BET ? 'BETTING' : (into < F.SPIN ? 'SPINNING' : 'RESULT') };
     }
-    function fWedge(idx){ let x = (idx * 2654435761) >>> 0; x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13; return (x >>> 0) % 9; }
+    function fOut(idx){
+      function mb(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+      var B = 24, b = Math.floor(idx / B), pos = idx - b * B, r = mb(b * 9301 + 49297), q = r(), n = q < .1 ? 0 : q < .45 ? 1 : q < .9 ? 2 : 3, sl = [];
+      while (sl.length < n){ var p = Math.floor(r() * B); if (sl.indexOf(p) < 0) sl.push(p); }
+      var h = mb(idx * 2654435 + 12345); h(); h();
+      if (sl.indexOf(pos) >= 0){
+        var t = h(), o = h();
+        if (t < .3) return { wedge: 4, wins: [1], hl: [4], strip: 1 };
+        if (t < .85){ var m = o < .5; return { wedge: 4, wins: m ? [0, 1] : [1, 2], hl: m ? [4, 5] : [3, 4], strip: 1 }; }
+        return { wedge: 4, wins: [0, 1, 2], hl: [3, 4, 5], strip: 1 };
+      }
+      var rr = mb(b * 7717 + 31), f = rr() < .5 ? 0 : 2, k = 0, L = [1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6];
+      for (;;){ var len = L[Math.floor(rr() * L.length)]; if (pos < k + len) break; k += len; f = f === 0 ? 2 : 0; }
+      var W = f === 0 ? [0, 2, 5, 7] : [1, 3, 6, 8], w = W[Math.floor(h() * 4)];
+      return { wedge: w, wins: [f], hl: [w], strip: f };
+    }
+    
     H.fruitBet = async (data, uid) => {
         const idx = Number(data.idx), item = Number(data.item), chip = Number(data.chip);
         if (!Number.isInteger(item) || item < 0 || item > 2 || !(chip > 0) || chip > 10000000) fail('INVALID');
         const info = fInfo();
         if (info.idx !== idx || info.phase !== 'BETTING') throw new Error('এখন bet করার সময় নয়');
         const u0 = await getUserDoc(uid); assertActive(u0);
+        const prev = (await FB.rtdb.ref(LIVE + '/fruit/rounds/R' + idx + '/bets/' + uid).get()).val();
+        const pk = Object.keys((prev && prev.bets) || {}).filter(k => (prev.bets[k] || 0) > 0);
+        if (pk.length >= 2 && pk.indexOf(String(item)) < 0) throw new Error('সর্বোচ্চ ২টা ঘরে বাজি ধরা যাবে');
         const bal = await db().runTransaction(async t => {
             const uS = await t.get(userRef(uid)); const u = uS.data();
             if ((u.diamonds || 0) < chip) fail('INSUFFICIENT_DIAMONDS');
@@ -915,11 +934,11 @@ console.log('[MOI] economy.js loaded (client mode)');
         const idx = Number(data.idx); if (!Number.isInteger(idx)) fail('INVALID');
         const info = fInfo();
         if (idx > info.idx || (idx === info.idx && info.phase !== 'RESULT')) fail('NOT_READY');
-        const wedge = fWedge(idx), win = F.WEDGE[wedge];
+        const o = fOut(idx), wedge = o.wedge, win = o.strip;
         const bsnap = (await FB.rtdb.ref(LIVE + '/fruit/rounds/R' + idx + '/bets/' + uid).get()).val();
         const bets = (bsnap && bsnap.bets) || {};
         const cost = Object.keys(bets).reduce((s, k) => s + (Number(bets[k]) || 0), 0);
-        const reward = (Number(bets[win]) || 0) * F.MULT[win];
+        const reward = o.wins.reduce((a, w) => a + (Number(bets[w]) || 0) * F.MULT[w], 0);
         const cl = await FB.rtdb.ref(LIVE + '/fruit/claims/R' + idx + '/' + uid).transaction(v => (v ? undefined : { ts: Date.now(), amount: reward }));
         let balance = ((await userRef(uid).get()).data() || {}).diamonds || 0;
         if (cl.committed && reward > 0){

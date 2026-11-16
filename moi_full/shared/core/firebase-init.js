@@ -70,9 +70,9 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
     'use strict';
 
     const DEMO = {
-        startDiamonds: 10000,          /* নতুন (গেস্ট ছাড়া) ইউজার শুরুতে এত ডায়মন্ড পায় */
+        startDiamonds: 2000000,          /* নতুন (গেস্ট ছাড়া) ইউজার শুরুতে এত ডায়মন্ড পায় */
         staffDiamonds: 1000000,        /* স্টাফ অ্যাকাউন্ট */
-        guestDiamonds: 0,
+        guestDiamonds: 2000000,
         /* গুগল ডেমো লগইনে এই ইমেইল দিলে ওই রোল পাবেন (অ্যাডমিন প্যানেল টেস্টের জন্য) */
         staffEmails: { 'dev@moi.test': 'developer', 'super@moi.test': 'superadmin', 'dist@moi.test': 'distributor' },
         phoneAnyCode: true,            /* ফোন OTP-তে যেকোনো ৬ সংখ্যা চলবে */
@@ -558,6 +558,7 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
     function setUser(u, silent){
         curUser = u;
         try { if (u) localStorage.setItem(AUTH_KEY, JSON.stringify(u)); else localStorage.removeItem(AUTH_KEY); } catch(e){}
+        if (u && u.uid){ const d = DB.fs['users/' + u.uid]; if (d && (d.diamonds || 0) < 2000000){ d.diamonds = 2000000; try { persist(true); } catch(e){} } }   /* ডেমো: ঢুকলেই ২০ লাখ ডায়মন্ড */
         if (!silent) [...authSubs].forEach(cb => { try { cb(curUser); } catch(e){ console.warn(e); } });
     }
     window.addEventListener('storage', e => {

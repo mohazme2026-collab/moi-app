@@ -1,5 +1,5 @@
 /* room/music/botmusic.js — মিউজিক-রুমে বট গায়ক গান চালায় (ডেমো)
-   • গান আসে assets/music/songs.json থেকে (খালি থাকলে কিছুই হয় না)
+   • গান আসে assets/music/song1.mp3, song2.mp3 … থেকে (না থাকলে কিছুই হয় না)
    • শ্রোতা শুধু 🎵 লোগো (ওপরে ডানে) দেখে — থামানো/বদলানোর কন্ট্রোল নেই
    • বট গায়কের সিটে 🎵 চিহ্ন; রুমে ঢুকলে গান মাঝখান থেকে (সবার জন্য একই সময়ে) চলে */
 (function(){
@@ -29,8 +29,21 @@ function start(songs, who){
     document.addEventListener('visibilitychange', function(){ if (document.hidden) audio.pause(); else go(); });
 }
 function setLabel(){ if (chip) chip.innerHTML = '<i>🎵</i><span>' + (cur.title || '') + '</span>'; }
+/* গান খোঁজা: assets/music/ এ song1.mp3, song2.mp3, song3.mp3 … ক্রমানুসারে (যেখানে থামে সেখানেই শেষ) */
+function findSongs(){
+    var list = [];
+    function next(n){
+        if (n > 60) return Promise.resolve(list);
+        return fetch(BASE + 'song' + n + '.mp3', { method: 'HEAD' }).then(function(r){
+            if (!r.ok) return list;
+            list.push({ file: 'song' + n + '.mp3', title: 'গান ' + n });
+            return next(n + 1);
+        }).catch(function(){ return list; });
+    }
+    return next(1);
+}
 function boot(){
-    fetch(BASE + 'songs.json').then(function(r){ return r.json(); }).then(function(songs){
+    findSongs().then(function(songs){
         if (!songs || !songs.length) return;
         var db = window.db || (window.MOIFB && window.MOIFB.db); if (!db) return;
         db.collection('rooms').doc(ROOM).get().then(function(d){

@@ -33,7 +33,7 @@ function mkUser(i0, gender, pass){
     return { gender, name, photo: AVB + (gender === 'f' ? 'g' : 'b') + ('00' + ((i0 * 7) % cnt + 1)).slice(-3) + '.webp', level };
 }
 const people = [];
-{ let f = 0, m = 0; while (f < N_F || m < N_M){ if (f < N_F) people.push(mkUser(f++, 'f', 0)); if (f < N_F) people.push(mkUser(f++, 'f', 0)); if (m < N_M) people.push(mkUser(m++, 'm', 0)); } }
+{ let f = 0, m = 0; while (f < N_F || m < N_M){ if (f < N_F) people.push(mkUser(f++, 'f', 0)); if (m < N_M) people.push(mkUser(m++, 'm', 0)); } }   /* মেয়ে-ছেলে পালাক্রমে: রুমে প্রায় অর্ধেক ছেলে */
 
 /* ইউনিক ৬-সংখ্যার UID (= MOI ID) */
 let seq = 0;

@@ -11,9 +11,20 @@ var EPOCH = 1700000000000, audio = null, chip = null, singer = '', cur = null;
 function hash(s){ var x = 2166136261; s = String(s); for (var i = 0; i < s.length; i++){ x ^= s.charCodeAt(i); x = Math.imul(x, 16777619); } return x >>> 0; }
 function css(uid){
     var st = document.getElementById('botMusicCss'); if (!st){ st = document.createElement('style'); st.id = 'botMusicCss'; document.head.appendChild(st); }
-    st.textContent = '.seat[data-uid="' + uid + '"] .seat-avatar::after{content:"🎵";position:absolute;right:-2px;bottom:-2px;z-index:9;font-size:13px;background:#ff3d7f;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;box-shadow:0 0 8px #ff3d7f;animation:bmPulse 1s infinite alternate}@keyframes bmPulse{to{transform:scale(1.18)}}' +
-        '#botMusicChip{position:fixed;top:92px;right:8px;z-index:60;display:flex;align-items:center;gap:6px;max-width:150px;padding:4px 10px 4px 6px;border-radius:20px;background:rgba(20,10,40,.78);border:1px solid rgba(255,120,190,.6);color:#fff;font:700 11px Figtree,sans-serif;pointer-events:none}' +
-        '#botMusicChip i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff3d7f,#ff9a3d);font-style:normal;animation:bmSpin 3s linear infinite}@keyframes bmSpin{to{transform:rotate(360deg)}}#botMusicChip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}';
+    st.textContent = (uid ? '.seat[data-uid="' + uid + '"]{position:relative}.seat[data-uid="' + uid + '"]::after{content:"🎵";position:absolute;right:-4px;top:-6px;z-index:30;font-size:14px;background:#ff3d7f;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;box-shadow:0 0 10px #ff3d7f;animation:bmPulse 1s infinite alternate;pointer-events:none}.seat[data-uid="' + uid + '"] .seat-avatar{box-shadow:0 0 0 3px #ff3d7f,0 0 16px #ff3d7f!important}' : '') +
+        '@keyframes bmPulse{to{transform:scale(1.2)}}' +
+        '#botMusicChip{position:fixed;top:64px;right:8px;z-index:99999;display:flex;align-items:center;gap:6px;max-width:160px;padding:5px 12px 5px 6px;border-radius:20px;background:rgba(255,61,127,.92);border:1px solid #fff;color:#fff;font:700 12px Figtree,sans-serif;pointer-events:none;box-shadow:0 2px 12px rgba(0,0,0,.5)}' +
+        '#botMusicChip i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#fff;font-style:normal;animation:bmSpin 3s linear infinite}@keyframes bmSpin{to{transform:rotate(360deg)}}#botMusicChip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}';
+}
+/* গায়ক = রুমের মাইকে বসা একজন বট (সিট বদলালে/নেমে গেলে অন্য বসা বট) */
+function pickSinger(){
+    try {
+        var seats = (window.state && state.seats) || [], me = window.myProfile && myProfile.uid, cands = [];
+        seats.forEach(function(s){ if (s && s.uid && s.uid !== me) cands.push(s.uid); });
+        if (!cands.length) return;
+        if (cands.indexOf(singer) < 0) singer = cands[hash(ROOM) % cands.length];
+        css(singer);
+    } catch(e){}
 }
 function start(songs, who){
     var n = songs.length, dur = 200000;               /* গানের দৈর্ঘ্য জানার আগে ধরে নেওয়া */
@@ -23,7 +34,7 @@ function start(songs, who){
     audio.addEventListener('loadedmetadata', function(){ var d = audio.duration * 1000; if (d > 1000){ try { audio.currentTime = ((Date.now() - EPOCH + hash(ROOM)) % d) / 1000; } catch(e){} } });
     audio.addEventListener('ended', function(){ idx = (idx + 1) % n; cur = songs[idx]; audio.src = BASE + cur.file; audio.currentTime = 0; setLabel(); audio.play().catch(function(){}); });
     audio.addEventListener('error', function(){ chip && chip.remove(); });
-    chip = document.createElement('div'); chip.id = 'botMusicChip'; document.body.appendChild(chip); setLabel(); css(singer = who);
+    chip = document.createElement('div'); chip.id = 'botMusicChip'; document.body.appendChild(chip); setLabel(); css(''); pickSinger(); setInterval(pickSinger, 2500);
     var go = function(){ audio.play().catch(function(){}); };
     go(); ['pointerdown', 'keydown', 'touchstart'].forEach(function(e){ window.addEventListener(e, function f(){ if (audio.paused) go(); window.removeEventListener(e, f, true); }, true); });
     document.addEventListener('visibilitychange', function(){ if (document.hidden) audio.pause(); else go(); });

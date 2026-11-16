@@ -883,6 +883,58 @@ console.log('[MOI] economy.js loaded (client mode)');
         return { ok: true, win, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
     };
 
+    /* ═══════════ ফল-চাকা গেম (game2): ৯ খোপ — তরমুজ ৪, জাম ৪, ৭৭ ১টা ═══════════
+       ঘর: 0=তরমুজ x2, 1=৭৭ x8, 2=জাম x2। রাউন্ড ২০ সেকেন্ড: ১০ বাজি + ৫.৫ ঘোরা + ৪.৫ ফল */
+    const F = { EPOCH: 1700000000000, ROUND: 20000, BET: 10000, SPIN: 15500, MULT: [2, 8, 2], CHIPS: [500, 5000, 50000, 100000], WEDGE: [0, 2, 0, 2, 1, 0, 2, 0, 2] };
+    function fInfo(){
+        const el = Date.now() - F.EPOCH, idx = Math.floor(el / F.ROUND), into = el % F.ROUND;
+        return { idx, phase: into < F.BET ? 'BETTING' : (into < F.SPIN ? 'SPINNING' : 'RESULT') };
+    }
+    function fWedge(idx){ let x = (idx * 2654435761) >>> 0; x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13; return (x >>> 0) % 9; }
+    H.fruitBet = async (data, uid) => {
+        const idx = Number(data.idx), item = Number(data.item), chip = Number(data.chip);
+        if (!Number.isInteger(item) || item < 0 || item > 2 || !(chip > 0) || chip > 10000000) fail('INVALID');
+        const info = fInfo();
+        if (info.idx !== idx || info.phase !== 'BETTING') throw new Error('এখন bet করার সময় নয়');
+        const u0 = await getUserDoc(uid); assertActive(u0);
+        const bal = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < chip) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -chip, title: 'Fruit Wheel bet', txType: 'spend' }).diamonds;
+        });
+        const bref = FB.rtdb.ref(LIVE + '/fruit/rounds/R' + idx + '/bets/' + uid);
+        let mine = null;
+        await bref.transaction(v => {
+            v = v || { uid, name: u0.name || 'User', photo: u0.photo || '', bets: {} };
+            v.bets = v.bets || {}; v.bets[item] = (v.bets[item] || 0) + chip; v.ts = Date.now(); mine = v.bets;
+            return v;
+        });
+        return { ok: true, balance: bal, bets: mine };
+    };
+    H.fruitClaim = async (data, uid) => {
+        const idx = Number(data.idx); if (!Number.isInteger(idx)) fail('INVALID');
+        const info = fInfo();
+        if (idx > info.idx || (idx === info.idx && info.phase !== 'RESULT')) fail('NOT_READY');
+        const wedge = fWedge(idx), win = F.WEDGE[wedge];
+        const bsnap = (await FB.rtdb.ref(LIVE + '/fruit/rounds/R' + idx + '/bets/' + uid).get()).val();
+        const bets = (bsnap && bsnap.bets) || {};
+        const cost = Object.keys(bets).reduce((s, k) => s + (Number(bets[k]) || 0), 0);
+        const reward = (Number(bets[win]) || 0) * F.MULT[win];
+        const cl = await FB.rtdb.ref(LIVE + '/fruit/claims/R' + idx + '/' + uid).transaction(v => (v ? undefined : { ts: Date.now(), amount: reward }));
+        let balance = ((await userRef(uid).get()).data() || {}).diamonds || 0;
+        if (cl.committed && reward > 0){
+            const me = await getUserDoc(uid);
+            balance = await db().runTransaction(async t => {
+                const uS = await t.get(userRef(uid));
+                return applyDelta(t, uid, uS.data(), { dia: reward, title: 'Fruit Wheel win', txType: 'reward' }).diamonds;
+            });
+            await FB.rtdb.ref(LIVE + '/fruit/dailyWins/' + gDay() + '/' + uid).transaction(v => {
+                v = v || { amount: 0 }; v.amount = (v.amount || 0) + reward; v.name = me.name || 'User'; v.photo = me.photo || ''; return v;
+            });
+        }
+        return { ok: true, win, wedge, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
+    };
+
     /* ═══════════ রিলেশনশিপ: CP / ফ্রেন্ড / সিস্টার / ব্রাদার (রুমের moi-rel.js) ═══════════
        ডেটা (লোকাল): moi_rel_cp, moi_rel_fr, moi_relreq  — 🔒 LOCK-LATER: পরে সার্ভারে নেওয়া হবে */
     const REL_COST = { cp: 1000, friend: 300, sister: 300, brother: 300 };

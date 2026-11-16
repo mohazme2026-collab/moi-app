@@ -154,7 +154,7 @@ async function giftRenderThumb(el, gift){
     if (!json || !window.lottie){ el.innerHTML = '<div style="font-size:32px">💎</div>'; return; }
     try {
         var anim = lottie.loadAnimation({
-            container: el, renderer: 'svg', loop: true, autoplay: true,
+            container: el, renderer: 'canvas', rendererSettings: { clearCanvas: true, progressiveLoad: true }, loop: true, autoplay: true,
             animationData: JSON.parse(JSON.stringify(json))
         });
         _thumbAnims.push(anim);
@@ -399,7 +399,7 @@ async function giftPlayStandard(gift, targets, qty){
     main.style.height = mainSize + 'px';
     layer.appendChild(main);
     var mainAnim = lottie.loadAnimation({
-        container: main, renderer: 'svg', loop: false, autoplay: true,
+        container: main, renderer: 'canvas', rendererSettings: { clearCanvas: true, progressiveLoad: true }, loop: false, autoplay: true,
         animationData: JSON.parse(JSON.stringify(json))
     });
     main.animate([
@@ -449,7 +449,7 @@ function giftFlyToTarget(json, cx, cy, target, qty, layer, size){
     ball.style.height = size + 'px';
     layer.appendChild(ball);
     var ballAnim = lottie.loadAnimation({
-        container: ball, renderer: 'svg', loop: true, autoplay: true,
+        container: ball, renderer: 'canvas', rendererSettings: { clearCanvas: true, progressiveLoad: true }, loop: true, autoplay: true,
         animationData: JSON.parse(JSON.stringify(json))
     });
     ball.animate([
@@ -499,7 +499,7 @@ async function giftPlaySticky(gift, targets, qty){
     main.style.height = '220px';
     layer.appendChild(main);
     var mainAnim = lottie.loadAnimation({
-        container: main, renderer: 'svg', loop: false, autoplay: true,
+        container: main, renderer: 'canvas', rendererSettings: { clearCanvas: true, progressiveLoad: true }, loop: false, autoplay: true,
         animationData: JSON.parse(JSON.stringify(json))
     });
     main.animate([
@@ -553,7 +553,7 @@ async function giftAttachSticky(uid, gift){
     el.setAttribute('data-uid', uid);
     seatEl.appendChild(el);
     var anim = lottie.loadAnimation({
-        container: el, renderer: 'svg', loop: true, autoplay: true,
+        container: el, renderer: 'canvas', rendererSettings: { clearCanvas: true, progressiveLoad: true }, loop: true, autoplay: true,
         animationData: JSON.parse(JSON.stringify(json))
     });
     _stickyGifts[uid] = { gift: gift, lottieAnim: anim, el: el };

@@ -718,6 +718,7 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
         var st = document.createElement('style');
         st.textContent = 'html,body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}' +
             'button,a,[onclick],[role=button],.tab,.nav-item{touch-action:manipulation;-webkit-user-select:none;user-select:none}' +
+            '*{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.seat-skinbox{filter:none!important}.seat-skinbox::after{display:none!important}' +
             'button:active,[onclick]:active,[role=button]:active{transform:scale(.96);opacity:.88;transition:transform .05s,opacity .05s}';
         (document.head || document.documentElement).appendChild(st);
     } catch(e){}

@@ -104,7 +104,7 @@ function roomSim(){
     const doEmoji = () => {
         const s = seatedNow(); if (!s.length) return;
         const x = pick(s), code = pick(CODES);
-        if (typeof showSeatReaction === 'function') showSeatReaction(x.i, code, (window.EMOJI_BASE || '') + code + '/512.gif');
+        if (typeof showSeatReaction === 'function') showSeatReaction(x.i, code, (window.EMOJI_BASE || '') + code + '/512.webp');
     };
     (function emojiLoop(first){
         const wait = first ? FIRST_EMOJI_SEC * 1000 : rnd(EMOJI_EVERY_MIN[0] * 60, EMOJI_EVERY_MIN[1] * 60) * 1000;
@@ -145,7 +145,7 @@ function roomSim(){
 
     /* ৮) PK — প্রথম ৬টা রুমে ঢুকলেই একটা PK চলতে থাকে; শ্রোতারা দুই পাশকে গিফট দিয়ে সাপোর্ট করে।
           শেষ হলে একটু পরে নতুন জুটি নিয়ে আবার শুরু। (আপনি গিফট দিলে আসল গিফট সিস্টেমেই স্কোর/সাপোর্টার বাড়বে) */
-    const PK_ROOMS = D.ROOMS.slice(0, 6).map(r => r.id);       /* কোন কোন রুমে PK চলবে — সংখ্যা বদলাতে 6 বদলান */
+    const PK_ROOMS = ['S1001', 'S1004', 'S1012'];       /* কোন কোন রুমে PK চলবে — সংখ্যা বদলাতে 6 বদলান */
     const PK_MIN = 10;                                         /* PK কত মিনিটের */
     const PK_GIFT_SEC = [2.5, 6];                              /* কত সেকেন্ড পরপর একটা গিফট (ন্যূনতম, সর্বোচ্চ) */
     const PK_AMOUNTS = [[10, 30], [50, 25], [100, 20], [199, 12], [520, 8], [1000, 5]];   /* [💎, সম্ভাবনা] */

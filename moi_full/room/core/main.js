@@ -61,7 +61,8 @@ function finishInit(){
     renderTopGifters();
     joinRoom();
     buildEmojiCategories();
-    renderEmojiGrid();
+    /* ইমোজি গ্রিড খোলার সময়ই লোড হবে (রুম খোলা হালকা) */
+    [200, 900, 2200].forEach(t => setTimeout(() => { if (window.rtReload) window.rtReload(); }, t));   /* সার্ভার/সিড থেকে লেআউট আসতে দেরি হলে ধরে নেয় */
 
     initDragHandle('chatDragHandle', 'chatSheet');
     initDragHandle('gameDragHandle', 'gameSheet');
@@ -96,6 +97,7 @@ function finishInit(){
             const wp = ls_get(KEY.wallpaper);
             if (wp && wp.dataUrl) applyWallpaper(wp.dataUrl);
         }
+        if (e.key === KEY.roomLayout && typeof window.rtReload === 'function') window.rtReload();
         if (e.key === KEY.activity){
             const acts = ls_get(KEY.activity, []) || [];
             const arr = Array.isArray(acts) ? acts : Object.values(acts);

@@ -315,6 +315,8 @@ window.renderSeats = function(){
 console.log('[THEME] renderSeats overridden successfully');
 
 rtLoad();
+/* অন্য কেউ (বা সিড) লেআউট বদলালে সাথে সাথে সিট আবার সাজানো */
+window.rtReload = function(){ rtLoad(); var g = document.getElementById('seatsGrid'), L = RT_LAYOUTS[_rtCurrent]; if (g && L && g.querySelectorAll('.seat').length !== rtTotalSeats(L) && typeof window.renderSeats === 'function') window.renderSeats(); };
 
 /* ═══ গিফট hook ═══ */
 (function(){

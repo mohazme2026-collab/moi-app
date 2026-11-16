@@ -45,7 +45,7 @@
             const [lt, json] = await Promise.all([needLottie(), loadGiftJson(ev.giftUrl, ev.giftFilter || '')]);
             if (!lt || !json || !el.isConnected) return;
             el.textContent = '';
-            lt.loadAnimation({ container: el, renderer: 'svg', loop: true, autoplay: true, animationData: JSON.parse(JSON.stringify(json)) });
+            lt.loadAnimation({ container: el, renderer: 'canvas', rendererSettings: { clearCanvas: true, progressiveLoad: true }, loop: true, autoplay: true, animationData: JSON.parse(JSON.stringify(json)) });
         } catch(e){ /* ছবি না এলে 🎁 ইমোজিই থাকবে */ }
     }
 

@@ -145,6 +145,8 @@ function roomWorld(){
     /* — ঢোকা: SVIP / স্টোর এন্ট্রি থাকলে এনিমেশন সহ — */
     function join(){
         let u = away.length && Math.random() < 0.6 ? away.shift() : (spare.length ? spare.shift() : null);
+        /* ঢোকার অর্ধেক সময় SVIP/স্টোর এন্ট্রিওয়ালা বট — গাড়ি/এন্ট্রি এনিমেশন নিয়মিত দেখা যাবে */
+        if (Math.random() < 0.5){ const cr = crowd(), vip = Object.keys(D.USERS).filter(x => x !== ME && !cr.includes(x) && LS('moi_svip_level_' + x)); if (vip.length) u = pick(vip); }
         if (!u) { const g = D.SPARE.concat(Object.keys(D.USERS)).filter(x => x !== ME && !crowd().includes(x)); u = pick(g); }
         if (!U(u)) return;
         const us = U(u);
@@ -166,7 +168,7 @@ function roomWorld(){
     /* — ইমোজি: সিটে বসা হলে সিটের উপরে + কমেন্টে; শ্রোতা হলে শুধু কমেন্টে — */
     function emoji(){
         const c = crowd(); if (!c.length) return;
-        const uid = pick(c), code = pick(CODES), src = (window.EMOJI_BASE || '') + code + '/512.gif';
+        const uid = pick(c), code = pick(CODES), src = (window.EMOJI_BASE || '') + code + '/512.webp';
         const at = seated().find(x => x.s.uid === uid);
         say(uid, '', { type: 'emoji', img: src });
         if (at && typeof showSeatReaction === 'function') setTimeout(() => showSeatReaction(at.i, code, src), 60);
@@ -238,13 +240,13 @@ function roomWorld(){
         const st = seated(), adm = st.find(x => x.s.role === 'owner') || pick(st); if (!adm) return;
         const r = Math.random(), who = adm.s.uid;
         if (r < 0.3){ const t = pick(TOPICS); M.rtSet(base() + '/topic', t); say(who, '📝 টপিক বদলানো হলো: ' + t); }
-        else if (r < 0.55){ M.rtSet(base() + '/wallpaper', { dataUrl: wallUrl(pick(WALL)), ts: Date.now() }); say(who, '🖼 ওয়ালপেপার বদলানো হলো'); }
+        else if (r < 0.55){ M.rtSet(base() + '/wallpaper', { dataUrl: (location.href.replace(/\/room\/.*$/, '/assets/wp/w') + ('0' + rnd(1, 12)).slice(-2) + '.webp'), ts: Date.now() }); say(who, '🖼 ওয়ালপেপার বদলানো হলো'); }
         else if (r < 0.75){ const id = 'skin' + rnd(1, 4); M.rtSet(base() + '/skin', { id }); const own = {}; own[id] = FAR; rtdb().ref(base() + '/skinOwn/' + id).set(FAR); say(who, '🎨 সিট স্কিন বদলানো হলো'); }
         else { const s = pick(SONGS); M.rtSet(base() + '/musicState', { title: s, by: U(who).name, ts: Date.now(), playing: true }); say(who, '🎵 এখন চলছে: ' + s); }
     }
 
     /* সময়সূচি (সেকেন্ড) — ঢোকার একটু পরেই কাজ শুরু, যাতে সঙ্গে সঙ্গে জীবন্ত লাগে */
-    every(join, 25, 60, 14);
+    every(join, 12, 30, 8);
     every(leave, 70, 150, 90);
     every(chat, 7, 18, 5);
     every(emoji, 22, 55, 18);

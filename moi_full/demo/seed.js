@@ -125,10 +125,11 @@ const ROOM_DEFS = [
 ];
 /* ৫০টা রুম: প্রতিটায় মোট ৪৫ জন (সিটে বসা + শ্রোতা) */
 ROOM_DEFS.forEach((e, k) => {
-    const sc = k < 5 ? [10, 6, 2, 8, 4][k] : 2 + ((k * 5 + 3) % 9), seatIdx = [], pool = [0,1,2,3,4,5,6,7,8,9];
+    const lay = ['basic-12', 'basic-6', 'basic-20', 'basic-11', 'special-11'][k % 5], NS = { 'basic-12': 12, 'basic-6': 6, 'basic-20': 20, 'basic-11': 11, 'special-11': 11 }[lay];
+    const sc = Math.min(NS - 1, k < 5 ? [10, 6, 2, 8, 4][k] : 2 + ((k * 5 + 3) % 9)), seatIdx = [], pool = Array.from({ length: NS }, (_, q) => q);
     for (let q = 0; q < sc; q++) seatIdx.push(pool.splice((k * 3 + q * 7) % pool.length, 1)[0]);
     seatIdx.sort((a, b) => a - b);
-    ROOMS.push({ id: 'S' + (1001 + k), name: e[0], country: e[1], category: e[2], topic: e[3], seatIdx, aud: 45 - sc });
+    ROOMS.push({ layout: lay, nSeats: NS, id: 'S' + (1001 + k), name: e[0], country: e[1], category: e[2], topic: e[3], seatIdx, aud: 45 - sc });
 });
 const MEMBERS = [5000, 3200, 640, 1500, 1000, 500, 800, 2000, 2500, 3500, 1200, 4000, 750, 1800, 3000, 520, 900, 1100, 2200, 600, 1400, 2800, 550, 1700, 4500];
 /* জয়েনিং সংখ্যা (রুমে যে নাম্বার দেখায়) — ৫০০ / ১০০০ / ৫০০০ ইত্যাদি। বদলাতে চাইলে MEMBERS তালিকা বদলান */
@@ -152,14 +153,14 @@ ROOMS.forEach((R, ri) => {
     M.seedDoc('rooms/' + R.id, {
         id: R.id, name: R.name, logo: owner.photo, country: R.country, language: 'bn', category: R.category, topic: R.topic,
         owner: { uid: owner.uid, name: owner.name, avatar: owner.photo }, ownerUid: owner.uid, ownerName: owner.name, ownerAvatar: owner.photo,
-        admins, level: 3 + ri, points: 20000 + ri * 15000, micSeatCount: 10, isLive: true,
+        admins, level: 3 + ri, points: 20000 + ri * 15000, micSeatCount: R.nSeats, isLive: true,
         createdAt: T(NOW - (ri === 2 ? 2 : 30 + ri * 9) * 86400000), rules: [], mutedUsers: [], bannedUsers: []
     });
     M.seedDoc('users/' + owner.uid, Object.assign({}, USERS[owner.uid], { myRoomUid: R.id, myRoomId: R.id }));
 
     const base = 'moi-live/rooms/' + R.id;
     /* সিট */
-    for (let s = 0; s < 10; s++){
+    for (let s = 0; s < R.nSeats; s++){
         const k = R.seatIdx.indexOf(s);
         if (k < 0) continue;
         const u = USERS[seated[k]];
@@ -173,6 +174,10 @@ ROOMS.forEach((R, ri) => {
         M.rtSet('moi-live/roomPresence/' + R.id + '/' + uid, true);
         if ((j % 5) < 3) M.rtSet(base + '/joinedUsers/' + uid, true);
     });
+    /* রুমভেদে আলাদা: সিট-লেআউট (৬/১১/১২/২০), ওয়ালপেপার (১২টার একটা), থিম-স্কিন (কিছু রুমে) */
+    M.rtSet(base + '/roomLayout', R.layout);
+    M.rtSet(base + '/wallpaper', { dataUrl: AVB.replace('/av/', '/wp/') + 'w' + ('0' + (ri % 12 + 1)).slice(-2) + '.webp', ts: NOW });
+    if (ri % 3 === 0){ const id = 'skin' + (ri % 4 + 1); M.rtSet(base + '/skin', { id }); M.rtSet(base + '/skinOwn/' + id, 4102444800000); }
     M.rtSet(base + '/likes', rnd(180, 2600));
     /* টপ গিফটার প্যানেলের জন্য কিছু ইতিহাস */
     seated.forEach(uid => {

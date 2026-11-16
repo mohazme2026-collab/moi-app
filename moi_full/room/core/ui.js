@@ -151,8 +151,8 @@ function renderEmojiGrid(){
     if (!cat) return;
     $('emojiGrid').innerHTML = cat.items.map(code => {
         if (cat.meme) return `<div class="emoji-grid-item" onclick="sendEmojiReaction('${code}')"><img src="${MOIStore.memeSrc(code)}" alt=""></div>`;
-        const src = EMOJI_BASE + code + '/512.gif';
-        return `<div class="emoji-grid-item" onclick="sendEmojiReaction('${code}')"><img src="${src}" loading="lazy" alt="" onerror="this.parentElement.innerHTML='<div style=\\'font-size:32px;text-align:center\\'>${emojiFallback(code)}</div>'"></div>`;
+        const src = EMOJI_BASE + code + '/512.webp';
+        return `<div class="emoji-grid-item" onclick="sendEmojiReaction('${code}')"><img src="${src}" loading="lazy" alt="" onerror="if(!this.dataset.g){this.dataset.g=1;this.src=this.src.replace(\'512.webp\',\'512.gif\');return}this.parentElement.innerHTML='<div style=\\'font-size:32px;text-align:center\\'>${emojiFallback(code)}</div>'"></div>`;
     }).join('');
 }
 
@@ -177,7 +177,7 @@ window.openEmojiSheet = () => {
 window.sendEmojiReaction = (code) => {
     if (!myProfile) return;
     const idx = state.seats.findIndex(s => s && s.uid === myProfile.uid);
-    const src = isMeme(code) ? MOIStore.memeSrc(code) : EMOJI_BASE + code + '/512.gif';
+    const src = isMeme(code) ? MOIStore.memeSrc(code) : EMOJI_BASE + code + '/512.webp';
     closeSheet();
     /* চ্যাটে সবসময় দেখায় (নাম + প্রোফাইল + ইমোজি) */
     pushMessage({ uid: myProfile.uid, name: myProfile.name || 'User', avatar: myProfile.avatar, text: '', img: src, type: 'emoji' });

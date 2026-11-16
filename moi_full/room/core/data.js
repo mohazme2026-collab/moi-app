@@ -29,6 +29,7 @@ function initState(){
     state.roomLayout = ls_get(KEY.roomLayout) || state.roomLayout;
     const wp = ls_get(KEY.wallpaper);
     if (wp && wp.dataUrl) applyWallpaper(wp.dataUrl);
+    if (window.rtReload) window.rtReload();
     state.joinedUsers = new Set(ls_get(KEY.joined, []) || []);
 }
 

@@ -119,6 +119,7 @@ async function onPhaseChange(info){
 function handleTap(itemId, evt){
   if (currentPhase !== 'BETTING' || getRoundInfo().timeLeft < 400){ showToast('Betting is closed'); return; }
   if (GameData.me.diamonds < selectedChip){ showToast('Not enough diamonds'); return; }
+  if (!userBets[itemId] && Object.keys(userBets).filter(k => userBets[k] > 0).length >= 6){ showToast('সর্বোচ্চ ৬টা ঘরে বাজি ধরা যাবে'); return; }
   const chip = selectedChip, idx = currentIdx;
   const x = evt && (evt.clientX || evt.pageX), y = evt && (evt.clientY || evt.pageY);
   try { localStorage.setItem('gedi_seen', '1'); } catch(e){}

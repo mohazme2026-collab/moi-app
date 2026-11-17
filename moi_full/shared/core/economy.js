@@ -999,6 +999,9 @@ console.log('[MOI] economy.js loaded (client mode)');
         const info = gdInfo();
         if (info.idx !== idx || info.phase !== 'BETTING') throw new Error('Betting is closed');
         const u0 = await getUserDoc(uid); assertActive(u0);
+        const prevG = (await FB.rtdb.ref(LIVE + '/gedi/rounds/R' + idx + '/bets/' + uid).get()).val();
+        const pkG = Object.keys((prevG && prevG.bets) || {}).filter(k => (prevG.bets[k] || 0) > 0);
+        if (pkG.length >= 6 && pkG.indexOf(String(item)) < 0) throw new Error('সর্বোচ্চ ৬টা ঘরে বাজি ধরা যাবে');
         const bal = await db().runTransaction(async t => {
             const uS = await t.get(userRef(uid)); const u = uS.data();
             if ((u.diamonds || 0) < chip) fail('INSUFFICIENT_DIAMONDS');

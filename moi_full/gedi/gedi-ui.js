@@ -118,7 +118,7 @@ function renderWinList(res){
   const list = Object.values(roundBetsCache).map(u => {
     if (!u || !u.bets) return null;
     const amt = gediReward(u.bets, res);
-    return amt > 0 ? { name: u.name || 'User', photo: u.photo || '', amt } : null;
+    return amt > 0 ? { name: u.name || 'User', photo: u.photo || '', amt, bet: Object.values(u.bets).reduce((a, b) => a + (b || 0), 0) } : null;
   }).filter(Boolean).sort((a, b) => b.amt - a.amt).slice(0, 3);
   if (!list.length){
     $('win-list').innerHTML = `<div class="wl empty" style="top:${tops[0]}px;height:${hs[0]}px">No winners this round</div>`;

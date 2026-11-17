@@ -353,9 +353,10 @@ window.openGameSheet = () => {
         pk.style.cssText = 'position:fixed;inset:0;z-index:2147483050;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center';
         pk.innerHTML = '<div style="width:100%;max-width:520px;background:linear-gradient(#2a1458,#14082e);border-radius:22px 22px 0 0;padding:16px 14px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.5)">'
           + '<div style="color:#fff;font:700 17px sans-serif;text-align:center;margin-bottom:14px">🎮 গেম</div>'
-          + '<div style="display:flex;gap:12px">'
+          + '<div style="display:flex;gap:10px">'
           + '<div data-g="game" style="flex:1;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#6a2cff,#ff3fa4);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><div style="font-size:54px;line-height:110px;height:110px">🚀</div>Space Wheel</div>'
           + '<div data-g="game2" style="flex:1;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#ff8a00,#e52e71);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../game2/img/card_fruit.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Fruit Wheel</div>'
+          + '<div data-g="gedi" style="flex:1;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#00b4ff,#7b2cff);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../gedi/img/item_basket.webp" style="width:100px;height:110px;object-fit:contain;display:block;margin:0 auto">Gedi</div>'
           + '</div></div>';
         document.body.appendChild(pk);
         pk.addEventListener('click', e => {

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Gedi</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="gedi.css">
+</head>
+<body>
+
+<div class="loading-cover" id="loadingCover">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Loading...</div>
+</div>
+
+<div id="bg"></div>
+
+<div id="gameRoot">
+
+  <!-- ══ উপরের বার ══ -->
+  <img class="abs btn" id="btnPower" src="img/btn_power.webp" style="left:19px;top:53px;width:30px" onclick="goBack()" alt="">
+  <div class="abs" id="wifiBox" style="left:58px;top:52px"><img src="img/icon_wifi.webp" alt=""><span id="pingTxt"></span></div>
+  <div class="abs" id="balPill" style="left:150px;top:51px;width:112px;height:34px">
+    <img src="img/balance_pill.webp" alt="">
+    <span class="bal-ic">💎</span><span id="user-balance">0</span>
+  </div>
+  <img class="abs btn" id="btnMusic" src="img/btn_music.webp" style="left:304px;top:54px;width:28px" onclick="toggleMusic()" alt="">
+  <img class="abs btn" id="btnHelp" src="img/btn_help.webp" style="left:344px;top:54px;width:28px" onclick="openRule()" alt="">
+  <div class="abs btn" id="trophyBtn" style="left:333px;top:84px;width:38px" onclick="openRank()">
+    <img src="img/trophy.webp" alt=""><span>TOP</span>
+  </div>
+
+  <!-- ══ চাকা ══ -->
+  <img class="abs" src="img/stand.webp" style="left:110px;top:272px;width:170px;height:168px" alt="">
+  <div class="abs" id="dotdisc"></div>
+  <img class="abs" id="wheelRing" src="img/ring.webp" alt="">
+  <div id="wheelStage"></div>
+  <img class="abs" id="hubImg" src="img/hub.webp" alt="">
+  <img class="abs" id="pileImg" src="img/item_pile.webp" alt="">
+  <div class="abs" id="hubText">
+    <div id="hubRound">Round: <span id="round-number">1</span></div>
+    <div id="phase-status">Select Time</div>
+    <div id="timer-pill"><span id="timer-display">22</span>s</div>
+  </div>
+
+  <!-- ══ দুই পাশের পোডিয়াম (স্পেশাল) ══ -->
+  <div class="abs pod" id="podF" style="left:48px;top:392px;width:78px;height:68px">
+    <img class="pod-ic" src="img/item_basket.webp" alt=""><img class="pod-base" src="img/ped_left.webp" alt=""><span>FRUIT</span>
+  </div>
+  <div class="abs pod" id="podS" style="left:261px;top:392px;width:78px;height:68px">
+    <img class="pod-ic" src="img/item_platter.webp" alt=""><img class="pod-base" src="img/ped_right.webp" alt=""><span>SWEET</span>
+  </div>
+
+  <!-- ══ নিচের কনসোল ══ -->
+  <img class="abs" src="img/panel.webp" style="left:25px;top:452px;width:340px;height:86px" alt="">
+  <div class="abs" id="selLabel"><i>1</i>Select Amount<i>2</i>Select Food</div>
+  <button class="abs chip selected" data-chip="10"   style="left:75px;top:477px"  onclick="selectChip(10)"><img class="n" src="img/chip_normal.webp" alt=""><img class="s" src="img/chip_selected.webp" alt=""><b>10</b></button>
+  <button class="abs chip" data-chip="100"  style="left:137px;top:477px" onclick="selectChip(100)"><img class="n" src="img/chip_normal.webp" alt=""><img class="s" src="img/chip_selected.webp" alt=""><b>100</b></button>
+  <button class="abs chip" data-chip="500"  style="left:199px;top:477px" onclick="selectChip(500)"><img class="n" src="img/chip_normal.webp" alt=""><img class="s" src="img/chip_selected.webp" alt=""><b>500</b></button>
+  <button class="abs chip" data-chip="1000" style="left:261px;top:477px" onclick="selectChip(1000)"><img class="n" src="img/chip_normal.webp" alt=""><img class="s" src="img/chip_selected.webp" alt=""><b>1K</b></button>
+
+  <div class="abs bar" style="left:25px;top:541px;width:340px;height:34px">
+    <img src="img/bar_revenue.webp" alt=""><span class="bl">Today's Revenue:</span><span class="bv">💎 <span id="today-win">0</span></span>
+  </div>
+  <div class="abs bar" style="left:25px;top:579px;width:340px;height:38px">
+    <img src="img/bar_results.webp" alt=""><span class="bl" style="color:#cfe4ff">Results</span>
+    <div id="history-container"></div>
+  </div>
+  <div class="abs bar btn" id="rankBar" style="left:25px;top:621px;width:340px;height:42px" onclick="openRank()">
+    <img src="img/bar_rank.webp" alt="">
+    <span class="bl two" style="color:#ffe9a8">Today's Prize<br>Ranking</span>
+    <div id="topAvatars"></div>
+    <img class="nx" src="img/btn_next.webp" alt="">
+  </div>
+
+  <img class="abs" id="handHint" src="img/hand.webp" alt="">
+
+  <!-- ══ রেজাল্ট পপ-আপ ══ -->
+  <div id="result-modal" class="modal hidden">
+    <div class="pop" style="width:300px;height:499px">
+      <img class="frame" src="img/popup_result.webp" alt="">
+      <img id="modal-item-icon" alt="">
+      <div id="modal-mult">x10</div>
+      <div id="modal-title">Round <span id="modal-round">1</span>'s Result</div>
+      <div id="modal-countdown">(5)</div>
+      <div id="win-list"></div>
+    </div>
+    <div class="abs bar" style="position:relative;width:300px;height:34px;margin-top:8px">
+      <img src="img/bar_revenue.webp" alt="">
+      <span class="bl" style="left:14px;font-size:9.5px">Reward 💎 <b id="modal-reward">0</b></span>
+      <span class="bv" style="right:14px;left:auto;font-size:9.5px">Cost 💎 <b id="modal-cost">0</b></span>
+    </div>
+  </div>
+
+  <!-- ══ রুল পপ-আপ ══ -->
+  <div id="rule-modal" class="modal hidden" onclick="if(event.target===this)closeRule()">
+    <div class="pop" style="width:300px;height:442px">
+      <img class="frame" src="img/popup_rule.webp" alt="">
+      <div class="pop-title" style="top:10px;height:43px;color:#fff">Rule</div>
+      <div id="rule-body">
+        <p><b>1.</b> Pick an amount, then tap the food you want to bet on.</p>
+        <p><b>2.</b> Each round has a betting time. When it ends the wheel spins and the result is shown at once. Betting is closed while it spins.</p>
+        <p><b>3.</b> If the result matches the food you chose, you win your bet × the number shown on that food (x5, x10, x15, x25, x45).</p>
+        <p><b>4.</b> You can bet on more than one food in the same round.</p>
+        <p><b>5.</b> Sometimes the <b>FRUIT</b> basket comes out. Then all the fruits win together (x5).</p>
+        <p><b>6.</b> Sometimes the <b>SWEET</b> platter comes out. Then all the sweets win together (x10, x15, x25, x45).</p>
+        <p><b>7.</b> Rounds never stop — a new one starts by itself.</p>
+      </div>
+      <img class="close" src="img/btn_close.webp" onclick="closeRule()" alt="">
+    </div>
+  </div>
+
+  <!-- ══ র‍্যাংকিং পপ-আপ ══ -->
+  <div id="rank-modal" class="modal hidden" onclick="if(event.target===this)closeRank()">
+    <div class="pop" style="width:300px;height:458px">
+      <img class="frame" src="img/popup_rank.webp" alt="">
+      <div class="pop-title" style="top:6px;height:40px;color:#7a3300">Ranking</div>
+      <div id="rank-tabs"><button class="on" data-k="daily" onclick="switchRank('daily')">Daily</button><button data-k="weekly" onclick="switchRank('weekly')">Weekly</button></div>
+      <div id="rank-list"></div>
+      <img class="close" src="img/btn_close.webp" onclick="closeRank()" alt="">
+    </div>
+  </div>
+
+</div>
+
+<!-- ছবি আগে থেকে লোড (বদলের সময় ঝিলিক না দেয়) -->
+<div style="position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none">
+  <img src="img/cell_normal.webp" alt=""><img src="img/cell_selected.webp" alt=""><img src="img/cell_dim.webp" alt=""><img src="img/cell_win.webp" alt="">
+  <img src="img/medal1.webp" alt=""><img src="img/medal2.webp" alt=""><img src="img/medal3.webp" alt=""><img src="img/tag_hot.webp" alt=""><img src="img/tag_new.webp" alt="">
+</div>
+
+<script src="../shared/core/firebase-init.js"></script>
+<script src="../demo/seed.js"></script>
+<script src="../shared/core/sync.js"></script>
+<script src="../shared/core/sync-routes.js"></script>
+<script src="../shared/storage.js"></script>
+<script src="../shared/core/economy.js"></script>
+<script src="../shared/core/db-storage.js"></script>
+<script src="../shared/core/auth.js"></script>
+<script src="../shared/broadcast/broadcast-core.js"></script>
+
+<script src="gedi-config.js"></script>
+<script src="gedi-fit.js"></script>
+<script src="gedi-demo.js"></script>
+<script src="gedi-data.js"></script>
+<script src="gedi-ui.js"></script>
+<script src="gedi-main.js"></script>
+</body>
+</html>

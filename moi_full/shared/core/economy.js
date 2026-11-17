@@ -954,6 +954,89 @@ console.log('[MOI] economy.js loaded (client mode)');
         return { ok: true, win, wedge, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
     };
 
+    /* ═══════════ গেম: Gedi ═══════════
+       বেট ধরলে ডায়মন্ড কাটে, জিতলে যোগ হয় — সব ওয়ালেট হিস্ট্রিতে থাকে। (Space Wheel-এর কিছু ছোঁয়া হয়নি)
+       🔒 কোন ঘর জিতবে সেই অংশ gedi/gedi-config.js-এর সাথে হুবহু একই রাখতে হবে। */
+    const GD = { EPOCH: 1700000000000, ROUND: 30000, BET: 22000, SPIN: 3000, MULT: [10, 15, 25, 45, 5, 5, 5, 5], CHIPS: [10, 100, 500, 1000] };
+    function gdInfo(){
+        const el = Date.now() - GD.EPOCH, idx = Math.floor(el / GD.ROUND), into = el % GD.ROUND;
+        return { idx, phase: into < GD.BET ? 'BETTING' : (into < GD.BET + GD.SPIN ? 'SPINNING' : 'RESULT') };
+    }
+    /* ── কোন ঘর জিতবে — রাউন্ড নম্বর (idx) থেকেই ঠিক হয়, সবার জন্য একই ──
+       🔒 এই অংশটা gedi/gedi-config.js আর shared/core/economy.js — দুই জায়গায় হুবহু একই রাখতে হবে।
+       ফল: { cell: 0..7, special: null } অথবা { cell: -1, special: 'F' (সব ফল) | 'S' (সব মিষ্টি) } */
+    function gediRng(seed){ let a = seed >>> 0; return function(){ a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+    const GEDI_CACHE = {};
+    function gediSuper(s){
+      if (GEDI_CACHE[s]) return GEDI_CACHE[s];
+      const r = gediRng(Math.imul(s + 7, 2654435761) ^ 0x85ebca6b);
+      const sp = r() < 0.8 ? Math.floor(r() * 64) : (r(), -1);          /* ৬৪ রাউন্ডে সর্বোচ্চ ১টা স্পেশাল (খুব কম) */
+      const spType = r() < 0.6 ? 'F' : 'S';
+      const out = []; let lastSmall = -1, prevMood = -1;
+      while (out.length < 64){
+        const m = r(); let mood = m < 0.35 ? 0 : (m < 0.75 ? 1 : 2);        /* ০ = ফলের ধারা, ১ = মেশানো, ২ = বড় ঘরের ধারা */
+        if (mood !== 1 && mood === prevMood) mood = 1; prevMood = mood;   /* একই ধারা পরপর দুইবার নয় */
+        const len = mood === 0 ? 3 + Math.floor(r() * 7) : mood === 1 ? 3 + Math.floor(r() * 4) : 2 + Math.floor(r() * 3);
+        const pBig = mood === 0 ? 0.06 : mood === 1 ? 0.34 : 0.78;
+        for (let k = 0; k < len && out.length < 64; k++){
+          if (out.length === sp){ out.push({ cell: -1, special: spType }); continue; }
+          let cell;
+          if (r() < pBig){ const x = r() * 60; cell = x < 28 ? 0 : x < 46 ? 1 : x < 56 ? 2 : 3; }   /* ১০ বেশি, ১৫, ২৫, ৪৫ সবচেয়ে কম */
+          else { cell = 4 + Math.floor(r() * 4); if (cell === lastSmall && r() < 0.6) cell = 4 + Math.floor(r() * 4); lastSmall = cell; }
+          out.push({ cell: cell, special: null });
+        }
+      }
+      GEDI_CACHE[s] = out;
+      return out;
+    }
+    function gediResult(idx){ return gediSuper(Math.floor(idx / 64))[((idx % 64) + 64) % 64]; }
+    const gdCells = res => (res.special === 'F' ? [4, 5, 6, 7] : res.special === 'S' ? [0, 1, 2, 3] : [res.cell]);
+    const gdWeek = () => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+
+    H.gediBet = async (data, uid) => {
+        const idx = Number(data.idx), item = Number(data.item), chip = Number(data.chip);
+        if (!Number.isInteger(item) || item < 0 || item > 7 || GD.CHIPS.indexOf(chip) < 0) fail('INVALID');
+        const info = gdInfo();
+        if (info.idx !== idx || info.phase !== 'BETTING') throw new Error('Betting is closed');
+        const u0 = await getUserDoc(uid); assertActive(u0);
+        const bal = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < chip) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -chip, title: 'Gedi bet', txType: 'spend' }).diamonds;
+        });
+        const bref = FB.rtdb.ref(LIVE + '/gedi/rounds/R' + idx + '/bets/' + uid);
+        let mine = null;
+        await bref.transaction(v => {
+            v = v || { uid, name: u0.name || 'User', photo: u0.photo || '', bets: {} };
+            v.bets = v.bets || {}; v.bets[item] = (v.bets[item] || 0) + chip; v.ts = Date.now(); mine = v.bets;
+            return v;
+        });
+        return { ok: true, balance: bal, bets: mine };
+    };
+    H.gediClaim = async (data, uid) => {
+        const idx = Number(data.idx); if (!Number.isInteger(idx)) fail('INVALID');
+        const info = gdInfo();
+        if (idx > info.idx || (idx === info.idx && info.phase !== 'RESULT')) fail('NOT_READY');
+        const res = gediResult(idx), cells = gdCells(res);
+        const bsnap = (await FB.rtdb.ref(LIVE + '/gedi/rounds/R' + idx + '/bets/' + uid).get()).val();
+        const bets = (bsnap && bsnap.bets) || {};
+        const cost = Object.keys(bets).reduce((s, k) => s + (Number(bets[k]) || 0), 0);
+        const reward = cells.reduce((s, c) => s + (Number(bets[c]) || 0) * GD.MULT[c], 0);
+        const cl = await FB.rtdb.ref(LIVE + '/gedi/claims/R' + idx + '/' + uid).transaction(v => (v ? undefined : { ts: Date.now(), amount: reward }));
+        let balance = ((await userRef(uid).get()).data() || {}).diamonds || 0;
+        if (cl.committed && reward > 0){
+            const me = await getUserDoc(uid);
+            balance = await db().runTransaction(async t => {
+                const uS = await t.get(userRef(uid));
+                return applyDelta(t, uid, uS.data(), { dia: reward, title: 'Gedi win', txType: 'reward' }).diamonds;
+            });
+            const add = v => { v = v || { amount: 0 }; v.amount = (v.amount || 0) + reward; v.name = me.name || 'User'; v.photo = me.photo || ''; return v; };
+            await FB.rtdb.ref(LIVE + '/gedi/dailyWins/' + gDay() + '/' + uid).transaction(add);
+            await FB.rtdb.ref(LIVE + '/gedi/weeklyWins/' + gdWeek() + '/' + uid).transaction(add);
+        }
+        return { ok: true, win: res, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
+    };
+
     /* ═══════════ রিলেশনশিপ: CP / ফ্রেন্ড / সিস্টার / ব্রাদার (রুমের moi-rel.js) ═══════════
        ডেটা (লোকাল): moi_rel_cp, moi_rel_fr, moi_relreq  — 🔒 LOCK-LATER: পরে সার্ভারে নেওয়া হবে */
     const REL_COST = { cp: 1000, friend: 300, sister: 300, brother: 300 };

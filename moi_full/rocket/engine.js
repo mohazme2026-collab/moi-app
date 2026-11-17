@@ -19,7 +19,7 @@ function rkCrash(k){
 }
 function rkMult(ms){ var t = Math.max(0, ms) / 1000; return Math.exp(RK.A * t + RK.B * t * t); }
 function rkTime(m){ var L = Math.log(Math.max(1, m)); return (-RK.A + Math.sqrt(RK.A * RK.A + 4 * RK.B * L)) / (2 * RK.B) * 1000; }
-function rkFly(c){ return Math.max(700, Math.round(rkTime(c))); }
+function rkFly(c){ return Math.max(1000, Math.round(rkTime(c))); }
 function rkBlock(bi){
   var bs = bi * RK.BLK, t = bs, k = bi * 1000, out = [];
   for (;;){

@@ -11,14 +11,15 @@ function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c
 function rng(seed){ var s = (seed >>> 0) % 2147483647 || 1; return function(){ return (s = s * 48271 % 2147483647) / 2147483647; }; }
 function mask(n){ n = String(n || 'User'); return (n.length > 4 ? n.slice(0, 4) : n.slice(0, 3)) + '**'; }
 function av(p){ return esc(p || (window.MOI_AVATAR ? MOI_AVATAR('x', 'f') : '')); }
+function disp(t, crash){ return t < 1000 ? Math.min(crash, Math.max(0, t) / 1000) : Math.min(crash, Math.floor(rkMult(t) * 100) / 100); }
 function ease(t){ t = Math.max(0, Math.min(1, t)); return 1 - Math.pow(1 - t, 3); }
 
 /* ─── মাপ ─── */
 function fit(){
   var vw = window.innerWidth, vh = window.innerHeight, k = Math.min(vw / 720, vh / 1000), cv = $('cv');
   Hh = vh / k; cv.style.height = Hh + 'px'; cv.style.transform = 'scale(' + k + ')'; cv.style.left = ((vw - 720 * k) / 2) + 'px';
-  SH = Hh - 225; $('stage').style.height = SH + 'px';
-  $('bSound').style.top = (Hh - 259 - 86) + 'px'; $('newb').style.top = (Hh - 259 - 30) + 'px';
+  SH = Hh - 258; $('stage').style.height = SH + 'px';
+  $('bSound').style.top = (Hh - 292 - 86) + 'px'; $('newb').style.top = (Hh - 292 - 30) + 'px';
   $('badge').style.top = (SH * .27) + 'px'; $('podium').style.height = '340px';
   if (cur) placeIdle();
 }
@@ -57,10 +58,10 @@ function sched(s){
 /* ─── রাউন্ড শুরু/রিসেট ─── */
 function keyOf(s){ return s.idle ? 'i' + s.next : 'r' + s.idx; }
 var joined = 0, lastList = 0, boomDone = false, podDone = false, settled = false, tickN = -1;
-function placeIdle(){ var rk = $('rk'); rk.src = 'img/rk_stand.webp'; rk.style.width = '112px'; rk.style.left = '304px'; rk.style.top = (SH - 350) + 'px'; }
+function placeIdle(){ var rk = $('rk'); $('rki').src = 'img/rk_stand.webp'; rk.dataset.f = ''; $('flame').style.display = 'none'; rk.style.width = '112px'; rk.style.left = '304px'; rk.style.top = (SH - 350) + 'px'; $('tp').setAttribute('d', ''); }
 function newRound(s){
   cur = { s: s, key: keyOf(s), bots: s.idle ? [] : sched(s) };
-  joined = 0; boomDone = false; podDone = false; settled = false; tickN = -1;
+  cur.mc = 0; joined = 0; boomDone = false; podDone = false; settled = false; tickN = -1;
   mine = { amt: 0, esc: 0, reward: 0 };
   $('fly').innerHTML = ''; $('list').innerHTML = ''; $('boom').className = ''; $('podium').style.display = 'none'; $('join').style.display = 'none'; $('badge').style.display = 'none';
   $('rk').style.display = 'block'; $('rk').style.opacity = 1; placeIdle(); $('bgw').style.transition = 'none'; $('bgw').style.transform = 'translateY(0)';
@@ -93,7 +94,7 @@ function bet(amt){
 function showBal(){ $('balN').textContent = fmt(me.dia); }
 function doEscape(at){
   var s = cur && cur.s; if (!s || s.idle || mine.amt <= 0 || mine.esc || mine.sending) return;
-  var t = Date.now() - s.flyStart, m = Math.min(s.crash, Math.floor(rkMult(t) * 100) / 100); if (t < 0 || Date.now() >= s.crashAt) return;
+  var t = Date.now() - s.flyStart, m = Math.min(s.crash, Math.floor(rkMult(t) * 100) / 100); if (t < 1000 || Date.now() >= s.crashAt) return;
   mine.sending = true; var idx = s.idx, mm = at || m; mine.esc = mm; mine.reward = Math.floor(mine.amt * mm); beep(900, .12, .08);
   window.MOIEco.call('rocketEscape', at ? { idx: idx, at: at } : { idx: idx }).then(function(r){
     mine.sending = false; if (!cur || cur.s.idx !== idx) return; mine.esc = r.mult; mine.reward = r.reward || mine.reward; if (typeof r.balance === 'number'){ me.dia = r.balance; showBal(); }
@@ -111,6 +112,15 @@ function flyBot(b){
   setTimeout(function(){ el.remove(); }, 1700);
 }
 
+function chute(x, y, v, me){
+  var d = document.createElement('div'); d.className = 'pc' + (me ? ' me' : ''); d.style.left = (x - (me ? 65 : 48)) + 'px'; d.style.top = y + 'px'; d.style.setProperty('--dx', (Math.random() * 90 - 20) + 'px');
+  d.innerHTML = '<b>' + Number(v).toFixed(2) + '</b><img src="img/pc' + Math.floor(Math.random() * 3) + '.webp" alt="">'; $('fly').appendChild(d); setTimeout(function(){ d.remove(); }, 3600); if (me) beep(1000, .15, .06);
+}
+function spark(x, y){
+  var e = document.createElement('i'); e.className = 'sp2'; var a = (41 + (Math.random() * 30 - 15)) * Math.PI / 180, dist = 60 + Math.random() * 90;
+  e.style.left = x + 'px'; e.style.top = y + 'px'; e.style.transition = 'transform .6s ease-out,opacity .6s'; $('fly').appendChild(e);
+  requestAnimationFrame(function(){ e.style.transform = 'translate(' + (Math.sin(a) * dist) + 'px,' + (Math.cos(a) * dist) + 'px) scale(.3)'; e.style.opacity = '0'; }); setTimeout(function(){ e.remove(); }, 700);
+}
 /* ─── তালিকা (বাঁয়ে) ─── */
 function renderList(m, phase, into){
   var rows = [];
@@ -172,13 +182,18 @@ function frame(){
     if (now - lastList > 250){ lastList = now; renderList(1, 'BET', into); }
     renderAxis(1);
   } else if (ph === 'FLY'){
-    m = Math.min(s.crash, Math.floor(rkMult(t) * 100) / 100); $('cd').style.display = 'none'; $('badge').style.display = 'block'; $('mx').textContent = m.toFixed(2) + 'x';
+    m = disp(t, s.crash); $('cd').style.display = 'none'; $('badge').style.display = 'block'; $('mx').textContent = m.toFixed(2) + 'x';
     $('bgw').style.transform = 'translateY(' + (250 * ease(t / 3500)).toFixed(1) + 'px)';
     var e = ease(t / 1800), idleTop = SH - 350, tgtTop = SH * .50, tgtL = 235, wob = Math.min(1, t / 2000);
-    rk.style.width = t > 300 ? '120px' : '112px'; if (t > 300 && rk.dataset.f !== '1'){ rk.src = 'img/rk_fly.webp'; rk.dataset.f = '1'; }
+    rk.style.width = t > 300 ? '120px' : '112px'; if (t > 300 && rk.dataset.f !== '1'){ $('rki').src = 'img/rk_fly2.webp'; rk.dataset.f = '1'; $('flame').style.display = 'block'; }
     rk.style.left = (304 + (tgtL - 304) * e + Math.sin(t / 650) * 9 * wob) + 'px'; rk.style.top = (idleTop + (tgtTop - idleTop) * e + Math.cos(t / 520) * 7 * wob) + 'px';
+    var rx = parseFloat(rk.style.left), ry = parseFloat(rk.style.top), nx = rx + .714 * 120, ny = ry + .823 * 125, sy = SH - 205 + 250 * ease(t / 3500);
+    $('tp').setAttribute('d', 'M360 ' + sy.toFixed(0) + ' Q' + (300 + Math.sin(t / 900) * 30).toFixed(0) + ' ' + ((sy + ny) / 2).toFixed(0) + ' ' + nx.toFixed(0) + ' ' + ny.toFixed(0)); $('tp').style.strokeDashoffset = (-t * .06) % 28;
+    if (now - (cur.sp || 0) > 70){ cur.sp = now; spark(nx, ny); }
+    cur.bots.forEach(function(b){ if (b.esc && !b.d && m >= b.esc){ b.d = 1; chute(rx + 30 + Math.random() * 30, ry + 60, b.esc, 0); } });
+    if (mine.esc && !cur.mc){ cur.mc = 1; chute(rx + 40, ry + 60, mine.esc, 1); }
     if (mine.amt > 0 && !mine.esc && !mine.lost){
-      fbarMode('esc'); $('escT').textContent = 'ESCAPE'; $('escV').textContent = '💎 ' + fmt(mine.amt * m);
+      fbarMode('esc'); $('f_esc').classList.toggle('dim', t < 1000); $('escT').textContent = 'ESCAPE'; $('escV').textContent = '💎 ' + fmt(mine.amt * m);
       if (auto.on && auto.val <= m && auto.val <= s.crash) doEscape(auto.val);
     } else if (mine.esc){ fbarMode('done'); $('escT').textContent = 'ESCAPED  x' + Number(mine.esc).toFixed(2); $('escV').textContent = '+ 💎 ' + fmt(mine.reward || mine.amt * mine.esc); }
     else { fbarMode('wait'); $('waitT').textContent = 'wait for next round'; }
@@ -190,7 +205,7 @@ function frame(){
     if (!boomDone){
       boomDone = true; var b2 = $('boom'), rx = parseFloat(rk.style.left) || 300, ry = parseFloat(rk.style.top) || (SH - 350);
       if (s.fl <= 800){ rx = 304; ry = SH - 350; }
-      b2.style.left = (rx + 56 - 150) + 'px'; b2.style.top = (ry + 70 - 150) + 'px'; b2.className = 'on'; rk.style.display = 'none'; rk.dataset.f = ''; beep(110, .5, .12, 'sawtooth'); beep(70, .6, .1, 'square');
+      b2.style.left = (rx + 56 - 150) + 'px'; b2.style.top = (ry + 70 - 150) + 'px'; b2.className = 'on'; rk.style.display = 'none'; rk.dataset.f = ''; $('tp').setAttribute('d', ''); beep(110, .5, .12, 'sawtooth'); beep(70, .6, .1, 'square');
       renderHist();
     }
     if (!podDone && r > 900){ podDone = true; podium(s); }
@@ -250,7 +265,7 @@ function saveAuto(){ $('av2').textContent = auto.val.toFixed(2) + 'x'; $('tg').c
 
 /* ─── UI তৈরি ─── */
 function buildUI(){
-  var h = '', cx = [120, 212, 302, 395];
+  var h = '', cx = [100, 200, 300, 400];
   CANS.forEach(function(v, i){ h += '<div class="can" id="cn' + i + '" style="left:' + (cx[i] - 31) + 'px"><img src="img/can_' + CC[i] + '.webp" alt=""><i>' + CL[i] + '</i></div>'; });
   $('cans').innerHTML = h;
   CANS.forEach(function(v, i){ $('cn' + i).addEventListener('pointerdown', function(e){ e.preventDefault(); bet(v); }); });

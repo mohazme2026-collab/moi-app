@@ -1062,7 +1062,7 @@ console.log('[MOI] economy.js loaded (client mode)');
     }
     function rkMult(ms){ var t = Math.max(0, ms) / 1000; return Math.exp(RK.A * t + RK.B * t * t); }
     function rkTime(m){ var L = Math.log(Math.max(1, m)); return (-RK.A + Math.sqrt(RK.A * RK.A + 4 * RK.B * L)) / (2 * RK.B) * 1000; }
-    function rkFly(c){ return Math.max(700, Math.round(rkTime(c))); }
+    function rkFly(c){ return Math.max(1000, Math.round(rkTime(c))); }
     function rkBlock(bi){
       var bs = bi * RK.BLK, t = bs, k = bi * 1000, out = [];
       for (;;){
@@ -1111,10 +1111,10 @@ console.log('[MOI] economy.js loaded (client mode)');
         let mult;
         const at = Number(data.at);
         if (at >= 1.01 && at <= 100) {                  /* auto escape: ওই গুণকে পৌঁছালে */
-            if (at > s.crash || now < s.flyStart + rkTime(at) - 300) throw new Error('CRASHED');
+            if (at > s.crash || now < s.flyStart + Math.max(1000, rkTime(at)) - 300) throw new Error('CRASHED');
             mult = rkR2(at);
         } else {
-            if (now < s.flyStart || now >= s.crashAt) throw new Error('CRASHED');
+            if (now < s.flyStart + 1000 || now >= s.crashAt) throw new Error('CRASHED');
             mult = Math.min(s.crash, Math.floor(rkMult(now - s.flyStart) * 100) / 100);
         }
         const reward = Math.floor(b.amt * mult);

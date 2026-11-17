@@ -1040,6 +1040,97 @@ console.log('[MOI] economy.js loaded (client mode)');
         return { ok: true, win: res, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
     };
 
+    /* ═══════════ Rocket engine (rocket/engine.js এর কপি) ═══════════ */
+    /* ROCKET ENGINE — 🔒 এই ফাইলের কোড shared/core/economy.js এর "Rocket" অংশে হুবহু একই কপি আছে।
+       রাউন্ড: ১৪ সেকেন্ড বাজি → উড়ান (ক্র্যাশ গুণকের উপর নির্ভর) → ৬ সেকেন্ড ফল। ৩০ মিনিটের ব্লকে সময় থেকেই সব ঠিক হয়। */
+    var RK = { BLK: 1800000, BET: 14000, RES: 6000, A: 0.035, B: 0.0022 };
+    function rkMb(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+    function rkR2(x){ return Math.round(x * 100) / 100; }
+    function rkCrash(k){
+      var B = 20, b = Math.floor(k / B), pos = k - b * B, r = rkMb(b * 7919 + 104729), q = r(), n = q < .25 ? 0 : q < .7 ? 1 : q < .95 ? 2 : 3, set = {}, i, p;
+      for (i = 0; i < n; i++){ p = Math.floor(r() * B); set[p] = 1; if (r() < .22){ set[p + 1] = 1; if (r() < .4) set[p + 2] = 1; } }
+      var h = rkMb(k * 2654435 + 777); h(); h();
+      var t = h(), v = h();
+      if (set[pos]){
+        if (t < .70) return rkR2(10 + v * 10);
+        if (t < .92) return rkR2(35 + v * 5);
+        return [50, 80, 100][Math.floor(v * 3)];
+      }
+      if (t < .09) return 1.00;
+      if (t < .68) return rkR2(1.01 + v * .99);
+      return rkR2(2 + v * 3);
+    }
+    function rkMult(ms){ var t = Math.max(0, ms) / 1000; return Math.exp(RK.A * t + RK.B * t * t); }
+    function rkTime(m){ var L = Math.log(Math.max(1, m)); return (-RK.A + Math.sqrt(RK.A * RK.A + 4 * RK.B * L)) / (2 * RK.B) * 1000; }
+    function rkFly(c){ return Math.max(700, Math.round(rkTime(c))); }
+    function rkBlock(bi){
+      var bs = bi * RK.BLK, t = bs, k = bi * 1000, out = [];
+      for (;;){
+        var c = rkCrash(k), fl = rkFly(c), end = t + RK.BET + fl + RK.RES;
+        if (end > bs + RK.BLK) break;
+        out.push({ idx: k, start: t, flyStart: t + RK.BET, crashAt: t + RK.BET + fl, end: end, crash: c, fl: fl }); t = end; k++;
+      }
+      return out;
+    }
+    var rkCache = {};
+    function rkBlk(bi){ return rkCache[bi] || (rkCache[bi] = rkBlock(bi)); }
+    function rkAt(now){
+      var bi = Math.floor(now / RK.BLK), L = rkBlk(bi);
+      for (var i = 0; i < L.length; i++) if (now < L[i].end) return L[i];
+      return { idle: true, next: (bi + 1) * RK.BLK };
+    }
+    function rkOf(idx){ var L = rkBlk(Math.floor(idx / 1000)); for (var i = 0; i < L.length; i++) if (L[i].idx === idx) return L[i]; return null; }
+    function rkPhase(s, now){ return s.idle ? 'IDLE' : now < s.flyStart ? 'BET' : now < s.crashAt ? 'FLY' : 'RES'; }
+
+
+    /* ═══════════ গেম: Rocket (ক্র্যাশ) — বাজি ধরলে ডায়মন্ড কাটে; escape করলে বাজি × গুণক ফেরত ═══════════ */
+    H.rocketBet = async (data, uid) => {
+        const idx = Number(data.idx), amt = Math.floor(Number(data.amt));
+        if (!Number.isInteger(idx) || !(amt > 0) || amt > 50000000) fail('INVALID');
+        const s = rkOf(idx), now = Date.now();
+        if (!s || now >= s.flyStart - 150 || now < s.start - 500) throw new Error('এখন বাজি ধরার সময় নয়');
+        const u0 = await getUserDoc(uid); assertActive(u0);
+        const bal = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < amt) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -amt, title: 'Rocket bet', txType: 'spend' }).diamonds;
+        });
+        let total = 0;
+        await FB.rtdb.ref(LIVE + '/rocket/rounds/R' + idx + '/bets/' + uid).transaction(v => {
+            v = v || { uid, name: u0.name || 'User', photo: u0.photo || '', amt: 0 };
+            v.amt = (v.amt || 0) + amt; v.ts = Date.now(); total = v.amt; return v;
+        });
+        return { ok: true, balance: bal, total };
+    };
+    H.rocketEscape = async (data, uid) => {
+        const idx = Number(data.idx); if (!Number.isInteger(idx)) fail('INVALID');
+        const s = rkOf(idx), now = Date.now(); if (!s) fail('INVALID');
+        const ref = FB.rtdb.ref(LIVE + '/rocket/rounds/R' + idx + '/bets/' + uid);
+        const b = (await ref.get()).val(); if (!b || !(b.amt > 0)) fail('NO_BET');
+        if (b.esc) return { ok: true, mult: b.esc, reward: b.reward || 0, already: true, balance: ((await userRef(uid).get()).data() || {}).diamonds || 0 };
+        let mult;
+        const at = Number(data.at);
+        if (at >= 1.01 && at <= 100) {                  /* auto escape: ওই গুণকে পৌঁছালে */
+            if (at > s.crash || now < s.flyStart + rkTime(at) - 300) throw new Error('CRASHED');
+            mult = rkR2(at);
+        } else {
+            if (now < s.flyStart || now >= s.crashAt) throw new Error('CRASHED');
+            mult = Math.min(s.crash, Math.floor(rkMult(now - s.flyStart) * 100) / 100);
+        }
+        const reward = Math.floor(b.amt * mult);
+        const cl = await ref.transaction(v => (v && !v.esc ? Object.assign(v, { esc: mult, reward }) : undefined));
+        if (!cl.committed) return { ok: true, mult, reward: 0, already: true };
+        const balance = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid));
+            return applyDelta(t, uid, uS.data(), { dia: reward, title: 'Rocket win', txType: 'reward' }).diamonds;
+        });
+        await FB.rtdb.ref(LIVE + '/rocket/dailyWins/' + gDay() + '/' + uid).transaction(v => {
+            v = v || { amount: 0 }; v.amount = (v.amount || 0) + reward; v.name = u0name(b); v.photo = b.photo || ''; return v;
+        });
+        return { ok: true, mult, reward, balance };
+    };
+    const u0name = b => (b && b.name) || 'User';
+
     /* ═══════════ রিলেশনশিপ: CP / ফ্রেন্ড / সিস্টার / ব্রাদার (রুমের moi-rel.js) ═══════════
        ডেটা (লোকাল): moi_rel_cp, moi_rel_fr, moi_relreq  — 🔒 LOCK-LATER: পরে সার্ভারে নেওয়া হবে */
     const REL_COST = { cp: 1000, friend: 300, sister: 300, brother: 300 };

@@ -358,6 +358,7 @@ window.openGameSheet = () => {
           + '<div data-g="game2" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#ff8a00,#e52e71);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../game2/img/card_fruit.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Fruit Wheel</div>'
           + '<div data-g="gedi" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#00b4ff,#7b2cff);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../gedi/img/item_basket.webp" style="width:100px;height:110px;object-fit:contain;display:block;margin:0 auto">Gedi</div>'
           + '<div data-g="rocket" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0b2a55,#1d6fb8);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../rocket/img/card.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Rocket</div>'
+          + '<div data-g="slot" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#7a1fd0,#e0408f);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../slot/img/card.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Teen Patti Slot</div>'
           + '</div></div>';
         document.body.appendChild(pk);
         pk.addEventListener('click', e => {

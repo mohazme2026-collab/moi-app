@@ -1131,6 +1131,55 @@ console.log('[MOI] economy.js loaded (client mode)');
     };
     const u0name = b => (b && b.name) || 'User';
 
+
+    /* ═══════════ Teen Patti Slot (৫ রিল × ৩ সারি) — ফলাফল ইউজার+স্পিন নম্বর থেকে নির্দিষ্ট ═══════════ */
+    const SL_BETS = (() => { const a = []; for (let b = 100; b <= 1000; b += 100) a.push(b); for (let b = 1500; b <= 10000; b += 500) a.push(b); return a; })();
+    const slH = (a, b) => { let h = (a ^ Math.imul(b + 0x9e3779b9, 0x85ebca6b)) >>> 0; h = Math.imul(h ^ (h >>> 15), 0x2c1b3c6d) >>> 0; h = Math.imul(h ^ (h >>> 12), 0x297a2d39) >>> 0; return (h ^ (h >>> 15)) >>> 0; };
+    const slSeed = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; };
+    const slRng = seed => { let s = (seed >>> 0) % 2147483647 || 1; return () => (s = s * 48271 % 2147483647) / 2147483647; };
+    function slMood(us, n) {
+        const LEN = [3, 4, 5, 7, 9, 12];
+        let pos = 0, seg = 0;
+        for (let g = 0; g < 100000; g++) { const l = LEN[slH(us, seg + 31) % LEN.length]; if (pos + l > n) break; pos += l; seg++; }
+        return slH(us, seg + 777) / 4294967296;
+    }
+    function slOut(uid, n) {
+        const us = slSeed(String(uid)), m = slMood(us, n), u = slH(us, n * 7 + 3) / 4294967296;
+        /* ঠান্ডা: কম জেতা | মাঝারি | গরম: অনেক জেতা, বড়ও বেশি */
+        const P = m < .35 ? [.80, .95, .99] : m < .75 ? [.55, .85, .95] : [.20, .65, .87];
+        const k = u < P[0] ? 0 : u < P[1] ? 3 : u < P[2] ? 4 : 5;
+        const r = slRng(slH(us, n * 13 + 5));
+        const runs = g => { const o = []; for (let c = 0; c < 8; c++) { let k2 = 0; while (k2 < 5 && g[k2].indexOf(c) >= 0) k2++; o.push(k2); } return o; };
+        let best = null;
+        for (let it = 0; it < 800; it++) {
+            const card = Math.floor(r() * 8), g = [];
+            for (let c = 0; c < 5; c++) { const col = [Math.floor(r() * 8), Math.floor(r() * 8), Math.floor(r() * 8)]; if (k && c < k) col[Math.floor(r() * 3)] = card; g.push(col); }
+            const R = runs(g), big = R.filter(x => x >= 3).length, mx = Math.max.apply(null, R);
+            if (k === 0 ? mx <= 2 : (big === 1 && mx === k)) { best = { g, card: k ? card : -1 }; break; }
+        }
+        if (!best) return k ? slOut(uid, n + 1000003) : { grid: [[0, 1, 2], [3, 4, 5], [6, 7, 0], [1, 2, 3], [4, 5, 6]], k: 0, card: -1 };
+        return { grid: best.g, k, card: best.card };
+    }
+    H.slotSpin = async (data, uid) => {
+        const bet = Math.floor(Number(data.bet));
+        if (SL_BETS.indexOf(bet) < 0) fail('INVALID');
+        const u0 = await getUserDoc(uid); assertActive(u0);
+        await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < bet) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -bet, title: 'Slot bet', txType: 'spend' });
+        });
+        let n = 0;
+        await FB.rtdb.ref(LIVE + '/slot/users/' + uid + '/n').transaction(v => { n = (v || 0); return n + 1; });
+        const o = slOut(uid, n), win = o.k ? bet * o.k : 0;
+        let balance = ((await userRef(uid).get()).data() || {}).diamonds || 0;
+        if (win > 0) balance = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid));
+            return applyDelta(t, uid, uS.data(), { dia: win, title: 'Slot win', txType: 'reward' }).diamonds;
+        });
+        return { ok: true, grid: o.grid, k: o.k, card: o.card, win, bet, balance, n };
+    };
+
     /* ═══════════ রিলেশনশিপ: CP / ফ্রেন্ড / সিস্টার / ব্রাদার (রুমের moi-rel.js) ═══════════
        ডেটা (লোকাল): moi_rel_cp, moi_rel_fr, moi_relreq  — 🔒 LOCK-LATER: পরে সার্ভারে নেওয়া হবে */
     const REL_COST = { cp: 1000, friend: 300, sister: 300, brother: 300 };

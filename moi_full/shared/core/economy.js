@@ -1132,6 +1132,99 @@ console.log('[MOI] economy.js loaded (client mode)');
     const u0name = b => (b && b.name) || 'User';
 
 
+    /* ═══════════ গেম: Ludo Dice ═══════════
+       ডাইসে ২–৬ কোন নম্বর পড়বে তাতে বেট; সর্বোচ্চ ২ ঘরে। জিতলে বেট × নম্বর। বেটে ডায়মন্ড কাটে, জয়ে যোগ হয়।
+       🔒 কোন নম্বর পড়বে সেই অংশ ludo/ludo-config.js-এর সাথে হুবহু একই রাখতে হবে। */
+    const LD = { EPOCH: 1700000000000, BET: 15000, ROLL: 4000, RES: 5000, CHIPS: [10, 100, 500, 1000] };
+    function ldInfo(){
+        const R = LD.BET + LD.ROLL + LD.RES, el = Date.now() - LD.EPOCH, idx = Math.floor(el / R), into = el % R;
+        return { idx, phase: into < LD.BET ? 'BETTING' : (into < LD.BET + LD.ROLL ? 'ROLLING' : 'RESULT') };
+    }
+    /* ── ডাইসে কোন নম্বর পড়বে (২–৬) — রাউন্ড নম্বর (idx) থেকেই ঠিক হয়, সবার জন্য একই ──
+       🔒 এই অংশটা ludo/ludo-config.js আর shared/core/economy.js — দুই জায়গায় হুবহু একই রাখতে হবে। */
+    function ludoRng(seed){ let a = seed >>> 0; return function(){ a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+    const LUDO_MOODS = [
+      { w: [0.44, 0.34, 0.13, 0.06, 0.03], min: 4, span: 6 },   /* ছোট নম্বরের ধারা */
+      { w: [0.27, 0.26, 0.22, 0.14, 0.11], min: 3, span: 5 },   /* মেশানো */
+      { w: [0.10, 0.15, 0.27, 0.26, 0.22], min: 2, span: 4 }    /* বড় নম্বরের ধারা */
+    ];
+    const LUDO_CACHE = {};
+    function ludoSuper(s){
+      if (LUDO_CACHE[s]) return LUDO_CACHE[s];
+      const r = ludoRng(Math.imul(s + 11, 2246822519) ^ 0x27d4eb2f);
+      const out = []; let prev = -1, prevMood = -1;
+      while (out.length < 64){
+        const m = r(); let mood = m < 0.30 ? 0 : (m < 0.78 ? 1 : 2);
+        if (mood !== 1 && mood === prevMood) mood = 1; prevMood = mood;
+        const M = LUDO_MOODS[mood], len = M.min + Math.floor(r() * M.span);
+        for (let k = 0; k < len && out.length < 64; k++){
+          let v = ludoPick(M.w, r());
+          if (v === prev && r() < 0.35) v = ludoPick(M.w, r());     /* একই নম্বর পরপর কম আসে */
+          out.push(v); prev = v;
+        }
+      }
+      LUDO_CACHE[s] = out;
+      return out;
+    }
+    function ludoPick(w, x){ let c = 0; for (let i = 0; i < 5; i++){ c += w[i]; if (x < c) return i + 2; } return 6; }
+    function ludoResult(idx){ return ludoSuper(Math.floor(idx / 64))[((idx % 64) + 64) % 64]; }
+
+    H.ludoBet = async (data, uid) => {
+        const idx = Number(data.idx), num = Number(data.num), chip = Number(data.chip);
+        if (!Number.isInteger(num) || num < 2 || num > 6 || LD.CHIPS.indexOf(chip) < 0) fail('INVALID');
+        const info = ldInfo();
+        if (info.idx !== idx || info.phase !== 'BETTING') throw new Error('Betting is closed');
+        const u0 = await getUserDoc(uid); assertActive(u0);
+        /* আগে বেট লিখি (সর্বোচ্চ ২ ঘর এখানেই আটকানো হয়), তারপর ডায়মন্ড কাটি; কাটতে না পারলে বেট ফিরিয়ে নিই */
+        const bref = FB.rtdb.ref(LIVE + '/ludo/rounds/R' + idx + '/bets/' + uid);
+        let mine = null, ok = false;
+        await bref.transaction(v => {
+            ok = false;
+            v = v || { uid, name: u0.name || 'User', photo: u0.photo || '', bets: {} };
+            v.bets = v.bets || {};
+            const used = Object.keys(v.bets).filter(k => (v.bets[k] || 0) > 0);
+            if (used.length >= 2 && used.indexOf(String(num)) < 0) return;          /* ৩য় ঘর — বাতিল */
+            v.bets[num] = (v.bets[num] || 0) + chip; v.ts = Date.now(); mine = v.bets; ok = true;
+            return v;
+        });
+        if (!ok) throw new Error('You can bet on 2 numbers only');
+        let bal;
+        try {
+            bal = await db().runTransaction(async t => {
+                const uS = await t.get(userRef(uid)); const u = uS.data();
+                if ((u.diamonds || 0) < chip) fail('INSUFFICIENT_DIAMONDS');
+                return applyDelta(t, uid, u, { dia: -chip, title: 'Ludo Dice bet', txType: 'spend' }).diamonds;
+            });
+        } catch (e) {
+            await bref.transaction(v => { if (!v || !v.bets) return v; v.bets[num] = Math.max(0, (v.bets[num] || 0) - chip); return v; });
+            throw e;
+        }
+        return { ok: true, balance: bal, bets: mine };
+    };
+    H.ludoClaim = async (data, uid) => {
+        const idx = Number(data.idx); if (!Number.isInteger(idx)) fail('INVALID');
+        const info = ldInfo();
+        if (idx > info.idx || (idx === info.idx && info.phase !== 'RESULT')) fail('NOT_READY');
+        const res = ludoResult(idx);
+        const bsnap = (await FB.rtdb.ref(LIVE + '/ludo/rounds/R' + idx + '/bets/' + uid).get()).val();
+        const bets = (bsnap && bsnap.bets) || {};
+        const cost = Object.keys(bets).reduce((s, k) => s + (Number(bets[k]) || 0), 0);
+        const reward = (Number(bets[res]) || 0) * res;
+        const cl = await FB.rtdb.ref(LIVE + '/ludo/claims/R' + idx + '/' + uid).transaction(v => (v ? undefined : { ts: Date.now(), amount: reward }));
+        let balance = ((await userRef(uid).get()).data() || {}).diamonds || 0;
+        if (cl.committed && reward > 0){
+            const me = await getUserDoc(uid);
+            balance = await db().runTransaction(async t => {
+                const uS = await t.get(userRef(uid));
+                return applyDelta(t, uid, uS.data(), { dia: reward, title: 'Ludo Dice win', txType: 'reward' }).diamonds;
+            });
+            const add = v => { v = v || { amount: 0 }; v.amount = (v.amount || 0) + reward; v.name = me.name || 'User'; v.photo = me.photo || ''; return v; };
+            await FB.rtdb.ref(LIVE + '/ludo/dailyWins/' + gDay() + '/' + uid).transaction(add);
+            await FB.rtdb.ref(LIVE + '/ludo/weeklyWins/' + gdWeek() + '/' + uid).transaction(add);
+        }
+        return { ok: true, win: res, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
+    };
+
     /* ═══════════ Teen Patti Slot (৫ রিল × ৩ সারি) — ফলাফল ইউজার+স্পিন নম্বর থেকে নির্দিষ্ট ═══════════ */
     const SL_BETS = (() => { const a = []; for (let b = 100; b <= 1000; b += 100) a.push(b); for (let b = 1500; b <= 10000; b += 500) a.push(b); return a; })();
     const slH = (a, b) => { let h = (a ^ Math.imul(b + 0x9e3779b9, 0x85ebca6b)) >>> 0; h = Math.imul(h ^ (h >>> 15), 0x2c1b3c6d) >>> 0; h = Math.imul(h ^ (h >>> 12), 0x297a2d39) >>> 0; return (h ^ (h >>> 15)) >>> 0; };

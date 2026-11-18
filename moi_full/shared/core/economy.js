@@ -391,17 +391,24 @@ console.log('[MOI] economy.js loaded (client mode)');
         if (!bot || fn === 'asBot' || !H[fn]) fail('INVALID');
         return H[fn](data.args || {}, bot);
     };
-    /* শুধু ডেমো: কয়েকজন বট বক্স খোলে (আসল Firebase-এ এটা চলবে না) */
+    /* শুধু ডেমো: বক্সের মেয়াদ শেষে রুমে যারা (বট) সত্যি আছে তারাই বক্স ধরে — রুমের লিসেনার লিস্ট থেকে (আসল Firebase-এ এটা চলবে না) */
     H.lbBots = async (data, uid) => {
         if (!window.__MOCK) fail('INVALID');
         const roomId = String(data.roomId || ''), boxId = String(data.boxId || '');
-        const names = ['Rafi', 'Sumi', 'Tanvir', 'Nila', 'Hasan', 'Mim', 'Sakib', 'Priya'];
         const ref = FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/luckybox/' + boxId);
         const first = (await ref.get()).val(); if (!first) return { n: 0 };
-        const take = Math.max(0, Math.min(names.length, first.qty - 1));
-        for (let i = 0; i < take; i++){
-            await new Promise(r => setTimeout(r, 1500 + Math.random() * 2500));
-            const bid = 'bot_' + i + '_' + boxId;
+        const D = window.DEMO || {}, US = D.USERS || {};
+        const lis = (await FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/listeners').get()).val() || {};
+        const seats = (await FB.rtdb.ref(LIVE + '/rooms/' + roomId + '/seats').get()).val() || {};
+        const here = {}; Object.keys(lis).forEach(k => { here[k] = 1; }); Object.keys(seats).forEach(k => { if (seats[k] && seats[k].uid) here[seats[k].uid] = 1; });
+        const bots = Object.keys(here).filter(u => US[u] && u !== first.senderUid && u !== uid).sort(() => Math.random() - 0.5);
+        let n = 0;
+        for (let i = 0; i < bots.length; i++){
+            const cur = (await ref.get()).val(); if (!cur) break;
+            const w = cur.winners ? Object.values(cur.winners).length : 0;
+            if (w >= cur.qty - 1) break;                      /* শেষ ভাগটা আসল ইউজারের জন্য থাকে */
+            await new Promise(r => setTimeout(r, 300 + Math.random() * 1100));
+            let amount = 0; const bid = bots[i], bu = US[bid];
             await ref.transaction(box => {
                 if (!box) return box;
                 box.claimedBy = box.claimedBy ? Object.values(box.claimedBy) : [];
@@ -409,12 +416,16 @@ console.log('[MOI] economy.js loaded (client mode)');
                 if (box.winners.length >= box.qty - 1 || box.claimedBy.includes(bid)) return undefined;
                 box.claimedBy.push(bid);
                 const given = box.winners.reduce((s, w) => s + w.amount, 0), left = box.pool - given;
-                const amount = Math.max(1, Math.min(left, Math.floor(box.pool / (box.qty * 2) * (0.5 + Math.random()))));
-                box.winners.push({ uid: bid, name: names[i], avatar: (window.MOI_AVATAR ? MOI_AVATAR(names[i]) : ''), amount, ts: Date.now() });
+                amount = Math.max(1, Math.min(left, Math.floor(box.pool / (box.qty * 2) * (0.5 + Math.random()))));
+                box.winners.push({ uid: bid, name: bu.name || 'User', avatar: bu.photo || '', amount, ts: Date.now() });
                 return box;
             });
+            if (amount > 0){
+                try { await db().runTransaction(async t => { const uS = await t.get(userRef(bid)); if (uS.exists) applyDelta(t, bid, uS.data(), { dia: amount, title: 'Lucky box win' }); }); } catch(e){}
+                n++;
+            }
         }
-        return { n: take };
+        return { n };
     };
     H.openLuckyBox = async (data, uid) => {
         const roomId = String(data.roomId || ''), boxId = String(data.boxId || '');

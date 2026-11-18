@@ -6,6 +6,7 @@ console.log('[ROOM] render.js loaded');
 function updateRoleFlag(){
     const flag = $('roleFlag'), txt = $('roleFlagText');
     if (!flag || !txt) return;
+    flag.style.display = 'none'; flag.className = 'role-flag'; return;       /* OWNER/VISITOR লেবেল আর দেখানো হয় না (লিসেনার সংখ্যা ঢেকে রাখত) */
     if (state.myRole === 'owner'){
         flag.className = 'role-flag show';
         txt.textContent = 'OWNER';

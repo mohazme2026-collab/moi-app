@@ -14,8 +14,8 @@ if (/[?&]bots=0/.test(location.search)) return;
 const SPEED = Number((new URLSearchParams(location.search)).get('speed')) || 1;
 
 /* ═══ ⚙️ সেটিংস ═══ */
-const TARGET = (total, qty) => Math.max(Math.round(Math.sqrt(total) + qty * 0.4), qty + 3);  /* একটা বক্সে কতজন আসবে: ১০০💎≈১২, ১০০০≈৩৬, ১০,০০০≈১০৪, ১ লাখ≈৩২০ */
-const TARGET_MAX = 600;                  /* এক রুমে বটের সর্বোচ্চ */
+const TARGET = (total, qty) => Math.max(Math.round(Math.sqrt(total) * 0.45 + qty * 0.3), qty + 3);  /* একটা বক্সে কতজন বাড়বে: ১,০০০💎≈২০, ১০,০০০≈৫০, ৫০,০০০≈১০৫; বক্স যত জমবে যোগ হয়ে বাড়বে (১০টা ৫০ হাজারি = ১০০০) */
+const TARGET_MAX = 1000;                 /* এক রুমে বটের সর্বোচ্চ (আমাদের মোট ডেমো ইউজার ১০০০) */
 const STAY_MS = [60000, 480000];         /* বক্সের মেয়াদ শেষের পর কেউ কতক্ষণ থাকবে (সর্বনিম্ন, সর্বোচ্চ) */
 const SEATED_MAX = 10;                   /* একসাথে সর্বোচ্চ কতজন সিটে */
 
@@ -26,13 +26,15 @@ const rtdb = () => window.MOIFB.rtdb;
 const U = uid => D.USERS[uid];
 const meUid = () => { try { const u = window.MOIFB.auth.currentUser; if (u && u.uid) return u.uid; } catch(e){} return D.ME.uid; };
 const obj = v => (v && typeof v === 'object') ? v : {};
-const act = a => { try { if (typeof showActivity === 'function') showActivity(Object.assign({ ts: Date.now() }, a)); } catch(e){} };
+/* ঢোকার মেসেজ শুধু যে রুমে আছেন সেই রুমের, এবং শুধু যখন সত্যি কেউ ঢুকল। বেরোনোর মেসেজ নেই। */
+const act = (room, a) => { try { if (typeof showActivity === 'function' && typeof ROOM_ID !== 'undefined' && ROOM_ID === room) showActivity(Object.assign({ ts: Date.now() }, a)); } catch(e){} };
 
 /* ১০০০ বট সবাই ডেমো রুমে ভাগ করা — তাই অন্য রুমের ভিড়ে থাকা বটও আসতে পারে (শুধু এই রুমে/অন্য ভিড়ে না থাকলেই হলো) */
 const POOL = Object.keys(D.USERS);
 const mem = {};       /* roomId → { seatWant, seatNext } */
 
-function boxesOf(room){ return Object.values(obj(M.rtGet(LIVE() + '/rooms/' + room + '/luckybox'))).filter(b => b && b.expiresAt); }
+/* ভিড় আসে শুধু আসল ইউজারের ছাড়া বক্সে (ডেমো রুমের বটদের বক্সে নয়) */
+function boxesOf(room){ return Object.values(obj(M.rtGet(LIVE() + '/rooms/' + room + '/luckybox'))).filter(b => b && b.expiresAt && !U(b.senderUid)); }
 function wantOf(room, now){
     let t = 0, latest = 0;
     boxesOf(room).forEach(b => {
@@ -56,7 +58,7 @@ function addBots(room, n, latestExpiry){
         upd['rooms/' + room + '/listeners/' + u] = { name: us.name, avatar: us.photo, role: 'member', joined: now };
         upd['roomPresence/' + room + '/' + u] = true;
         upd['crowdPlan/' + room + '/' + u] = Math.max(latestExpiry, now) + rnd(STAY_MS[0], STAY_MS[1]);
-        if (acts < 2){ acts++; act({ action: 'join', name: us.name }); }
+        if (acts < 2){ acts++; act(room, { action: 'join', name: us.name }); }
         if (anim < 2){
             let fx = null; try { fx = (window.MOIStore && MOIStore.entryFor(u)) || (window.MOIPerks && (MOIPerks.perksOf(u) || {}).entry) || null; } catch(e){}
             if (fx){ anim++; rtdb().ref(LIVE() + '/rooms/' + room + '/entries').push({ uid: u, name: us.name, photo: us.photo, fx, ts: now + anim * 900 }); }
@@ -86,7 +88,6 @@ function sweep(){
             Object.keys(seats).forEach(i => { if (seats[i] && seats[i].uid === u) upd['rooms/' + room + '/seats/' + i] = null; });
         });
         rtdb().ref(LIVE()).update(upd);
-        if (gone.length < 3) gone.forEach(u => act({ action: 'leave', name: (U(u) || {}).name }));
     });
 }
 
@@ -94,7 +95,7 @@ function sweep(){
 function seatTick(room, now){
     const plan = planOf(room), bots = Object.keys(plan); if (bots.length < 3) return;
     const m = mem[room] = mem[room] || { seatWant: rnd(2, 5), seatNext: now + rnd(15000, 40000) };
-    if (now >= m.seatNext){ m.seatWant = rnd(1, Math.min(SEATED_MAX, Math.max(2, Math.floor(bots.length * 0.6)))); m.seatNext = now + rnd(15000, 50000); }
+    if (now >= m.seatNext){ m.seatWant = rnd(1, Math.min(SEATED_MAX, Math.max(2, Math.floor(bots.length * 0.6)))); m.seatNext = now + rnd(8000, 30000); }
     const seats = obj(M.rtGet(LIVE() + '/rooms/' + room + '/seats'));
     let total = 12; try { if (typeof ROOM_ID !== 'undefined' && ROOM_ID === room && state && state.seats) total = state.seats.length; } catch(e){}
     const seated = [], empty = [];
@@ -108,7 +109,9 @@ function seatTick(room, now){
     } else if (seated.length > m.seatWant){
         const x = pick(seated);
         if (r < 0.3) removeBot(room, x.s.uid); else rtdb().ref(LIVE() + '/rooms/' + room + '/seats/' + x.i).remove();
-    } else if (seated.length && r < 0.25){
+    } else if (seated.length && empty.length === 0 || (seated.length && r < 0.18)){
+        const x = pick(seated); rtdb().ref(LIVE() + '/rooms/' + room + '/seats/' + x.i).remove();                      /* সিট খালি, পরের জন এসে বসবে */
+    } else if (seated.length && r < 0.4){
         const x = pick(seated); rtdb().ref(LIVE() + '/rooms/' + room + '/seats/' + x.i + '/mic').set(!x.s.mic && Math.random() < 0.35);   /* মাঝে মাঝে মাইক খোলে/মিউট */
     }
 }
@@ -118,7 +121,7 @@ function tick(){
     if (document.hidden) return;
     const now = Date.now(), rooms = obj(M.rtGet(LIVE() + '/rooms'));
     Object.keys(rooms).forEach(room => {
-        const hasBox = rooms[room] && rooms[room].luckybox;
+        const hasBox = rooms[room] && rooms[room].luckybox && boxesOf(room).length;
         const plan = planOf(room), cur = Object.keys(plan).filter(u => (obj(M.rtGet(LIVE() + '/roomPresence/' + room)))[u]).length;
         if (hasBox){
             const w = wantOf(room, now);

@@ -161,7 +161,6 @@ function roomWorld(){
         const a = aud(); if (a.length < Math.max(4, R.aud - 4)) return;
         const u = pick(a).uid; away.push(u);
         M.rtSet(base() + '/listeners/' + u, null); M.rtSet(LIVE() + '/roomPresence/' + ROOM + '/' + u, null); M.rtSet(base() + '/joinedUsers/' + u, null);
-        act({ action: 'leave', name: U(u).name });
     }
     /* — কমেন্ট — */
     function chat(){ const c = crowd(); if (!c.length) return; say(pick(c), pick(D.TEXTS.concat(MORE_TEXT))); }

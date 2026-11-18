@@ -208,7 +208,7 @@ function filterRooms(list, opts){
 function renderHotRooms(){
     const rooms = allRooms();
     const mineId = window.userReady ? window.user.uid : '';
-    const forFeed = rooms.filter(r => r.ownerUid !== mineId);        /* আমার রুম আলাদা রেলে আছে */
+    const forFeed = rooms.filter(r => r.ownerUid !== mineId || (r.listeners || 0) >= 10);        /* আমার রুম আলাদা রেলেও আছে; ইউজার বেশি (১০+) হলে লাইভ তালিকাতেও আসে */
 
     /* ক্যাটাগরি চিপ */
     const catsEl = document.getElementById('cats');

@@ -80,7 +80,7 @@ function finish(r, bet){
   var win = r.win || 0;
   if (r.k){
     var cols = $('reels').querySelectorAll('.reel');
-    for (var c = 0; c < r.k; c++){ var im = cols[c].querySelectorAll('.c img'); for (var j = 0; j < 3; j++) if (r.grid[c][j] === r.card) im[j].classList.add('w'); }
+    for (var c = 0; c < 5; c++){ var im = cols[c].querySelectorAll('.c img'); for (var j = 1; j < 2; j++) if (r.grid[c][1] === r.card) im[1].classList.add('w'); }
     beep(660, .15, .08); setTimeout(function(){ beep(880, .15, .08); }, 150); setTimeout(function(){ beep(1100, .25, .08); }, 300);
     $('winp').classList.add('on'); countUp(win);
     setTimeout(function(){ me.dia = r.balance; showBal(); popup(r, win); }, 1300);
@@ -106,8 +106,8 @@ function popup(r, win){
 /* ─── সাহায্য ─── */
 function help(){
   var h = '<div class="ttl">Teen Patti Slot</div><div class="x">×</div>'
-    + '<div>বাঁ দিক থেকে পরপর রিলে একই তাস পড়লে জিত (যেকোনো সারিতে):</div>'
-    + '<div class="rw"><b>×3</b> ৩টা রিলে একই তাস</div><div class="rw"><b>×4</b> ৪টা রিলে একই তাস</div><div class="rw"><b>×5</b> ৫টা রিলে একই তাস</div>'
+    + '<div>শুধু <b>মাঝের সারিতে</b> একই তাস যতগুলো পড়বে (পরপর না হলেও):</div>'
+    + '<div class="rw"><b>×3</b> ৩টা একই তাস</div><div class="rw"><b>×4</b> ৪টা একই তাস</div><div class="rw"><b>×5</b> ৫টা একই তাস</div>'
     + '<div>সব তাসের দাম সমান। জিত = বাজি × গুণক।</div><div class="cg">' + NAMES.map(function(n){ return '<img src="img/c_' + n + '.webp" alt="">'; }).join('') + '</div>';
   $('mbox').innerHTML = h; $('modal').classList.add('on');
 }

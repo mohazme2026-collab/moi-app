@@ -72,3 +72,4 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a0b3a;font-family:
 #loading{position:absolute;inset:0;background:#1a0b3a;display:flex;align-items:center;justify-content:center;z-index:99;transition:opacity .3s}
 #loading.off{opacity:0;pointer-events:none}
 .sp{width:70px;height:70px;border:8px solid #6d3ad0;border-top-color:#ffd34d;border-radius:50%;animation:rot .9s linear infinite}
+#midl{position:absolute;left:56px;top:555px;width:608px;height:155px;border-top:2px solid rgba(255,211,77,.8);border-bottom:2px solid rgba(255,211,77,.8);background:linear-gradient(90deg,rgba(255,211,77,.05),rgba(255,211,77,.14),rgba(255,211,77,.05));box-shadow:0 0 14px rgba(255,200,60,.35);pointer-events:none}

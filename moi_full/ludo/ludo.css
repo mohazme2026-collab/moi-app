@@ -166,3 +166,14 @@ img.btn{pointer-events:auto}
 .spinner{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:#ffd84a;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .loading-text{font-size:12px;color:#a9d8c0;font-weight:600}
+
+/* ── মাঝখানের বড় কাউন্টডাউন (বেটের সময়) ── */
+#cdBig{position:absolute;left:105px;top:57px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,#0f5a3b 0,#06291c 78%);box-shadow:0 0 0 3px #f2c24a,0 6px 16px rgba(0,0,0,.65);text-align:center;pointer-events:none;z-index:3}
+#cdBig svg{position:absolute;inset:5px;width:120px;height:120px;transform:rotate(-90deg)}
+#cdBig .bgc{fill:none;stroke:rgba(255,255,255,.14);stroke-width:7}
+#cdBig .fg{fill:none;stroke:#ffd34d;stroke-width:7;stroke-linecap:round;stroke-dasharray:326.7;stroke-dashoffset:0;transition:stroke-dashoffset .25s linear,stroke .25s}
+#cdBig b{position:absolute;left:0;right:0;top:30px;font:900 56px/60px 'Orbitron','Figtree',system-ui;color:#fff;text-shadow:0 2px 0 #7a4a00,0 0 12px rgba(255,211,77,.7)}
+#cdBig i{position:absolute;left:0;right:0;top:92px;font:800 11px/12px 'Figtree',system-ui;font-style:normal;color:#ffe9a8;letter-spacing:1.5px}
+#cdBig.low .fg{stroke:#ff4b3e}
+#cdBig.low b{color:#ffb3ab;animation:cdp .5s ease-in-out infinite}
+@keyframes cdp{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}

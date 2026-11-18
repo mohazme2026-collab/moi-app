@@ -55,6 +55,11 @@ function tick(){
   currentIdx = info.roundIndex;
   $('round-number').textContent = info.roundNumber;
   $('timer-display').textContent = info.phase === 'BETTING' ? Math.ceil(info.timeLeft / 1000) : 0;
+  if (info.phase === 'BETTING'){                                       /* মাঝখানে বড় কাউন্টডাউন */
+    const sec = Math.max(1, Math.ceil(info.timeLeft / 1000));
+    $('cdNum').textContent = sec; $('cdBig').classList.toggle('low', sec <= 5);
+    $('cdRing').style.strokeDashoffset = String(326.7 * (1 - info.timeLeft / BETTING_DURATION));
+  }
   if (info.phase !== lastPhase || info.roundIndex !== lastIdx){
     lastPhase = info.phase; lastIdx = info.roundIndex;
     onPhaseChange(info);
@@ -68,7 +73,7 @@ async function onPhaseChange(info){
   if (info.phase === 'BETTING'){
     clearRoundUI();
     rollStarted = false;
-    setDieStatic(ludoResult(Math.max(0, info.roundIndex - 1)), info.roundIndex - 1);   /* আগের রাউন্ডের নম্বর দেখিয়ে থেমে থাকে */
+    $('cdBig').style.display = 'block'; $('diceStage').style.visibility = 'hidden';   /* বেটের সময় ডাইসের জায়গায় কাউন্টডাউন */
     renderHistory(GameData.history(info.roundIndex));
     const idx = info.roundIndex;
     const cache = await GameData.roundBets(idx);
@@ -90,15 +95,17 @@ async function onPhaseChange(info){
       if (mine && mine.bets) Object.keys(mine.bets).forEach(k => { userBets[k] = Math.max(userBets[k] || 0, mine.bets[k] || 0); updateBoxBadge(k); });
     }
   }
+  if (info.phase !== 'BETTING'){ $('cdBig').style.display = 'none'; $('diceStage').style.visibility = 'visible'; }
   if (info.phase === 'ROLLING'){
     if (!rollStarted){
       rollStarted = true;
       const n = ludoResult(info.roundIndex);
       if (info.msInto - BETTING_DURATION > 600) setDieStatic(n, info.roundIndex);    /* দেরিতে ঢুকলে সরাসরি ফল */
-      else rollDie(n, info.roundIndex);
+      else rollDie(n, info.roundIndex, info.rollMs);
     }
   }
   if (info.phase === 'RESULT'){
+    if (!rollStarted){ rollStarted = true; setDieStatic(ludoResult(info.roundIndex), info.roundIndex); }   /* রেজাল্টের সময় ঢুকলে ডাইসে ফল */
     if (window._resultShownFor !== info.roundIndex){
       window._resultShownFor = info.roundIndex;
       await handleResult(info.roundIndex, info.roundNumber);

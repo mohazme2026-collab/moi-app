@@ -1135,10 +1135,11 @@ console.log('[MOI] economy.js loaded (client mode)');
     /* ═══════════ গেম: Ludo Dice ═══════════
        ডাইসে ২–৬ কোন নম্বর পড়বে তাতে বেট; সর্বোচ্চ ২ ঘরে। জিতলে বেট × নম্বর। বেটে ডায়মন্ড কাটে, জয়ে যোগ হয়।
        🔒 কোন নম্বর পড়বে সেই অংশ ludo/ludo-config.js-এর সাথে হুবহু একই রাখতে হবে। */
-    const LD = { EPOCH: 1700000000000, BET: 15000, ROLL: 4000, RES: 5000, CHIPS: [10, 100, 500, 1000] };
+    const LD = { EPOCH: 1700000000000, BET: 15000, ROUND: 27000, CHIPS: [10, 100, 500, 1000] };
+    function ludoRollMs(idx){ let a = (Math.imul(idx + 5, 2654435761) ^ 0x1b873593) >>> 0; a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); const x = ((t ^ (t >>> 14)) >>> 0) / 4294967296; return x < 0.36 ? 3000 : (x < 0.70 ? 5000 : 7000); }
     function ldInfo(){
-        const R = LD.BET + LD.ROLL + LD.RES, el = Date.now() - LD.EPOCH, idx = Math.floor(el / R), into = el % R;
-        return { idx, phase: into < LD.BET ? 'BETTING' : (into < LD.BET + LD.ROLL ? 'ROLLING' : 'RESULT') };
+        const R = LD.ROUND, el = Date.now() - LD.EPOCH, idx = Math.floor(el / R), into = el % R;
+        return { idx, phase: into < LD.BET ? 'BETTING' : (into < LD.BET + ludoRollMs(idx) ? 'ROLLING' : 'RESULT') };
     }
     /* ── ডাইসে কোন নম্বর পড়বে (২–৬) — রাউন্ড নম্বর (idx) থেকেই ঠিক হয়, সবার জন্য একই ──
        🔒 এই অংশটা ludo/ludo-config.js আর shared/core/economy.js — দুই জায়গায় হুবহু একই রাখতে হবে। */
@@ -1242,16 +1243,21 @@ console.log('[MOI] economy.js loaded (client mode)');
         const P = m < .35 ? [.80, .95, .99] : m < .75 ? [.55, .85, .95] : [.20, .65, .87];
         const k = u < P[0] ? 0 : u < P[1] ? 3 : u < P[2] ? 4 : 5;
         const r = slRng(slH(us, n * 13 + 5));
-        const runs = g => { const o = []; for (let c = 0; c < 8; c++) { let k2 = 0; while (k2 < 5 && g[k2].indexOf(c) >= 0) k2++; o.push(k2); } return o; };
-        let best = null;
+        /* জেতা শুধু মাঝের সারিতে: একই তাস ৩/৪/৫টা থাকলে (পরপর না হলেও) ×৩/×৪/×৫; ওপর-নিচের সারি শুধু সাজানো */
+        const cnt = row => { const o = [0, 0, 0, 0, 0, 0, 0, 0]; row.forEach(v => o[v]++); return o; };
         for (let it = 0; it < 800; it++) {
-            const card = Math.floor(r() * 8), g = [];
-            for (let c = 0; c < 5; c++) { const col = [Math.floor(r() * 8), Math.floor(r() * 8), Math.floor(r() * 8)]; if (k && c < k) col[Math.floor(r() * 3)] = card; g.push(col); }
-            const R = runs(g), big = R.filter(x => x >= 3).length, mx = Math.max.apply(null, R);
-            if (k === 0 ? mx <= 2 : (big === 1 && mx === k)) { best = { g, card: k ? card : -1 }; break; }
+            const card = Math.floor(r() * 8), mid = [];
+            let pos = [0, 1, 2, 3, 4];
+            for (let i = 4; i > 0; i--) { const j = Math.floor(r() * (i + 1)); const t = pos[i]; pos[i] = pos[j]; pos[j] = t; }
+            const set = {}; pos.slice(0, k).forEach(q => { set[q] = 1; });
+            for (let c = 0; c < 5; c++) mid.push(set[c] ? card : Math.floor(r() * 8));
+            const C = cnt(mid), mx = Math.max.apply(null, C);
+            if (k === 0 ? mx <= 2 : (C[card] === k && C.filter(x => x >= 3).length === 1)) {
+                const g = mid.map(v => [Math.floor(r() * 8), v, Math.floor(r() * 8)]);
+                return { grid: g, k, card: k ? card : -1 };
+            }
         }
-        if (!best) return k ? slOut(uid, n + 1000003) : { grid: [[0, 1, 2], [3, 4, 5], [6, 7, 0], [1, 2, 3], [4, 5, 6]], k: 0, card: -1 };
-        return { grid: best.g, k, card: best.card };
+        return k ? slOut(uid, n + 1000003) : { grid: [[0, 0, 1], [1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]], k: 0, card: -1 };
     }
     H.slotSpin = async (data, uid) => {
         const bet = Math.floor(Number(data.bet));

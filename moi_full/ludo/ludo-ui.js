@@ -27,14 +27,16 @@ function setDieStatic(n, idx){
   $('dieHop').classList.remove('hop'); $('dieShadow').classList.remove('hop');
 }
 /* ডাইস গড়িয়ে গড়িয়ে ঘুরে n-এ থামে */
-function rollDie(n, idx){
-  const el = $('die3d'), o = DIE_ORI[n], hop = $('dieHop'), sh = $('dieShadow');
+function rollDie(n, idx, ms){
+  const el = $('die3d'), o = DIE_ORI[n], hop = $('dieHop'), sh = $('dieShadow'), sec = ((ms || 3800) / 1000);
+  const k = 1 + Math.floor(sec / 1.6);                                  /* বেশি সময় = বেশি পাক */
   hop.classList.remove('hop'); sh.classList.remove('hop');
   el.style.transition = 'none'; el.style.transform = 'rotateZ(-70deg) rotateX(0deg) rotateY(0deg)';
+  hop.style.animationDuration = sh.style.animationDuration = sec + 's';
   void el.offsetWidth;
   hop.classList.add('hop'); sh.classList.add('hop');
-  el.style.transition = 'transform 3.6s cubic-bezier(.16,.6,.22,1)';
-  el.style.transform = `rotateZ(${tiltOf(idx)}deg) rotateX(${o[0] + 720}deg) rotateY(${o[1] + 1080}deg)`;
+  el.style.transition = 'transform ' + (sec * .95) + 's cubic-bezier(.16,.6,.22,1)';
+  el.style.transform = `rotateZ(${tiltOf(idx)}deg) rotateX(${o[0] + 360 * k}deg) rotateY(${o[1] + 360 * (k + 1)}deg)`;
 }
 
 /* ══════ ঘর (২–৬) ══════ */

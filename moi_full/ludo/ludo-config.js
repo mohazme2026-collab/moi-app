@@ -1,15 +1,17 @@
 /* ludo/ludo-config.js — Ludo Dice গেমের স্থির মান: সময়, নম্বর, জেতার নিয়ম */
 const EPOCH = 1700000000000;
 const BETTING_DURATION = 15000;   /* ১৫ সেকেন্ড বেট ধরার সময় */
-const ROLL_DURATION = 4000;       /* ৪ সেকেন্ড ডাইস ঘোরে — এ সময় বেট বন্ধ */
-const RESULT_DURATION = 5000;     /* ৫ সেকেন্ড রেজাল্ট */
-const ROUND_DURATION = BETTING_DURATION + ROLL_DURATION + RESULT_DURATION;   /* মোট ২৪ সেকেন্ড, তারপর পরের রাউন্ড নিজে শুরু */
+const ROUND_DURATION = 27000;     /* মোট ২৭ সেকেন্ড: ১৫ বেট + (ডাইস ঘোরা ৩/৫/৭ সেকেন্ড, রাউন্ড ভেদে আলাদা) + বাকি সময় রেজাল্ট */
 const ROUND_MAX = 5000;           /* স্ক্রিনে রাউন্ড নম্বর ১ থেকে ৫০০০ */
 const CHIPS = [10, 100, 500, 1000];
 const NUMS = [2, 3, 4, 5, 6];     /* ১ নেই — ঘর আর গুণ = ২ থেকে ৬ */
 const MAX_BOXES = 2;              /* একসাথে সর্বোচ্চ ২টা ঘরে বেট */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ── ডাইস কতক্ষণ ঘুরবে: ৩, ৫ বা ৭ সেকেন্ড — রাউন্ড নম্বর (idx) থেকে ঠিক হয়, সবার জন্য একই
+   🔒 এই অংশটা ludo/ludo-config.js আর shared/core/economy.js — দুই জায়গায় হুবহু একই রাখতে হবে। */
+function ludoRollMs(idx){ let a = (Math.imul(idx + 5, 2654435761) ^ 0x1b873593) >>> 0; a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); const x = ((t ^ (t >>> 14)) >>> 0) / 4294967296; return x < 0.36 ? 3000 : (x < 0.70 ? 5000 : 7000); }
 
 /* ══════ রাউন্ডের সময় — সবার জন্য একই ঘড়ি ══════ */
 function getRoundInfo(){
@@ -18,11 +20,12 @@ function getRoundInfo(){
   const roundIndex = Math.floor(elapsed / ROUND_DURATION);          /* অনন্য রাউন্ড নম্বর */
   const roundNumber = (roundIndex % ROUND_MAX) + 1;                  /* স্ক্রিনে দেখানো নম্বর */
   const msInto = elapsed % ROUND_DURATION;
+  const rollMs = ludoRollMs(roundIndex);
   let phase, timeLeft;
   if (msInto < BETTING_DURATION){ phase = 'BETTING'; timeLeft = BETTING_DURATION - msInto; }
-  else if (msInto < BETTING_DURATION + ROLL_DURATION){ phase = 'ROLLING'; timeLeft = (BETTING_DURATION + ROLL_DURATION) - msInto; }
+  else if (msInto < BETTING_DURATION + rollMs){ phase = 'ROLLING'; timeLeft = (BETTING_DURATION + rollMs) - msInto; }
   else { phase = 'RESULT'; timeLeft = ROUND_DURATION - msInto; }
-  return { roundIndex, roundNumber, phase, timeLeft, msInto };
+  return { roundIndex, roundNumber, phase, timeLeft, msInto, rollMs };
 }
 
 /* ── ডাইসে কোন নম্বর পড়বে (২–৬) — রাউন্ড নম্বর (idx) থেকেই ঠিক হয়, সবার জন্য একই ──

@@ -351,7 +351,8 @@ window.openGameSheet = () => {
     const GAMES = [
         { g: 'game', n: 'Diamond Orbit' }, { g: 'game2', n: 'Spin 77' }, { g: 'gedi', n: 'Gedi Food' },
         { g: 'rocket', n: 'Rocket Go' }, { g: 'ludo', n: 'Ludo Spin' }, { g: 'slot', n: 'Joker Win' },
-        { g: 'jackpot', n: 'Jackpot Fruit', isNew: true }
+        { g: 'jackpot', n: 'Jackpot Fruit', isNew: true },
+        { g: 'horse', n: 'Horse Racing', isNew: true }
     ];
     const KEY = 'moi_games_played';
     const played = () => { try { const a = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };

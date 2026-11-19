@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Horse Race</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="horse.css">
+</head>
+<body>
+<div id="vp"><div id="cv">
+  <!-- ট্র্যাক + ঘোড়া -->
+  <div id="track"><img src="img/track.webp" alt=""></div>
+  <div id="horses"></div>
+  <div id="winTxt"></div>
+
+  <!-- লোগো + টাইমার -->
+  <div id="logo"><img src="img/logo.webp" alt=""><div id="tm">BET 00:15</div></div>
+
+  <!-- ওপরের বাটন -->
+  <div id="round">Round:<span id="rn">1</span></div>
+  <img class="ib" id="bBack" src="../game2/img/back.webp" style="left:12px;top:22px" alt="">
+  <img class="ib" id="bSound" src="../game2/img/sound.webp" style="left:12px;top:104px" alt="">
+  <div id="wifi"><img src="../game2/img/wifi_full.webp" alt=""><b id="ping">111ms</b></div>
+  <img class="ib" id="bHelp" src="../game2/img/help.webp" style="left:632px;top:22px" alt="">
+  <div id="trophy"><img src="../game2/img/trophy_full.webp" alt=""></div>
+  <img class="ib" id="bHist" src="../game2/img/hist.webp" style="left:632px;top:214px" alt="">
+
+  <!-- লাইভ র‍্যাংক -->
+  <div id="rks"><b>LIVE</b><div id="rkIn"></div><u id="clo">Bets open</u></div>
+
+  <!-- ঘোড়ার কার্ড (বাজি) -->
+  <div id="cards"></div>
+
+  <!-- চিপ -->
+  <div id="chips"></div>
+
+  <!-- নিচের সারি -->
+  <div class="bp" id="bMine"><small>Mine</small><span><svg class="dm" viewBox="0 0 24 24"><use href="#dmI"/></svg><i id="balN">0</i></span><u>&rsaquo;</u></div>
+  <div class="bp" id="bToday"><small>Today Win</small><span><svg class="dm" viewBox="0 0 24 24"><use href="#dmI"/></svg><i id="todayN">0</i></span></div>
+  <div class="bp" id="bAuto">Auto</div>
+
+  <div id="fly"></div>
+  <div id="rp"></div>
+  <div id="toast"></div>
+  <div id="modal"><div id="mbox"></div></div>
+  <div id="loading"><div class="sp"></div></div>
+</div></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="dmI" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="#4fd8ff" stroke="#0b6fa8" stroke-width="1.2" stroke-linejoin="round"/><path d="M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12" fill="none" stroke="#e8fbff" stroke-width=".9" opacity=".75"/></symbol>
+</defs></svg>
+
+<script src="../shared/core/firebase-init.js"></script>
+<script src="../demo/seed.js"></script>
+<script src="../shared/core/sync.js"></script>
+<script src="../shared/core/sync-routes.js"></script>
+<script src="../shared/storage.js"></script>
+<script src="../shared/core/economy.js"></script>
+<script src="../shared/core/db-storage.js"></script>
+<script src="../shared/core/auth.js"></script>
+<script src="../shared/broadcast/broadcast-core.js"></script>
+<script src="horse.js"></script>
+</body>
+</html>

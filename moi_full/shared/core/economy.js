@@ -1365,7 +1365,79 @@ console.log('[MOI] economy.js loaded (client mode)');
         return { ok: true, main: o.fruit, bonus: o.has ? o.bonus : null, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
     };
 
-/* ═══════════ রিলেশনশিপ: CP / ফ্রেন্ড / সিস্টার / ব্রাদার (রুমের moi-rel.js) ═══════════
+/* ═══════════ গেম: Horse Race (horse/) ═══════════
+       ৬ ঘোড়া, গুণ ফিক্সড: ১=2× ২=4× ৩=6× ৪=8× ৫=10× ৬=12× | রাউন্ড ৮৪ সেকেন্ড: ১৫ বাজি + ৬০ রেস (শেষ ১০ সেকেন্ডে বাজি বন্ধ) + ফল
+       যেকোনো ২টা ঘোড়ায় বাজি | শুধু বিজয়ী ঘোড়ার ওপর বাজি জেতে (বাজি × গুণ)।
+       🔒 নিচের hWinner অংশ horse/horse.js-এর hWinner এর সাথে হুবহু একই রাখতে হবে। */
+    var HK = { EPOCH: 1700000000000, ROUND: 84000, PRE: 15000, CLOSE: 65000, FIN: 75000 };
+    var HMULT = [2, 4, 6, 8, 10, 12], HWT = [41, 20, 14, 10, 8, 7];
+    function hMb(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+    function hWinner(idx){
+      var B = 32, b = Math.floor(idx / B), k = idx - b * B, r = hMb(b * 9973 + 71), prev = -1, w = 0, i, j;
+      for (i = 0; i <= k; i++){
+        var x = r(), y = r() * 100, acc = 0, f = 0;
+        for (j = 0; j < 6; j++){ acc += HWT[j]; if (y < acc){ f = j; break; } }
+        w = (prev >= 0 && x < .2) ? prev : f; prev = w;
+      }
+      return w;
+    }
+    function hInfo(){ var el = Date.now() - HK.EPOCH, idx = Math.floor(el / HK.ROUND), into = el % HK.ROUND; return { idx: idx, into: into }; }
+
+    H.horseBet = async (data, uid) => {
+        const idx = Number(data.idx), item = Number(data.item), chip = Number(data.chip);
+        if (!Number.isInteger(idx) || !Number.isInteger(item) || item < 0 || item > 5 || !(chip > 0) || chip > 10000000) fail('INVALID');
+        const info = hInfo();
+        if (info.idx !== idx || info.into >= HK.CLOSE) throw new Error('এখন বাজি ধরার সময় নয়');
+        const u0 = await getUserDoc(uid); assertActive(u0);
+        const bal = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < chip) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -chip, title: 'Horse Race bet', txType: 'spend' }).diamonds;
+        });
+        const bref = FB.rtdb.ref(LIVE + '/horse/rounds/R' + idx + '/bets/' + uid);
+        let mine = null, tooMany = false;
+        await bref.transaction(v => {
+            mine = null; tooMany = false;
+            v = v || { uid, name: u0.name || 'User', photo: u0.photo || '', bets: {} };
+            v.bets = v.bets || {};
+            if (v.bets[item] === undefined && Object.keys(v.bets).length >= 2){ tooMany = true; return; }
+            v.bets[item] = (v.bets[item] || 0) + chip; v.ts = Date.now(); mine = v.bets;
+            return v;
+        });
+        if (tooMany || !mine){
+            await db().runTransaction(async t => {
+                const uS = await t.get(userRef(uid));
+                return applyDelta(t, uid, uS.data(), { dia: chip, title: 'Horse Race refund', txType: 'reward' }).diamonds;
+            });
+            throw new Error('সর্বোচ্চ ২টা ঘোড়ায় বাজি ধরা যায়');
+        }
+        return { ok: true, balance: bal, bets: mine };
+    };
+    H.horseClaim = async (data, uid) => {
+        const idx = Number(data.idx); if (!Number.isInteger(idx)) fail('INVALID');
+        const info = hInfo();
+        if (idx > info.idx || (idx === info.idx && info.into < HK.FIN)) fail('NOT_READY');
+        const w = hWinner(idx);
+        const bsnap = (await FB.rtdb.ref(LIVE + '/horse/rounds/R' + idx + '/bets/' + uid).get()).val();
+        const bets = (bsnap && bsnap.bets) || {};
+        const cost = Object.keys(bets).reduce((s, k) => s + (Number(bets[k]) || 0), 0);
+        const reward = (Number(bets[w]) || 0) * HMULT[w];
+        const cl = await FB.rtdb.ref(LIVE + '/horse/claims/R' + idx + '/' + uid).transaction(v => (v ? undefined : { ts: Date.now(), amount: reward }));
+        let balance = ((await userRef(uid).get()).data() || {}).diamonds || 0;
+        if (cl.committed && reward > 0){
+            const me = await getUserDoc(uid);
+            balance = await db().runTransaction(async t => {
+                const uS = await t.get(userRef(uid));
+                return applyDelta(t, uid, uS.data(), { dia: reward, title: 'Horse Race win', txType: 'reward' }).diamonds;
+            });
+            await FB.rtdb.ref(LIVE + '/horse/dailyWins/' + gDay() + '/' + uid).transaction(v => {
+                v = v || { amount: 0 }; v.amount = (v.amount || 0) + reward; v.name = me.name || 'User'; v.photo = me.photo || ''; return v;
+            });
+        }
+        return { ok: true, winner: w, cost, reward: cl.committed ? reward : 0, balance, already: !cl.committed };
+    };
+
+    /* ═══════════ রিলেশনশিপ: CP / ফ্রেন্ড / সিস্টার / ব্রাদার (রুমের moi-rel.js) ═══════════
        ডেটা (লোকাল): moi_rel_cp, moi_rel_fr, moi_relreq  — 🔒 LOCK-LATER: পরে সার্ভারে নেওয়া হবে */
     const REL_COST = { cp: 1000, friend: 300, sister: 300, brother: 300 };
     const SY = () => window.MOISync;

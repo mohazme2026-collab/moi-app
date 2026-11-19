@@ -347,28 +347,39 @@ window.openChatSheet = (uid, name) => {
 /* ═══ Game sheet (iframe) ═══ */
 window.openGameSheet = () => {
     closeSheet();
+    /* নাম আর ছবি: shared/gameicons/<key>.webp */
+    const GAMES = [
+        { g: 'game', n: 'Diamond Orbit' }, { g: 'game2', n: 'Spin 77' }, { g: 'gedi', n: 'Gedi Food' },
+        { g: 'rocket', n: 'Rocket Go' }, { g: 'ludo', n: 'Ludo Spin' }, { g: 'slot', n: 'Joker Win' },
+        { g: 'jackpot', n: 'Jackpot Fruit', isNew: true }
+    ];
+    const KEY = 'moi_games_played';
+    const played = () => { try { const a = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+    const tile = x => '<div data-g="' + x.g + '" style="position:relative;text-align:center;cursor:pointer">'
+        + '<img src="../shared/gameicons/' + x.g + '.webp" alt="" style="width:100%;aspect-ratio:1;border-radius:22%;object-fit:cover;display:block;box-shadow:0 3px 10px rgba(0,0,0,.45)">'
+        + (x.isNew ? '<span style="position:absolute;top:-4px;right:-4px;background:linear-gradient(#ff5a3c,#e0143c);color:#fff;font:800 9px sans-serif;padding:2px 6px;border-radius:8px;border:1px solid #fff4">NEW</span>' : '')
+        + '<div style="color:#fff;font:600 12px/15px sans-serif;margin-top:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">' + x.n + '</div></div>';
+    const sec = (ico, title, list) => list.length ? '<div style="display:flex;align-items:center;gap:8px;color:#fff;font:700 16px sans-serif;margin:14px 2px 10px"><span style="font-size:20px">' + ico + '</span>' + title + '</div>'
+        + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px 10px">' + list.map(tile).join('') + '</div>' : '';
     let pk = document.getElementById('gamePicker');
     if (!pk) {
         pk = document.createElement('div'); pk.id = 'gamePicker';
         pk.style.cssText = 'position:fixed;inset:0;z-index:2147483050;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center';
-        pk.innerHTML = '<div style="width:100%;max-width:520px;background:linear-gradient(#2a1458,#14082e);border-radius:22px 22px 0 0;padding:16px 14px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.5)">'
-          + '<div style="color:#fff;font:700 17px sans-serif;text-align:center;margin-bottom:14px">🎮 গেম</div>'
-          + '<div style="display:flex;flex-wrap:wrap;gap:10px">'
-          + '<div data-g="game" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#6a2cff,#ff3fa4);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><div style="font-size:54px;line-height:110px;height:110px">🚀</div>Space Wheel</div>'
-          + '<div data-g="game2" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#ff8a00,#e52e71);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../game2/img/card_fruit.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Fruit Wheel</div>'
-          + '<div data-g="gedi" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#00b4ff,#7b2cff);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../gedi/img/item_basket.webp" style="width:100px;height:110px;object-fit:contain;display:block;margin:0 auto">Gedi</div>'
-          + '<div data-g="rocket" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0b2a55,#1d6fb8);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../rocket/img/card.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Rocket</div>'
-          + '<div data-g="ludo" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#0d6b43,#c89a2e);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../ludo/img/card.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Ludo Dice</div>'
-          + '<div data-g="slot" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#7a1fd0,#e0408f);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../slot/img/card.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Teen Patti Slot</div>'
-          + '<div data-g="jackpot" style="flex:1 1 40%;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#7b2cff,#ff8a00);text-align:center;color:#fff;padding:14px 6px;font:700 14px sans-serif"><img src="../jackpot/img/card.webp" style="width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto">Fruit Jackpot</div>'
-          + '</div></div>';
         document.body.appendChild(pk);
         pk.addEventListener('click', e => {
             const c = e.target.closest('[data-g]');
-            if (c) { pk.style.display = 'none'; openGame(c.dataset.g); }
-            else if (e.target === pk) pk.style.display = 'none';
+            if (c) {
+                try { const a = played().filter(k => k !== c.dataset.g); a.unshift(c.dataset.g); localStorage.setItem(KEY, JSON.stringify(a.slice(0, 8))); } catch (er) {}
+                pk.style.display = 'none'; openGame(c.dataset.g);
+            } else if (e.target === pk) pk.style.display = 'none';
         });
     }
+    const pl = played().map(k => GAMES.find(x => x.g === k)).filter(Boolean).slice(0, 4);
+    pk.innerHTML = '<div style="width:100%;max-width:520px;max-height:82vh;overflow-y:auto;background:linear-gradient(#1c1236,#0e0a20);border-radius:22px 22px 0 0;padding:10px 16px 28px;box-shadow:0 -8px 30px rgba(0,0,0,.5)">'
+        + '<div style="width:44px;height:4px;border-radius:3px;background:#fff4;margin:0 auto 6px"></div>'
+        + '<div style="color:#fff;font:700 17px sans-serif;text-align:center">🎮 Games</div>'
+        + sec('🎮', 'Played', pl) + sec('🔥', 'New', GAMES.filter(x => x.isNew)) + sec('⭐', 'All Games', GAMES)
+        + '</div>';
     pk.style.display = 'flex';
 };
 function openGame(g) {

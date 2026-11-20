@@ -78,6 +78,25 @@ function seedRelations(){
     S.set('moi_rel_cp', cps); S.set('moi_rel_fr', frs);
 }
 
+/* বটদের সম্পর্ক — পাশাপাশি সিটে, সব লেভেল দেখার জন্য (শুধু ডেমো; একবারই বসে) */
+function seedRelLevels(){
+    const S = SY(); if (!S || S.get('moi_relseed_v4', 0)) return;
+    const cps = S.get('moi_rel_cp', {}) || {}, frs = S.get('moi_rel_fr', {}) || {};
+    Object.keys(cps).forEach(k => { if (cps[k] && cps[k].bot) delete cps[k]; });
+    Object.keys(frs).forEach(k => { if (frs[k] && frs[k].bot) delete frs[k]; });
+    const STEP = [0, 10000, 25000, 50000, 100000], KIND = ['friend', 'sister', 'brother', 'friend'], CPL = [8, 10, 20, 30, 40, 50];
+    D.ROOMS.forEach((R, ri) => {
+        const s = R.seatUids || [], ix = R.seatIdx || [], pairs = [];
+        for (let k = 0; k + 1 < s.length && pairs.length < 5; k++) if (ix[k + 1] === ix[k] + 1 && ix[k] % 4 !== 3){ pairs.push([s[k], s[k + 1]]); k++; }
+        pairs.forEach((pr, q) => {
+            const a = pr[0], b = pr[1], key = a < b ? a + '|' + b : b + '|' + a, ts = Date.now() - (4 + ri * 3 + q * 7) * 86400000;
+            if (q === 1 || (q === 3 && pairs.length > 3)) cps[key] = { a: key.split('|')[0], b: key.split('|')[1], ts, pts: cpPts(CPL[(ri + q) % CPL.length]), bot: 1 };
+            else frs[key] = { a: key.split('|')[0], b: key.split('|')[1], type: KIND[(q + ri) % 3], ts, pts: STEP[(ri + q) % 5] + 300 + ri * 90, bot: 1 };
+        });
+    });
+    S.set('moi_rel_cp', cps); S.set('moi_rel_fr', frs); S.set('moi_relseed_v4', 1);
+}
+
 async function seedRooms(){
     /* রুমের লেভেল (xp) ও Use-করা ফ্রেম — Firestore-এর রুম ডকে বসে, তাই হোম ও রুম দুই পেজেই একই দেখা যায় */
     for (let ri = 0; ri < D.ROOMS.length; ri++){
@@ -261,7 +280,7 @@ function roomWorld(){
 
 /* ════════════ চালু ════════════ */
 function boot(){
-    const go = () => { try { seedProfiles(); seedRelations(); seedRooms(); } catch(e){ console.warn('[world] seed', e); } try { seedRoomLive(); } catch(e){} };
+    const go = () => { try { seedProfiles(); seedRelations(); seedRelLevels(); seedRooms(); } catch(e){ console.warn('[world] seed', e); } try { seedRoomLive(); } catch(e){} };
     let n = 0; const t = setInterval(() => { n++; if (SY() && window.MOIFB && SY().get){ clearInterval(t); go(); } else if (n > 60) clearInterval(t); }, 150);
     if (document.getElementById('seatsGrid')){
         let k = 0;

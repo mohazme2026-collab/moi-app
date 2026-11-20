@@ -1507,6 +1507,21 @@ console.log('[MOI] economy.js loaded (client mode)');
         return { ok: true };
     };
 
+    /* Friend/Sister/Brother বন্ডের লেভেল 💎 */
+    H.relBoost = async (data, uid) => {
+        const amount = Math.floor(Number(data.amount)), to = String(data.to || '');
+        if (!(amount >= 100 && amount <= 100000)) fail('INVALID');
+        const frs = relGet('moi_rel_fr', {}), rec = frs[pairKey(uid, to)]; if (!rec) throw new Error('এই বন্ড নেই');
+        const me = await getUserDoc(uid); assertActive(me);
+        const bal = await db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); const u = uS.data();
+            if ((u.diamonds || 0) < amount) fail('INSUFFICIENT_DIAMONDS');
+            return applyDelta(t, uid, u, { dia: -amount, title: 'Bond level up', txType: 'spend' }).diamonds;
+        });
+        rec.pts = (rec.pts || 0) + amount; relSet('moi_rel_fr', frs);
+        return { ok: true, pts: rec.pts, balance: bal };
+    };
+
     /* ═══════════ CP: লেভেলের 💎 জমানো ও CP ভাঙা ═══════════ */
     const cpFind = uid => { const c = relGet('moi_rel_cp', {}); for (const k in c) if (c[k].a === uid || c[k].b === uid) return { key: k, c, rec: c[k] }; return null; };
     H.cpBoost = async (data, uid) => {

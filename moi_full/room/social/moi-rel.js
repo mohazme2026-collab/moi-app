@@ -23,7 +23,19 @@
     var frOf = function(uid){ var f = frs(), o = []; for (var k in f) if (f[k].a === uid || f[k].b === uid) o.push(f[k]); return o.sort(function(x, y){ return x.ts - y.ts; }); };
     var pairTotal = function(a, b){ return ((window.moiFriendData ? moiFriendData() : {})[pk(a, b)]) || 0; };
     var cpLevel = function(c){ return 1 + Math.floor(pairTotal(c.a, c.b) / 500); };
-    var frLevel = function(f){ return 1 + Math.floor(pairTotal(f.a, f.b) / 100); };
+    /* বন্ডের লেভেল (Friend/Sister/Brother): জমানো 💎 (pts) + রুমে একে অপরকে দেওয়া গিফট; ১–৫ */
+    var FR_STEPS = [0, 10000, 25000, 50000, 100000];
+    var frPts = function(f){ return (f.pts || 0) + pairTotal(f.a, f.b); };
+    var frLevel = function(f){ var p = frPts(f), l = 1; for (var i = 1; i < 5; i++) if (p >= FR_STEPS[i]) l = i + 1; return l; };
+    var frFind = function(a, b){ var f = frs()[pk(a, b)]; return f || null; };
+    window.moiRelOf = function(a, b){ return !!frFind(a, b) || !!cps()[pk(a, b)]; };
+    var IMG = (function(){ var s = document.currentScript; return s && s.src ? s.src.replace(/[^\/]*$/, '') + 'rel/' : 'social/rel/'; })();
+    /* সিটের মাঝের চিহ্ন + শিটের বড় ছবি */
+    var SEATIMG = { friend: 'friend_', sister: 'sister_', brother: 'brother_' }, BIGIMG = { friend: 'boat_', sister: 'sbig_', brother: 'bbig_' };
+    var KTITLE = { friend: 'Friend ship', sister: 'Sister ship', brother: 'Brother ship' };
+    var KDESC = { friend: 'বন্ধু · ফ্রি', sister: 'বোনের বন্ধন', brother: 'ভাইয়ের বন্ধন', cp: 'কাপল (খালি CP-ঘর থাকলে)' };
+    /* CP-র বাচ্চা: লেভেল ১০ থেকে নবজাতক; ২০/৩০/৪০/৫০-এ বড় হয়; ৪০-এ ছোট মেয়ে-বাচ্চা জন্মায় */
+    var kids = function(lv){ return lv < 10 ? [] : lv < 20 ? ['girl_1'] : lv < 30 ? ['boy_1'] : lv < 40 ? ['boy_2'] : lv < 50 ? ['boy_3', 'girl_2'] : ['boy_4', 'girl_3']; };
     var tier = function(l){ return l >= 20 ? 4 : l >= 10 ? 3 : l >= 5 ? 2 : 1; };
     var days = function(ts){ return Math.max(0, Math.floor((Date.now() - ts) / 86400000)); };
     var dstr = function(ts){ var d = new Date(ts); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
@@ -178,9 +190,24 @@
             var av = A.querySelector('.seat-avatar'), bv = B.querySelector('.seat-avatar'); if (!av || !bv) return;
             var ra = av.getBoundingClientRect(), rb = bv.getBoundingClientRect();
             if (Math.abs(ra.top - rb.top) > 8 || rb.left < ra.left) return;
-            var t = tier(cpLevel(c)); av.classList.add('cp-ring', 'cp-t' + t); bv.classList.add('cp-ring', 'cp-t' + t);
-            var x = (ra.right + rb.left) / 2 - hr.left, y = ra.top + ra.height * .42 - hr.top;
-            out += '<div class="seat-heart t' + t + '" style="left:' + x + 'px;top:' + y + 'px" data-a="' + esc(c.a) + '">' + HEART + '</div>';
+            var cl = window.CPBoard ? CPBoard.levelOf(c.pts || 0).lv : cpLevel(c), t = tier(cl); av.classList.add('cp-ring', 'cp-t' + t); bv.classList.add('cp-ring', 'cp-t' + t);
+            var x = (ra.right + rb.left) / 2 - hr.left, y = ra.top + ra.height * .42 - hr.top, ks = kids(cl);
+            var kh = ks.map(function(n, j){ return '<img class="sk k' + (j ? 'b' : 'a') + '" src="' + IMG + n + '.webp" alt="">'; }).join('');
+            out += '<div class="seat-heart t' + t + (ks.length ? ' hk' + ks.length : '') + '" style="left:' + x + 'px;top:' + y + 'px" data-a="' + esc(c.a) + '">' + HEART + kh + '</div>';
+            used[i] = 1;
+        });
+        /* Friend / Sister / Brother: পাশাপাশি দুজনের মাঝে লেভেলের চিহ্ন */
+        var F = frs();
+        Object.keys(els).forEach(function(k){
+            var i = +k, A = els[i], B = els[i + 1];
+            if (!B || !A.dataset.uid || !B.dataset.uid) return;
+            var f = F[pk(A.dataset.uid, B.dataset.uid)]; if (!f || !SEATIMG[f.type]) return;
+            var av = A.querySelector('.seat-avatar'), bv = B.querySelector('.seat-avatar'); if (!av || !bv) return;
+            var ra = av.getBoundingClientRect(), rb = bv.getBoundingClientRect();
+            if (Math.abs(ra.top - rb.top) > 8 || rb.left < ra.left) return;
+            var lv = frLevel(f), w = Math.max(26, Math.min(30, Math.round(rb.left - ra.right + 8)));
+            var x = (ra.right + rb.left) / 2 - hr.left, y = ra.top + ra.height * .5 - hr.top;
+            out += '<div class="seat-link l' + lv + '" style="left:' + x + 'px;top:' + y + 'px;width:' + w + 'px" data-a="' + esc(f.a) + '" data-b="' + esc(f.b) + '"><img src="' + IMG + SEATIMG[f.type] + lv + '.webp" alt=""></div>';
         });
         if (L.__h !== out){ L.__h = out; L.innerHTML = out; }
     }
@@ -194,4 +221,64 @@
     if (typeof o === 'function') window.renderSeats = function(){ var r = o.apply(this, arguments); setTimeout(placeHearts, 0); return r; };
     window.addEventListener('resize', placeHearts); window.addEventListener('moi:sync', placeHearts);
     setInterval(placeHearts, 1000);
+
+    /* ── বন্ডের শিট: সিটের চিহ্নে ট্যাপ করলে (Friend / Sister / Brother) ── */
+    function bondSheet(a, b){
+        var f = frFind(a, b); if (!f) return;
+        var lv = frLevel(f), pts = frPts(f), A = who(f.a), B = who(f.b), k = f.type;
+        var lo = FR_STEPS[lv - 1], hi = lv >= 5 ? null : FR_STEPS[lv], pc = hi ? Math.min(100, Math.round((pts - lo) / (hi - lo) * 100)) : 100;
+        var h = '<div class="bd-wrap bd-' + k + '"><div class="bd-pair"><div class="u"><img src="' + esc(A.avatar) + '"><span>' + esc(A.name) + '</span></div>'
+            + '<img class="bd-ic" src="' + IMG + SEATIMG[k] + lv + '.webp" alt=""><div class="u"><img src="' + esc(B.avatar) + '"><span>' + esc(B.name) + '</span></div></div>'
+            + '<div class="bd-t">' + KTITLE[k] + ' · Lv' + lv + '</div>'
+            + '<div class="bd-bar"><i style="width:' + pc + '%"></i></div>'
+            + '<div class="bd-n">' + pts.toLocaleString() + ' / ' + (hi ? hi.toLocaleString() : 'MAX') + ' 💎</div>'
+            + '<img class="bd-big" src="' + IMG + BIGIMG[k] + lv + '.webp" alt="">'
+            + '<div class="bd-lvs">' + [1, 2, 3, 4, 5].map(function(n){ return '<span class="' + (n === lv ? 'on' : n < lv ? 'done' : '') + '"><img src="' + IMG + SEATIMG[k] + n + '.webp" alt=""><b>Lv' + n + '</b></span>'; }).join('') + '</div>'
+            + (lv < 5 && (me() === f.a || me() === f.b) ? '<div class="bd-boost"><span>💎 লেভেল বাড়ান:</span>' + [1000, 10000, 50000].map(function(x){ return '<button data-a="' + x + '">' + x.toLocaleString() + '</button>'; }).join('') + '</div>' : '')
+            + '</div>';
+        var w = moiSheet('<i class="fa-solid fa-handshake-angle"></i> ' + KTITLE[k], h);
+        var bb = w.querySelector('.bd-boost');
+        if (bb) bb.onclick = function(e){
+            var x = e.target.closest('button[data-a]'); if (!x) return;
+            MOIEco.try('relBoost', { to: f.a === me() ? f.b : f.a, amount: +x.dataset.a }).then(function(r){ if (r){ w.remove(); bondSheet(a, b); } });
+        };
+    }
+    var oFs = window.openFriendship;
+    window.openFriendship = function(a, b){ if (frFind(a, b)) return bondSheet(a, b); if (oFs) return oFs.apply(this, arguments); };
+    document.addEventListener('click', function(e){
+        var t = e.target.closest && e.target.closest('.seat-link'); if (!t) return;
+        e.stopPropagation(); bondSheet(t.dataset.a, t.dataset.b);
+    }, true);
+
+    /* ── প্রোফাইলে লাল বাটন → সম্পর্কের ধরন → সরাসরি আমন্ত্রণ ── */
+    function pickKind(uid){
+        var m = me(); if (!m || m === uid){ return; }
+        var U = who(uid), has = !!frFind(m, uid), cpTaken = !!cpOf(m) || !!cpOf(uid);
+        var pend = {}; get('moi_relreq', []).forEach(function(r){ if (r.status === 'pending' && r.from === m && r.to === uid) pend[r.kind] = 1; });
+        var full = frOf(m).length >= 6, sel = null;
+        var rows = ['friend', 'sister', 'brother', 'cp'].map(function(k){
+            var why = pend[k] ? 'পাঠানো হয়েছে' : k === 'cp' ? (cpTaken ? 'CP-ঘর খালি নেই' : '') : has ? 'আগেই সম্পর্ক আছে' : full ? 'আপনার ৬টা ঘর পূর্ণ' : '';
+            var ic = k === 'cp' ? '<span class="pk-cp">💖</span>' : '<img src="' + IMG + SEATIMG[k] + '3.webp" alt="">';
+            return '<div class="pk-row' + (why ? ' off' : '') + '" data-k="' + k + '">' + ic + '<div><b>' + (k === 'cp' ? 'CP' : k === 'friend' ? 'Friendship' : k === 'sister' ? 'Sistership' : 'Brothership') + '</b><small>' + (why || KDESC[k]) + '</small></div><em>💎 ' + COST[k] + '</em></div>';
+        }).join('');
+        var w = moiSheet(esc(U.name) + '-কে পাঠান', '<div class="pk-wrap">' + rows + '<button class="pk-go" disabled>আমন্ত্রণ পাঠান</button></div>');
+        var go = w.querySelector('.pk-go');
+        w.querySelector('.pk-wrap').onclick = function(e){
+            var r = e.target.closest('.pk-row'); if (!r || r.classList.contains('off')) return;
+            w.querySelectorAll('.pk-row').forEach(function(x){ x.classList.remove('on'); }); r.classList.add('on'); sel = r.dataset.k; go.disabled = false;
+        };
+        go.onclick = function(){
+            if (!sel) return;
+            MOIEco.try('relInvite', { to: uid, kind: sel }).then(function(r){ if (r){ toastMsg('✅ আমন্ত্রণ পাঠানো হয়েছে'); w.remove(); } });
+        };
+    }
+    var oFill = window.moiRelFill;
+    window.moiRelFill = function(uid){
+        oFill(uid);
+        var box = document.getElementById('pfMore'), m = me(); if (!box || !m || m === uid) return;
+        var b = document.createElement('button'); b.className = 'rel-send'; b.type = 'button';
+        b.innerHTML = '<i class="fa-solid fa-heart"></i> সম্পর্ক পাঠান';
+        b.onclick = function(e){ e.stopPropagation(); pickKind(uid); };
+        box.insertBefore(b, box.firstChild);
+    };
 })();

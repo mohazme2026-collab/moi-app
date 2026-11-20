@@ -58,6 +58,7 @@
             var ra = av.getBoundingClientRect(), rb = bv.getBoundingClientRect();
             if (Math.abs(ra.top - rb.top) > 8 || rb.left < ra.left) return;        /* শুধু একই সারি */
             if (window.moiIsCp && moiIsCp(A.dataset.uid, B.dataset.uid)) return;
+            if (window.moiRelOf && moiRelOf(A.dataset.uid, B.dataset.uid)) return;        /* নতুন বন্ড-চিহ্ন থাকলে হাত নয় */
             var t = d[pairKey(A.dataset.uid, B.dataset.uid)] || 0; if (t <= 0) return;
             var lv = level(t);
             var gap = rb.left - ra.right;

@@ -1,0 +1,32 @@
+/* room/music/music-ui.css — ছোট মিউজিক উইজেট */
+.music-player-bar{display:none!important}
+.mpf{position:absolute;z-index:320;display:none;width:158px;padding:8px 9px 8px;border-radius:18px;background:linear-gradient(145deg,rgba(40,24,78,.96),rgba(18,10,44,.96));border:1.5px solid rgba(255,212,90,.55);box-shadow:0 8px 22px rgba(0,0,0,.55),0 0 14px rgba(168,85,247,.35);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.mpf.show{display:block}
+.mpf.drag{cursor:grabbing;box-shadow:0 12px 30px rgba(0,0,0,.65),0 0 20px rgba(255,95,162,.5)}
+.mpf-x{position:absolute;top:-8px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ff4d6d;color:#fff;font-size:10px;display:grid;place-items:center;border:2px solid #fff;cursor:pointer;z-index:2}
+.mpf-top{display:flex;align-items:center;gap:8px}
+.mpf-vinyl{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:radial-gradient(circle,#111 0 38%,#2a2a2a 40% 46%,#0c0c0c 48%);border:1px solid #555;display:grid;place-items:center}
+.mpf-vinyl i{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#ff5fa2,#a1174c)}
+.mpf-vinyl.spin{animation:mpfSpin 3s linear infinite}@keyframes mpfSpin{to{transform:rotate(360deg)}}
+.mpf-info{flex:1;min-width:0}
+.mpf-name{font:800 10.5px 'Figtree',sans-serif;color:#ffe9c0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mpf-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.18);margin-top:4px;overflow:hidden}
+.mpf-bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,#29d3ff,#ff5fa2)}
+.mpf-row{display:flex;justify-content:space-between;margin-top:7px}
+.mpf-row button{width:25px;height:25px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;font-size:10px;display:grid;place-items:center;cursor:pointer;padding:0}
+.mpf-row button.pl{background:linear-gradient(#ff7ab8,#e0307a);border-color:#fff;width:28px;height:28px;font-size:11px;margin-top:-2px}
+.mpf-row button.on{background:linear-gradient(135deg,#ff8c42,#ff5577)}
+.mpf-set{display:none;position:absolute;left:0;top:calc(100% + 8px);width:250px;padding:12px;border-radius:18px;background:linear-gradient(160deg,#2b1a5e,#120c2e);border:1.5px solid rgba(255,212,90,.55);box-shadow:0 14px 34px rgba(0,0,0,.6);cursor:default;touch-action:auto}
+.mpf-set.up{top:auto;bottom:calc(100% + 8px)}
+.mpf-set.show{display:block}
+.mps-pre{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.mps-pre button{border:1px solid rgba(255,212,90,.45);background:rgba(255,255,255,.07);color:#ffe9c0;border-radius:14px;padding:5px 9px;font:800 10.5px 'Figtree',sans-serif;cursor:pointer}
+.mps-pre button:active{background:rgba(255,212,90,.25)}
+.mps-r{display:block;margin-bottom:9px}
+.mps-l{display:flex;align-items:baseline;gap:5px;margin-bottom:4px;font-family:'Figtree','Hind Siliguri',sans-serif;color:#fff}
+.mps-l em{font-style:normal;font-size:13px}.mps-l b{font-size:12px;font-weight:800}.mps-l small{font-size:10px;color:#b7aee0;flex:1}.mps-l u{text-decoration:none;font:900 11px 'Figtree',sans-serif;color:#ffd45a}
+.mps-r input{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:5px;outline:none;margin:0}
+.mps-r input::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffd45a);border:2px solid #ff5fa2;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.mps-r input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#ffd45a;border:2px solid #ff5fa2}
+.mps-loud{width:100%;margin-top:2px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:16px;padding:8px;font:800 12px 'Figtree',sans-serif;cursor:pointer}
+.mps-loud.on{background:linear-gradient(135deg,#ff8c42,#ff3d6e);border-color:#fff}

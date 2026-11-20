@@ -1,0 +1,75 @@
+/* me/settings.css — Settings পেজ (থিমের রঙে চলে; RTL-safe) */
+.st{--i:var(--ink-rgb,255,255,255);--ac:#2fd08a;position:fixed;inset:0;z-index:7500;background:var(--bg0,#0f0818);color:var(--tx,#f4eefb);
+  font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;visibility:hidden;transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.25,1),visibility 0s .28s}
+.st.show{visibility:visible;transform:none;transition:transform .28s cubic-bezier(.2,.8,.25,1),visibility 0s}
+html.st-lock,html.st-lock body{overflow:hidden}
+.st *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.st button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.st-pg{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg0,#0f0818);transform:translateX(100%);transition:transform .26s cubic-bezier(.2,.8,.25,1)}
+.st-pg.in,.st-pg.main{transform:none}
+.st-top{display:flex;align-items:center;height:48px;padding:calc(env(safe-area-inset-top,0px) + 4px) 8px 0;box-sizing:content-box;flex:none}
+.st-back{width:42px;height:42px;display:grid;place-items:center;border-radius:50%}
+.st-back svg{width:26px;height:26px}
+[dir=rtl] .st-back svg,[dir=rtl] .st-chev{transform:scaleX(-1)}
+.st-back:active{background:rgba(var(--i),.1)}
+.st-title{flex:1;text-align:center;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px}
+.st-right{min-width:42px;display:flex;justify-content:flex-end}
+.st-save{padding:7px 16px;border-radius:16px;background:var(--ac);color:#08331f!important;font-weight:700;font-size:14px}
+.st-scroll{flex:1;overflow-y:auto;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 28px);-webkit-overflow-scrolling:touch}
+.st-grp{background:rgba(var(--i),.07);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.st-row{display:flex;align-items:center;width:100%;min-height:54px;padding:0 14px;gap:8px;text-align:start;border-bottom:1px solid rgba(var(--i),.08)}
+.st-row:last-child{border-bottom:0}
+.st-row:active{background:rgba(var(--i),.08)}
+.st-lb{flex:1;font-size:15.5px;font-weight:500}
+.st-val{font-size:13px;color:var(--mute,#a89fbd)}
+.st-chev{width:18px;height:18px;opacity:.5;flex:none}
+.st-btns{display:flex;flex-direction:column;gap:12px;margin:22px 8px 8px}
+.st-pill{height:48px;border-radius:24px;font-size:15.5px;font-weight:600;background:rgba(var(--i),.1);border:1px solid rgba(var(--i),.15)!important}
+.st-pill:last-child{background:var(--ac);color:#08331f;border-color:transparent!important}
+.st-pill:active{opacity:.8}
+.st-theme{margin-top:26px;background:rgba(var(--i),.07);border-radius:16px;padding:14px}
+.st-thh{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--mute,#a89fbd)}
+.st-thr{display:flex;gap:10px}
+.st-th{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 4px;border-radius:14px;border:2px solid transparent!important;font-size:13px;font-weight:600}
+.st-th.on{border-color:var(--ac)!important;background:rgba(var(--i),.08)}
+.st-th i{display:block;width:100%;height:58px;border-radius:10px;border:1px solid;position:relative}
+.st-th i b{position:absolute;left:12%;right:12%;bottom:10px;height:18px;border-radius:6px}
+/* সাব-পেজ */
+.st-user,.st-acc{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;margin-bottom:10px;border-radius:14px;background:rgba(var(--i),.07);text-align:start}
+.st-user img,.st-acc img{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:none}
+.st-user .tx,.st-acc .tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.st-user b,.st-acc b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-user span,.st-acc span{font-size:12px;color:var(--mute,#a89fbd)}
+.st-sm{padding:7px 14px;border-radius:14px;background:rgba(var(--i),.14);font-size:13px;font-weight:600}
+.st-empty{text-align:center;color:var(--mute,#a89fbd);padding:60px 0;font-size:15px}
+.st-lang{display:flex;align-items:center;justify-content:space-between;width:100%;height:54px;padding:0 14px;border-bottom:1px solid rgba(var(--i),.08)!important;font-size:16px;text-align:start}
+.st-ck{width:22px;height:22px;border-radius:50%;background:var(--ac);display:grid;place-items:center}
+.st-ck svg{width:14px;height:14px}
+.st-doc h2,.st-sw h2{font-size:18px;margin:0 0 14px}
+.st-card{background:rgba(var(--i),.07);border-radius:14px;padding:14px;margin-bottom:12px;font-size:14px;line-height:1.55}
+.st-card p{margin:0 0 8px}
+.st-policy h2,.st-policy h3{margin:16px 0 6px;font-size:16px}
+.st-policy p,.st-policy li{font-size:14px;line-height:1.6;color:rgba(var(--i),.85)}
+.st-foot{flex:none;padding:12px 20px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.st-big{width:100%;height:50px;border-radius:25px;font-size:16px;font-weight:700;background:rgba(var(--i),.15);color:var(--mute,#a89fbd)}
+.st-big.ready{background:#e5484d;color:#fff}
+.st-big:disabled{cursor:not-allowed}
+.st-about{display:flex;flex-direction:column;align-items:center;padding-top:60px}
+.st-logo{width:92px;height:92px;border-radius:24px;display:grid;place-items:center;font-size:44px;font-weight:800;color:#fff;background:linear-gradient(135deg,#ff8a5c,#ff4f9a)}
+.st-about h2{margin:16px 0 4px;font-size:22px}
+.st-about p{color:var(--mute,#a89fbd);margin:0}
+.st-acc em{font-style:normal;font-size:12px;color:var(--ac);display:flex;align-items:center;gap:5px}
+.st-acc em i{width:9px;height:9px;border-radius:50%;background:var(--ac)}
+.st-acc.add{border:1.5px dashed rgba(var(--i),.3)!important;background:none}
+.st-acc .plus{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:rgba(var(--i),.1)}
+/* ডায়ালগ + টোস্ট */
+.st-modal{position:absolute;inset:0;z-index:5;display:grid;place-items:center;background:rgba(0,0,0,.55);padding:24px}
+.st-modal[hidden]{display:none}
+.st-dlg{width:100%;max-width:330px;border-radius:20px;padding:22px 20px 16px;background:var(--bg1,#1d1430);color:var(--tx,#fff);text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.st-dlg h3{margin:0 0 8px;font-size:18px}
+.st-dlg p{margin:0 0 18px;font-size:14.5px;line-height:1.5;color:var(--mute,#a89fbd)}
+.st-dbt{display:flex;gap:10px}
+.st-dbt button{flex:1;height:42px;border-radius:21px;font-weight:600;background:rgba(var(--i),.12)}
+.st-dbt .ok{background:var(--ac);color:#08331f}
+.st-toast{position:absolute;left:50%;bottom:90px;z-index:9;transform:translate(-50%,12px);opacity:0;pointer-events:none;padding:10px 18px;border-radius:18px;background:rgba(20,14,44,.95);color:#fff;font-size:13.5px;font-weight:600;transition:.25s}
+.st-toast.show{opacity:1;transform:translate(-50%,0)}

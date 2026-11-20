@@ -1,0 +1,75 @@
+/* me/myprofile.css — প্রোফাইল পেজ (ফুল স্ক্রিন) */
+.pf-cover{position:relative;height:min(84vw,350px)}
+.cv-track{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:0 0 46% 46% / 0 0 34px 34px}
+.cv-track::-webkit-scrollbar{display:none}
+.cv-slide{flex:0 0 100%;scroll-snap-align:center;background:#0a3a3a center/cover no-repeat}
+.cv-fade{position:absolute;inset:auto 0 0 0;height:46%;border-radius:0 0 46% 46% / 0 0 34px 34px;background:linear-gradient(180deg,transparent,rgba(4,38,40,.55) 55%,#05393a);pointer-events:none}
+.cv-top{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 0;z-index:3}
+.vis{margin-left:auto;margin-right:10px;padding:8px 14px;border-radius:20px;background:rgba(40,50,50,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:14px;font-weight:500}
+.pen .red{position:absolute;top:1px;right:1px;width:11px;height:11px;border-radius:50%;background:#ff4f86;border:2px solid #052a2b}
+.cv-av{position:absolute;left:24px;bottom:-34px;width:76px;height:76px;border-radius:50%;padding:2px;z-index:4;background:linear-gradient(135deg,#d8d0ff,#7d5ee6 60%,#f0e2b0);box-shadow:0 4px 16px rgba(0,0,0,.45)}
+.cv-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:#0c4a48}
+.cv-dots{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:3}
+.cv-dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45)}.cv-dots i.on{background:#fff;width:16px;border-radius:3px}
+
+.pf-body{padding:44px 16px calc(40px + env(safe-area-inset-bottom,0px))}
+.nm-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.nm-row h1{font-size:25px;font-weight:700;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.gbadge{display:inline-flex;align-items:center;gap:3px;height:24px;padding:0 9px;border-radius:12px;background:rgba(10,30,60,.7);font-size:14px;font-weight:600}
+.gbadge .g{font-size:15px;color:#4aa3ff}.gbadge .g.f{color:#ff7ab6}.gbadge .g.p{color:#c7b4ff}
+.ctry{display:inline-flex;align-items:center;gap:5px;font-size:15px;font-weight:600}.ctry .fl{font-size:21px;line-height:1}
+.onl{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 9px;border-radius:11px;border:1px solid #3ddc84;color:#6df0a6;font-size:12px;font-weight:600}
+.onl::after{content:"";width:7px;height:7px;border-radius:50%;background:#3ddc84}
+.homeb{margin-left:auto;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#2f8f86,#0c4d4a);border:1.5px solid rgba(255,255,255,.55);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.homeb svg{width:26px;height:26px}.homeb:active{transform:scale(.9)}
+.id-row{display:flex;align-items:center;gap:8px;margin-top:10px}
+.id-pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 14px 0 4px;border-radius:14px;background:linear-gradient(90deg,#1f5fd0,#1c8a9a 55%,#25a58b);font-size:15px;font-weight:700;letter-spacing:.5px;box-shadow:0 3px 10px rgba(30,120,200,.35)}
+.id-pill .idb{width:30px;height:26px;margin-left:-5px}
+.cpy{width:26px;height:26px;display:grid;place-items:center;color:#cfe7e3}.cpy svg{width:18px;height:18px}
+.lv-row{display:flex;gap:10px;margin-top:12px;min-height:44px}
+.fbox{display:flex;align-items:center;margin-top:14px;padding:14px 8px;border-radius:20px;background:linear-gradient(135deg,rgba(40,130,120,.38),rgba(10,60,62,.55));border:1px solid rgba(110,230,190,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.fst{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 6px}
+.fst span{font-size:15px;color:#cfe3df}.fst b{font-size:24px;font-weight:600}
+.fbox .sep{width:1px;height:38px;background:rgba(255,255,255,.2)}
+.fst:active{transform:scale(.94)}
+.card{margin-top:16px;padding:16px 14px 14px;border-radius:26px;background:linear-gradient(160deg,rgba(24,106,104,.5),rgba(6,52,54,.65));border:1px solid rgba(120,220,190,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 8px 24px rgba(0,0,0,.25)}
+.card .hd{display:flex;align-items:center;justify-content:space-between}
+.more{display:inline-flex;align-items:center;gap:2px;font-size:15px;color:#e6f3ef}.more svg{width:18px;height:18px}
+.badges .empty{height:78px}
+/* CP */
+.cpcard{position:relative;margin-top:12px;height:136px;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:space-around;padding:0 10px;
+  background:radial-gradient(90% 120% at 50% 0%,#d93a74,transparent 60%),repeating-linear-gradient(120deg,rgba(255,255,255,.05) 0 3px,transparent 3px 10px),linear-gradient(135deg,#a8164f,#d63870 50%,#9c1448);box-shadow:inset 0 0 0 1px rgba(255,200,220,.25)}
+.cpcard::before{content:"";position:absolute;left:10%;right:10%;top:8px;height:1px;background:linear-gradient(90deg,transparent,#ffd9a8,transparent)}
+.cpu{display:flex;flex-direction:column;align-items:center;gap:4px;width:92px}
+.cpu .av{width:64px;height:64px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#fff,#ffd0e0);overflow:hidden}
+.cpu .av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.cpu .plus{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:34px;font-weight:300;background:rgba(120,10,70,.55);color:#fff}
+.cpu small{font-size:12px;color:#ffe8f1;max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cph{display:flex;flex-direction:column;align-items:center;gap:2px}
+.cph svg{width:62px;height:56px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.35))}
+.cph b{font:700 15px "Playfair Display",Georgia,serif;color:#ffe3a1;margin-top:-30px;position:relative}
+.cph small{font-size:12px;color:#fff;margin-top:12px}
+/* Special */
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.slot{aspect-ratio:1/1.12;border-radius:20px;border:2px solid;border-color:#d9ab49;background:linear-gradient(180deg,#0a5a5a,#04383a 75%,#032a2c);display:grid;place-items:center;font-size:26px;color:#f1d58b;font-weight:300;position:relative;overflow:hidden;box-shadow:inset 0 0 12px rgba(0,0,0,.35)}
+.slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slot span{position:absolute;left:0;right:0;bottom:0;padding:14px 4px 6px;background:linear-gradient(transparent,rgba(0,0,0,.65));font-size:11px;text-align:center;font-weight:600;line-height:1.1}
+.slot:active{transform:scale(.96)}
+/* Supporters */
+.tiles{display:flex;gap:8px;margin-top:12px}
+.tile{flex:1;aspect-ratio:1/1.1;border-radius:18px;position:relative;overflow:hidden;display:grid;place-items:center}
+.tile.t1{background:linear-gradient(160deg,#ffd76a,#e53b3b 45%,#8a1018);box-shadow:inset 0 0 0 3px #ffd569,inset 0 0 0 6px #b3161e}
+.tile.t2{background:linear-gradient(160deg,#ffd3f0,#d96bd8 45%,#6a2a9a);box-shadow:inset 0 0 0 3px #f3b9ff,inset 0 0 0 6px #7a35b0}
+.tile.t3{background:linear-gradient(160deg,#dff3ff,#6fa8ff 45%,#2a4fb8);box-shadow:inset 0 0 0 3px #c8e4ff,inset 0 0 0 6px #3a66d0}
+.tile img{width:64%;aspect-ratio:1;border-radius:50%;object-fit:cover;border:2px solid #fff8;background:#0b4b49}
+.tile b{position:absolute;left:0;right:0;top:12%;text-align:center;font:italic 800 17px Poppins,sans-serif;background:linear-gradient(180deg,#fff,#ffe58a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6));z-index:2}
+.tile.empty img{opacity:.35}
+.fab{position:fixed;right:18px;bottom:calc(30px + env(safe-area-inset-bottom,0px));width:62px;height:52px;border-radius:26px;display:grid;place-items:center;z-index:20;background:linear-gradient(180deg,#2ea392,#0f6a62);border:1.5px solid rgba(255,255,255,.55);box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.fab svg{width:28px;height:28px}.fab:active{transform:scale(.92)}
+
+/* ফলো তালিকার পেজ (follow.css) এই পেজের গাঢ় টিল রঙে মিলিয়ে নেয় */
+:root{--bg0:#032a2b;--bg2:#0a3a3a;--tx:#ffffff;--mute:#9fc1bc;--ink-rgb:255,255,255}
+
+.pf-lv{display:inline-flex;margin-left:6px}
+.lv-row{display:block;margin-top:14px}
+.lv-row .moilv-plate{max-width:100%}

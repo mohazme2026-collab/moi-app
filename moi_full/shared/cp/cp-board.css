@@ -1,0 +1,106 @@
+/* shared/cp/cp-board.css — CP বোর্ড (গোলাপি ঘর)। সব মাপ ফ্রেম-ছবির (1672×941) অনুপাতে % এ। */
+.cpb{position:relative;width:100%;aspect-ratio:1672/941;container-type:inline-size;user-select:none;-webkit-user-select:none}
+.cpb *{box-sizing:border-box}
+.cpb .l{position:absolute;display:block;pointer-events:none}
+.cpb img.l{height:auto}
+.cpb .fr{left:0;top:0;width:100%}
+/* ডানে-বামে প্রোফাইল (রিং + ছবি) */
+.cpb .av{position:absolute;width:9.4%;aspect-ratio:1;border-radius:50%;overflow:hidden;background:#3a1030;display:grid;place-items:center}
+.cpb .av img{width:100%;height:100%;object-fit:cover}
+.cpb .av.empty{background:rgba(255,255,255,.18);color:#fff;font:900 5cqw 'Figtree',sans-serif}
+.cpb .nm{position:absolute;width:23%;z-index:3;text-align:center;font:800 2.5cqw 'Figtree','Hind Siliguri',sans-serif;color:#fff;text-shadow:0 1px 3px rgba(120,0,60,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* বাচ্চার পাট্টা */
+.cpb .kp{position:absolute;left:28.1%;top:51.5%;width:44%;height:27.6%;border-radius:4cqw;background:rgba(120,10,90,.35);box-shadow:inset 0 0 0 .5cqw rgba(255,180,220,.35)}
+.cpb .ks{position:absolute;inset:0;display:flex;gap:1.2cqw;overflow-x:auto;scroll-snap-type:x mandatory;padding:1cqw 2cqw;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cpb .ks::-webkit-scrollbar{display:none}
+.cpb .kc{flex:0 0 31%;scroll-snap-align:start;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:.6cqw}
+.cpb .kc .k{width:auto;height:78%;max-width:100%;object-fit:contain;transform-origin:50% 100%;animation:cpBob 2.6s ease-in-out infinite;animation-delay:var(--d,0s);filter:drop-shadow(0 .6cqw .8cqw rgba(90,0,50,.45))}
+.cpb .kc .pl{position:relative;width:70%;flex:0 0 auto;display:block}.cpb .kc .pl img{display:block;width:100%;height:auto}.cpb .kc .pl b{position:absolute;inset:0;display:grid;place-items:center;font:900 2.6cqw 'Figtree',sans-serif;color:#fff;text-shadow:0 .3cqw 0 #8a0050}
+.cpb .kc.lock .k{filter:grayscale(1) brightness(.45) contrast(.9);animation:none;opacity:.8}
+.cpb .kc.lock .pl{filter:grayscale(.7) brightness(.8)}
+.cpb .kc .lk{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);font-size:5.2cqw;filter:drop-shadow(0 .5cqw .6cqw rgba(0,0,0,.6))}
+.cpb .kc.cur .pl{animation:cpGlow 1.6s ease-in-out infinite}
+.cpb .kn{position:absolute;left:0;right:0;top:35%;text-align:center;font:800 2.6cqw 'Hind Siliguri','Figtree',sans-serif;color:#ffe6f4;text-shadow:0 1px 3px rgba(100,0,60,.9);pointer-events:none}
+/* লেভেলের লেখা */
+.cpb .lvt{position:absolute;display:grid;z-index:2;place-items:center;left:35%;width:30%;top:34.2%;height:11%;font:900 6.4cqw 'Figtree',sans-serif;color:#fff;-webkit-text-stroke:.3cqw #c2005f;paint-order:stroke fill;text-shadow:0 .45cqw 0 #a30050}
+/* ইনভাইট বাটন */
+.cpb .inv{position:absolute;left:36.6%;top:84.5%;width:26.8%;cursor:pointer;pointer-events:auto;animation:cpBreath 2.2s ease-in-out infinite}
+.cpb .inv img{display:block;width:100%;height:auto}
+/* অ্যানিমেশন */
+.cpb .girl,.cpb .boy{transform-origin:50% 96%;animation:cpSway 3.6s ease-in-out infinite}
+.cpb .boy{animation-delay:-1.8s}
+.cpb .badge{transform-origin:50% 55%;animation:cpBeat 1.5s ease-in-out infinite}
+.cpb .lvp{animation:cpFloat 3.2s ease-in-out infinite}.cpb .lvt{animation:cpFloat 3.2s ease-in-out infinite}
+.cpb .lvp::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.75) 50%,transparent 60%) 150% 0/260% 100% no-repeat;-webkit-mask:var(--m) center/100% 100% no-repeat;mask:var(--m) center/100% 100% no-repeat;animation:cpShine 3.4s ease-in-out infinite}
+.cpb .ring{animation:cpRing 3s ease-in-out infinite}
+.cpb .sp{position:absolute;width:3%;aspect-ratio:1;background:radial-gradient(circle,#fff 0 18%,rgba(255,255,255,.0) 60%);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:cpTw 2.4s ease-in-out infinite;animation-delay:var(--d)}
+.cpb .fh{position:absolute;bottom:18%;width:4%;height:auto;opacity:0;animation:cpRise 5.5s ease-in infinite;animation-delay:var(--d)}
+@keyframes cpSway{0%,100%{transform:rotate(-1.1deg)}50%{transform:rotate(1.1deg) translateY(-.4%)}}
+@keyframes cpBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.07)}28%{transform:scale(1)}42%{transform:scale(1.05)}}
+@keyframes cpFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5%)}}
+@keyframes cpShine{0%{background-position:150% 0}55%,100%{background-position:-50% 0}}
+@keyframes cpRing{0%,100%{filter:drop-shadow(0 0 .8cqw rgba(255,120,190,.7))}50%{filter:drop-shadow(0 0 2cqw rgba(255,255,255,.95))}}
+@keyframes cpTw{0%,100%{transform:scale(0) rotate(0);opacity:0}50%{transform:scale(1) rotate(90deg);opacity:1}}
+@keyframes cpRise{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:.95}100%{transform:translateY(-560%) scale(1.15) rotate(18deg);opacity:0}}
+@keyframes cpBob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4%) rotate(1deg)}}
+@keyframes cpBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+@keyframes cpGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3) drop-shadow(0 0 1.2cqw #fff)}}
+
+.cpb .ghost{filter:brightness(0) opacity(.22);animation:cpGhost 2.4s ease-in-out infinite!important}
+@keyframes cpGhost{0%,100%{opacity:.5}50%{opacity:1}}
+.cpb .av.empty{animation:cpPlus 1.8s ease-in-out infinite}
+@keyframes cpPlus{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.cpb .av.empty{font-size:7cqw;text-shadow:0 .5cqw 1cqw rgba(120,0,70,.8)}
+
+.cpb .lvt.off{opacity:.9}
+.cpb .tog{left:36.6%;top:85%;width:26.8%;height:11%;display:grid;place-items:center;font:900 3.6cqw Figtree,sans-serif;color:#fff;text-shadow:0 .4cqw 0 #a30050;animation:cpFloat 3s ease-in-out infinite}
+.cpb .pg{position:absolute;left:35%;width:30%;top:47.6%;height:3.6%;border-radius:2cqw;background:rgba(80,0,50,.55);box-shadow:inset 0 0 0 .3cqw rgba(255,210,235,.5);overflow:hidden;z-index:2}
+.cpb .pg b{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#ff7ab8,#ffd45a);border-radius:2cqw;box-shadow:0 0 1.6cqw rgba(255,210,90,.9)}
+.cpb .pg span{position:absolute;inset:0;display:grid;place-items:center;font:800 2.3cqw Figtree,sans-serif;color:#fff;text-shadow:0 .2cqw .4cqw rgba(0,0,0,.7)}
+/* আলো: উপরের স্পটলাইট থেকে নামা আলোর রশ্মি */
+.cpb .rays{left:7%;top:12%;width:86%;height:70%;background:
+  conic-gradient(from 168deg at 24% 4%,transparent 0 6deg,rgba(255,255,255,.55) 8deg,transparent 14deg),
+  conic-gradient(from 168deg at 50% 2%,transparent 0 6deg,rgba(255,255,255,.5) 8deg,transparent 14deg),
+  conic-gradient(from 168deg at 76% 4%,transparent 0 6deg,rgba(255,255,255,.55) 8deg,transparent 14deg);
+  mix-blend-mode:soft-light;opacity:.8;animation:cpRays 4.4s ease-in-out infinite;-webkit-mask:linear-gradient(#000 0,#000 55%,transparent);mask:linear-gradient(#000 0,#000 55%,transparent)}
+@keyframes cpRays{0%,100%{opacity:.35;transform:scaleY(.96)}50%{opacity:.95;transform:scaleY(1.02)}}
+/* পাদদেশের আলোর জ্যোতি */
+.cpb .glow{top:76%;width:26%;height:16%;border-radius:50%;filter:blur(1.8cqw);animation:cpHalo 2.6s ease-in-out infinite}
+.cpb .glow.gl{left:7%;background:radial-gradient(ellipse,rgba(255,150,210,.95),transparent 70%)}
+.cpb .glow.gr{left:67%;background:radial-gradient(ellipse,rgba(110,190,255,.95),transparent 70%);animation-delay:-1.3s}
+.cpb:not(.has) .glow{opacity:.35}
+@keyframes cpHalo{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}
+/* CP হার্টের চারপাশে ঘোরা আলোর কণা */
+.cpb .orbit{left:36%;top:2%;width:28%;aspect-ratio:1;animation:cpOrbit 7s linear infinite}
+.cpb .orbit i{position:absolute;width:8%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff 0 30%,rgba(255,210,240,.9) 45%,transparent 70%);box-shadow:0 0 1.6cqw #fff}
+.cpb .orbit i:nth-child(1){left:46%;top:-4%}.cpb .orbit i:nth-child(2){right:-2%;top:46%}.cpb .orbit i:nth-child(3){left:46%;bottom:-4%}.cpb .orbit i:nth-child(4){left:-2%;top:46%}
+@keyframes cpOrbit{to{transform:rotate(360deg)}}
+.cpb.has .lvt{animation:cpFloat 3.2s ease-in-out infinite,cpLvPop 4.8s ease-in-out infinite}
+@keyframes cpLvPop{0%,88%,100%{filter:none}94%{filter:drop-shadow(0 0 2cqw #fff) brightness(1.3)}}
+/* অ্যাকশন বাটন ও শিট (cp-ui.js) */
+.cpx-act{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.cpx-act button{border:0;border-radius:18px;padding:8px 14px;font:800 12px 'Figtree','Hind Siliguri',sans-serif;cursor:pointer;color:#fff}
+.cpx-act .bo{background:linear-gradient(#ff7ab8,#d4116f);box-shadow:0 2px 10px rgba(212,17,111,.5)}
+.cpx-act .br{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+.cpx-act .br.dis{opacity:.55}
+.cpx-note{text-align:center;font:700 11px 'Hind Siliguri','Figtree',sans-serif;color:#ffb9dc;margin-top:6px}
+.cpx-wrap{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,4,20,.62);animation:cpFade .2s}
+@keyframes cpFade{from{opacity:0}}
+.cpx-sheet{width:100%;max-width:520px;max-height:78vh;display:flex;flex-direction:column;border-radius:22px 22px 0 0;background:linear-gradient(180deg,#3a1450,#150a24);border-top:1.5px solid rgba(255,140,200,.6);color:#fff;animation:cpUp .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes cpUp{from{transform:translateY(40px);opacity:0}}
+.cpx-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.1);font:900 15px 'Figtree',sans-serif}
+.cpx-hd button{border:0;background:rgba(255,255,255,.12);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer}
+.cpx-bd{overflow-y:auto;padding:12px 14px 20px}
+.cpx-q{width:100%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:14px;padding:10px 12px;color:#fff;font:600 14px 'Figtree','Hind Siliguri',sans-serif;margin-bottom:10px;outline:none}
+.cpx-info{font:700 11.5px 'Hind Siliguri',sans-serif;color:#ffb9dc;margin-bottom:10px}
+.cpx-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.07);margin-bottom:7px}
+.cpx-row img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.cpx-row .n{flex:1;min-width:0;font:800 14px 'Figtree','Hind Siliguri',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cpx-row .n small{display:block;font-weight:600;color:#c9a9db;font-size:11px}
+.cpx-row button{border:0;border-radius:14px;padding:7px 13px;font:800 12px 'Figtree',sans-serif;color:#fff;background:linear-gradient(#ff7ab8,#d4116f);cursor:pointer}
+.cpx-row em{font:700 11px 'Hind Siliguri',sans-serif;color:#c9a9db;font-style:normal}
+.cpx-chips{display:flex;flex-wrap:wrap;gap:8px}.cpx-chips button{border:1px solid rgba(255,140,200,.6);background:rgba(255,255,255,.08);color:#fff;border-radius:16px;padding:9px 14px;font:900 13px 'Figtree',sans-serif;cursor:pointer}
+.cpx-pop{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:10000;width:min(92vw,380px);display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:20px;background:linear-gradient(135deg,#6a1b8a,#c2185b);border:1.5px solid #ffd1ea;box-shadow:0 10px 30px rgba(0,0,0,.55);color:#fff;animation:cpDrop .4s cubic-bezier(.2,1.3,.3,1)}
+@keyframes cpDrop{from{transform:translate(-50%,-80px);opacity:0}}
+.cpx-pop img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #fff}
+.cpx-pop .t{flex:1;font:700 12px 'Hind Siliguri',sans-serif}.cpx-pop .t b{display:block;font:900 14px 'Figtree',sans-serif}
+.cpx-pop button{border:0;border-radius:14px;padding:7px 11px;font:900 12px 'Figtree',sans-serif;cursor:pointer}.cpx-pop .y{background:#ffd45a;color:#5a1030}.cpx-pop .x{background:rgba(255,255,255,.2);color:#fff}

@@ -1,0 +1,111 @@
+/* shared/theme-light.css — White ও Pink ব্যাকগ্রাউন্ডে সাদা লেখা/স্বচ্ছ-সাদা কার্ড পড়ার মতো করা (Black থিম অপরিবর্তিত) */
+:root[data-theme="light"] .user-name,:root[data-theme="pink"] .user-name{color:var(--tx)}
+:root[data-theme="light"] .stat-box,:root[data-theme="pink"] .stat-box{background:linear-gradient(160deg,rgba(var(--ink-rgb),.05),rgba(var(--ink-rgb),.015))}
+:root[data-theme="light"] .menu-item,:root[data-theme="pink"] .menu-item{background:linear-gradient(160deg,rgba(var(--ink-rgb),.045),rgba(var(--ink-rgb),.015))}
+:root[data-theme="light"] .menu-icon.wallet,:root[data-theme="pink"] .menu-icon.wallet{color:var(--gold-2)}
+:root[data-theme="light"] .menu-name,:root[data-theme="pink"] .menu-name{color:var(--tx)}
+:root[data-theme="light"] .modal-close,:root[data-theme="pink"] .modal-close{background:rgba(var(--ink-rgb),.06);border:1px solid rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .modal-close:active,:root[data-theme="pink"] .modal-close:active{color:var(--tx)}
+:root[data-theme="light"] .btn-cancel,:root[data-theme="pink"] .btn-cancel{background:rgba(var(--ink-rgb),.06);color:var(--tx);border:1px solid rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .input-field,:root[data-theme="pink"] .input-field{color:var(--tx)}
+:root[data-theme="light"] .recharge-label,:root[data-theme="pink"] .recharge-label{color:var(--tx)}
+:root[data-theme="light"] .progress-track,:root[data-theme="pink"] .progress-track{background:rgba(var(--ink-rgb),.08)}
+:root[data-theme="light"] .level-chip.active,:root[data-theme="pink"] .level-chip.active{box-shadow:0 6px 18px rgba(var(--c3-rgb),.5),inset 0 1px 0 rgba(var(--ink-rgb),.5)}
+:root[data-theme="light"] .login-fallback h3,:root[data-theme="pink"] .login-fallback h3{color:var(--tx)}
+:root[data-theme="light"] .nav-item.active .nav-icon,:root[data-theme="pink"] .nav-item.active .nav-icon{box-shadow:0 0 20px rgba(var(--c2-rgb),.28),inset 0 1px 0 rgba(var(--ink-rgb),.10);color:var(--gold-2)}
+:root[data-theme="light"] .seg,:root[data-theme="pink"] .seg{background:rgba(var(--ink-rgb),.05)}
+:root[data-theme="light"] .fl-row,:root[data-theme="pink"] .fl-row{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .fl-name,:root[data-theme="pink"] .fl-name{color:var(--tx)}
+:root[data-theme="light"] .fl-btn.on,:root[data-theme="pink"] .fl-btn.on{background:rgba(var(--ink-rgb),.08);border:1px solid rgba(var(--ink-rgb),.12)}
+:root[data-theme="light"] .pack,:root[data-theme="pink"] .pack{background:rgba(var(--ink-rgb),.05);color:var(--tx)}
+:root[data-theme="light"] .tx-row,:root[data-theme="pink"] .tx-row{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .bag-item,:root[data-theme="pink"] .bag-item{background:rgba(var(--ink-rgb),.05)}
+:root[data-theme="light"] .pref-row,:root[data-theme="pink"] .pref-row{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .switch i,:root[data-theme="pink"] .switch i{background:rgba(var(--ink-rgb),.12)}
+:root[data-theme="light"] .faq,:root[data-theme="pink"] .faq{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .lang-opt,:root[data-theme="pink"] .lang-opt{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .about-meta,:root[data-theme="pink"] .about-meta{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .bio-line,:root[data-theme="pink"] .bio-line{background:rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .me-act,:root[data-theme="pink"] .me-act{color:var(--gold-2)}
+:root[data-theme="light"] .lvl-card,:root[data-theme="pink"] .lvl-card{background:radial-gradient(220px 110px at 0 0,rgba(var(--c1-rgb),.28),transparent 70%),rgba(var(--ink-rgb),.04)}
+:root[data-theme="light"] .mx-textarea,:root[data-theme="pink"] .mx-textarea{color:var(--tx)}
+:root[data-theme="light"] body,:root[data-theme="pink"] body{color:var(--tx)}
+:root[data-theme="light"] .login-btn,:root[data-theme="pink"] .login-btn{box-shadow:0 6px 25px rgba(var(--ink-rgb),.15)}
+:root[data-theme="light"] .my-profile .my-info .mname,:root[data-theme="pink"] .my-profile .my-info .mname{color:var(--tx)}
+:root[data-theme="light"] .my-profile .my-info .muid,:root[data-theme="pink"] .my-profile .my-info .muid{color:rgba(var(--ink-rgb),.75)}
+:root[data-theme="light"] .tab,:root[data-theme="pink"] .tab{color:rgba(var(--ink-rgb),.6)}
+:root[data-theme="light"] .tab.active,:root[data-theme="pink"] .tab.active{color:var(--tx)}
+:root[data-theme="light"] .search-wrap input,:root[data-theme="pink"] .search-wrap input{color:var(--tx)}
+:root[data-theme="light"] .search-wrap input::placeholder,:root[data-theme="pink"] .search-wrap input::placeholder{color:rgba(var(--ink-rgb),.5)}
+:root[data-theme="light"] .section-title,:root[data-theme="pink"] .section-title{color:rgba(var(--ink-rgb),.7)}
+:root[data-theme="light"] .user-item .u-info .u-name,:root[data-theme="pink"] .user-item .u-info .u-name{color:var(--tx)}
+:root[data-theme="light"] .user-item .u-info .u-last,:root[data-theme="pink"] .user-item .u-info .u-last{color:rgba(var(--ink-rgb),.55)}
+:root[data-theme="light"] .user-item .u-info .u-last .lbl-offline,:root[data-theme="pink"] .user-item .u-info .u-last .lbl-offline{color:rgba(var(--ink-rgb),.5)}
+:root[data-theme="light"] .user-item .u-meta .u-time,:root[data-theme="pink"] .user-item .u-meta .u-time{color:rgba(var(--ink-rgb),.6)}
+:root[data-theme="light"] .empty,:root[data-theme="pink"] .empty{color:rgba(var(--ink-rgb),.5)}
+:root[data-theme="light"] .req-card .req-info .rn,:root[data-theme="pink"] .req-card .req-info .rn{color:var(--tx)}
+:root[data-theme="light"] .req-card .req-info .rt,:root[data-theme="pink"] .req-card .req-info .rt{color:rgba(var(--ink-rgb),.7)}
+:root[data-theme="light"] .req-card .blk,:root[data-theme="pink"] .req-card .blk{background:rgba(var(--ink-rgb),.08)}
+:root[data-theme="light"] .chat-header .chat-info .cn,:root[data-theme="pink"] .chat-header .chat-info .cn{color:var(--tx)}
+:root[data-theme="light"] .chat-header .chat-info .cs,:root[data-theme="pink"] .chat-header .chat-info .cs{color:rgba(var(--ink-rgb),.75)}
+:root[data-theme="light"] .msg-bubble.incoming,:root[data-theme="pink"] .msg-bubble.incoming{background:linear-gradient(160deg,rgba(var(--ink-rgb),.11),rgba(var(--ink-rgb),.05));color:var(--tx)}
+:root[data-theme="light"] .tick-sent,:root[data-theme="pink"] .tick-sent{color:rgba(var(--ink-rgb),.7)}
+:root[data-theme="light"] .tick-delivered,:root[data-theme="pink"] .tick-delivered{color:rgba(var(--ink-rgb),.9)}
+:root[data-theme="light"] .voice-player .vp-play,:root[data-theme="pink"] .voice-player .vp-play{background:rgba(var(--ink-rgb),.22);color:var(--tx)}
+:root[data-theme="light"] .voice-player .vp-bar,:root[data-theme="pink"] .voice-player .vp-bar{background:rgba(var(--ink-rgb),.22)}
+:root[data-theme="light"] .reply-bar .rb-text,:root[data-theme="pink"] .reply-bar .rb-text{color:rgba(var(--ink-rgb),.75)}
+:root[data-theme="light"] .reply-bar .rb-close,:root[data-theme="pink"] .reply-bar .rb-close{background:rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .msg-bubble.outgoing .quote-box,:root[data-theme="pink"] .msg-bubble.outgoing .quote-box{background:rgba(var(--ink-rgb),.15)}
+:root[data-theme="light"] .quote-box .qt,:root[data-theme="pink"] .quote-box .qt{color:rgba(var(--ink-rgb),.85)}
+:root[data-theme="light"] .input-box input,:root[data-theme="pink"] .input-box input{color:var(--tx)}
+:root[data-theme="light"] .input-box input::placeholder,:root[data-theme="pink"] .input-box input::placeholder{color:rgba(var(--ink-rgb),.5)}
+:root[data-theme="light"] .add-friend-cta .af-msg,:root[data-theme="pink"] .add-friend-cta .af-msg{color:rgba(var(--ink-rgb),.8)}
+:root[data-theme="light"] .sheet-btn,:root[data-theme="pink"] .sheet-btn{color:var(--tx)}
+:root[data-theme="light"] .sheet-btn.cancel,:root[data-theme="pink"] .sheet-btn.cancel{background:rgba(var(--ink-rgb),.06);color:rgba(var(--ink-rgb),.7);border-color:rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .call-card h3,:root[data-theme="pink"] .call-card h3{color:var(--tx)}
+:root[data-theme="light"] .call-card p,:root[data-theme="pink"] .call-card p{color:rgba(var(--ink-rgb),.7)}
+:root[data-theme="light"] .call-btn,:root[data-theme="pink"] .call-btn{color:var(--tx)}
+:root[data-theme="light"] .cx-row,:root[data-theme="pink"] .cx-row{background:rgba(var(--ink-rgb),.045);color:var(--tx)}
+:root[data-theme="light"] .cx-ic,:root[data-theme="pink"] .cx-ic{color:var(--gold-2)}
+:root[data-theme="light"] .cx-search input,:root[data-theme="pink"] .cx-search input{color:var(--tx)}
+:root[data-theme="light"] .cx-quick button,:root[data-theme="pink"] .cx-quick button{color:var(--gold-2)}
+:root[data-theme="light"] .cx-stats b,:root[data-theme="pink"] .cx-stats b{color:var(--tx)}
+:root[data-theme="light"] .cx-bal b,:root[data-theme="pink"] .cx-bal b{color:var(--gold-2)}
+:root[data-theme="light"] .cx-amts button,:root[data-theme="pink"] .cx-amts button{background:rgba(var(--ink-rgb),.05);color:var(--tx)}
+:root[data-theme="light"] .cx-chip.on,:root[data-theme="pink"] .cx-chip.on{background:rgba(var(--ink-rgb),.08);border:1px solid rgba(var(--ink-rgb),.12)}
+:root[data-theme="light"] .u-unread.muted,:root[data-theme="pink"] .u-unread.muted{background:rgba(var(--ink-rgb),.18);color:var(--tx)}
+:root[data-theme="light"] .mx-toast,:root[data-theme="pink"] .mx-toast{color:var(--tx)}
+:root[data-theme="light"] .mx-hero,:root[data-theme="pink"] .mx-hero{background:radial-gradient(220px 120px at 0 0,rgba(var(--c1-rgb),.32),transparent 70%),rgba(var(--ink-rgb),.05)}
+:root[data-theme="light"] .mx-day,:root[data-theme="pink"] .mx-day{background:rgba(var(--ink-rgb),.05);border:1px solid rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .mx-wheel,:root[data-theme="pink"] .mx-wheel{box-shadow:0 0 0 7px rgba(var(--c2-rgb),.9),0 0 0 11px rgba(var(--ink-rgb),.14),0 18px 50px rgba(0,0,0,.55),0 0 60px rgba(var(--c1-rgb),.35)}
+:root[data-theme="light"] .mx-seg,:root[data-theme="pink"] .mx-seg{background:rgba(var(--ink-rgb),.06);border:1px solid rgba(var(--ink-rgb),.08)}
+:root[data-theme="light"] .mx-pod span,:root[data-theme="pink"] .mx-pod span{color:var(--gold-2)}
+:root[data-theme="light"] .mx-pod-av i,:root[data-theme="pink"] .mx-pod-av i{color:var(--tx)}
+:root[data-theme="light"] .mx-lb-row,:root[data-theme="pink"] .mx-lb-row{background:rgba(var(--ink-rgb),.05);border:1px solid rgba(var(--ink-rgb),.07)}
+:root[data-theme="light"] .mx-lb-row strong,:root[data-theme="pink"] .mx-lb-row strong{color:var(--gold-2)}
+:root[data-theme="light"] .mx-bal,:root[data-theme="pink"] .mx-bal{background:rgba(var(--ink-rgb),.06)}
+:root[data-theme="light"] .mx-bal b,:root[data-theme="pink"] .mx-bal b{color:var(--gold-2)}
+:root[data-theme="light"] .mx-frame,:root[data-theme="pink"] .mx-frame{background:rgba(var(--ink-rgb),.05);border:1px solid rgba(var(--ink-rgb),.08)}
+:root[data-theme="light"] .mx-level,:root[data-theme="pink"] .mx-level{background:radial-gradient(220px 120px at 0 0,rgba(var(--c2-rgb),.28),transparent 70%),rgba(var(--ink-rgb),.05)}
+:root[data-theme="light"] .mx-bar,:root[data-theme="pink"] .mx-bar{background:rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .mx-notif,:root[data-theme="pink"] .mx-notif{background:rgba(var(--ink-rgb),.04);border:1px solid rgba(var(--ink-rgb),.06)}
+:root[data-theme="light"] .mx-notif-ic,:root[data-theme="pink"] .mx-notif-ic{background:rgba(var(--ink-rgb),.08)}
+:root[data-theme="light"] .mx-theme,:root[data-theme="pink"] .mx-theme{background:rgba(var(--ink-rgb),.05);border:1.5px solid rgba(var(--ink-rgb),.1);color:var(--tx)}
+:root[data-theme="light"] .mx-idcard,:root[data-theme="pink"] .mx-idcard{background:radial-gradient(260px 160px at 0 0,rgba(var(--c1-rgb),.35),transparent 70%),radial-gradient(260px 160px at 100% 100%,rgba(var(--c2-rgb),.25),transparent 70%),rgba(var(--ink-rgb),.05)}
+:root[data-theme="light"] .mx-redeem input,:root[data-theme="pink"] .mx-redeem input{color:var(--tx)}
+:root[data-theme="light"] .bag-crown,:root[data-theme="pink"] .bag-crown{background:rgba(var(--ink-rgb),.05);border:1px solid rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .bag-actionbar,:root[data-theme="pink"] .bag-actionbar{background:rgba(var(--ink-rgb),.06);border:1px solid rgba(var(--ink-rgb),.1)}
+:root[data-theme="light"] .bag-use-btn.remove,:root[data-theme="pink"] .bag-use-btn.remove{background:rgba(var(--ink-rgb),.08);color:var(--tx);border:1px solid rgba(var(--ink-rgb),.2)}
+:root[data-theme="light"] ::selection,:root[data-theme="pink"] ::selection{color:var(--tx)}
+:root[data-theme="light"] .mx-sheet,:root[data-theme="pink"] .mx-sheet{color:var(--tx)}
+:root[data-theme="light"] .mx-grab,:root[data-theme="pink"] .mx-grab{background:rgba(var(--ink-rgb),.22)}
+:root[data-theme="light"] .mx-x,:root[data-theme="pink"] .mx-x{border:1px solid rgba(var(--ink-rgb),.12);background:rgba(var(--ink-rgb),.06);color:var(--tx)}
+:root[data-theme="light"] .mx-btn.ghost,:root[data-theme="pink"] .mx-btn.ghost{background:rgba(var(--ink-rgb),.07);color:var(--tx);border:1px solid rgba(var(--ink-rgb),.12)}
+:root[data-theme="light"] .mx-muted,:root[data-theme="pink"] .mx-muted{color:rgba(var(--ink-rgb),.62)}
+:root[data-theme="light"] .mx-card,:root[data-theme="pink"] .mx-card{background:rgba(var(--ink-rgb),.05)}
+
+/* হোমের চ্যাট ওভারলে টপবার */
+:root[data-theme="light"] .chat-topbar .ct-title,:root[data-theme="pink"] .chat-topbar .ct-title{color:var(--tx)}
+:root[data-theme="light"] .chat-topbar .ct-title .ct-sub,:root[data-theme="pink"] .chat-topbar .ct-title .ct-sub{color:rgba(var(--ink-rgb),.6)}
+:root[data-theme="light"] .chat-topbar .ct-back,:root[data-theme="pink"] .chat-topbar .ct-back{color:var(--tx);background:rgba(var(--ink-rgb),.08)}
+:root[data-theme="light"] .back-btn,:root[data-theme="pink"] .back-btn{color:var(--tx)}

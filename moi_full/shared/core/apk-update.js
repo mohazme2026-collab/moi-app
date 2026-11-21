@@ -21,7 +21,8 @@
     } catch(x){}
   });
   var BASE = 'https://github.com/mohazme2026-collab/moi-app/releases/download/live/';
-  try { if (sessionStorage.getItem('moi_upd_chk')) return; sessionStorage.setItem('moi_upd_chk', '1'); } catch(e){}
+  var DONE = false; try { DONE = !!sessionStorage.getItem('moi_upd_chk'); } catch(e){}
+  if (DONE) return;
 
   function banner(v){
     if (document.getElementById('moiUpd')) return;
@@ -50,11 +51,12 @@
       fetch('/build.json?t=' + Date.now()).then(function(r){ return r.json(); }),
       remote(BASE + 'version.json?t=' + Date.now())
     ]).then(function(a){
+      try { sessionStorage.setItem('moi_upd_chk', '1'); } catch(e){}
       var l = a[0] && a[0].v, r = a[1] && a[1].v;
       if (r && l !== r){ banner(r); dbg('আপডেট: ' + l + ' → ' + r, 4000); }
       else dbg('অ্যাপ আপ-টু-ডেট (' + l + ')', 3000);
     }).catch(function(e){ dbg('আপডেট চেক ব্যর্থ: ' + (e && e.message || e), 8000); });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(check, 3000); });
-  else setTimeout(check, 3000);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(check, 1200); });
+  else setTimeout(check, 1200);
 })();

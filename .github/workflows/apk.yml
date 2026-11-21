@@ -49,6 +49,12 @@ jobs:
             rm -f $RES/mipmap-$n/ic_launcher_foreground.png
           done
 
+      - name: SDK 35
+        run: |
+          sed -i 's/compileSdkVersion = 34/compileSdkVersion = 35/' android/variables.gradle
+          echo "android.suppressUnsupportedCompileSdk=35" >> android/gradle.properties
+          grep -n "compileSdk" android/variables.gradle
+
       - name: Version code
         run: |
           sed -i "s/versionCode 1/versionCode ${GITHUB_RUN_NUMBER}/; s/versionName \"1.0\"/versionName \"1.${GITHUB_RUN_NUMBER}\"/" android/app/build.gradle

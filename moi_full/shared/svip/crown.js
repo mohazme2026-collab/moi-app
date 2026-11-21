@@ -11,11 +11,13 @@
     const CROWNS = {
         svip1: { img: 'level1/crown.webp', scale: 1.8, dx: -0.49, dy: 1.07 },
         /* স্টোরের রিং (animated SVG) — ছবি shared/store/rings/ এ; ring-এর মাঝখান ছবির কেন্দ্র থেকে ২.১% নিচে, তাই dy = -2.14 */
-        gold1: { img: '../../store/rings/ring_gold.svg', scale: 2.0, dx: 0, dy: -2.14 }
+        gold1: { vid: '../../store/rings/ring_gold.mp4', scale: 2.15, dx: 0.7, dy: -4.0 }
     };
     const CSS = `.cv{position:absolute;left:50%;top:50%;pointer-events:none;z-index:7;transform:translate(-50%,-50%)}
 .cv img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none;visibility:hidden}
 .cv.on img{visibility:visible}
+.cv canvas{display:block;width:100%;height:100%;pointer-events:none;visibility:hidden}
+.cv.on canvas{visibility:visible}
 /* রুমের সিটে: মুকুট নিজের নাম-প্লেট/ডায়মন্ডের উপরে ওঠে না, পাশের সিটের উপরেও না (অন্য CSS ফাইল ঠিক না থাকলেও কাজ করে) */
 .seat{z-index:2}
 .seat.has-crown{z-index:1}
@@ -30,7 +32,7 @@
     /* হালকা মোড: true হলে মুকুট/রিং আঁকা হয় না (ভারী ছবি নামে না)। হালকা MP4 মুকুট এলে false করা হবে */
     const LITE = true;
     function attach(host, id){
-        const c = CROWNS[id]; if (!host || !c || LITE) return null;
+        const c = CROWNS[id]; if (!host || !c || (LITE && !c.vid)) return null;
         css();
         const old = host.querySelector(':scope > .cv');
         if (old && old.dataset.id === id) return old;
@@ -39,6 +41,14 @@
         const w = Math.round(c.scale * 1000) / 10;
         const el = document.createElement('span'); el.className = 'cv'; el.dataset.id = id; el.setAttribute('aria-hidden', 'true');
         el.style.cssText = 'width:' + w + '%;height:' + w + '%;margin-left:' + (c.dx * w / 100).toFixed(3) + '%;margin-top:' + (c.dy * w / 100).toFixed(3) + '%';
+        if (c.vid){                              /* হালকা প্যাকড-আলফা MP4 রিং — ভিডিও একটাই চলে */
+            const st0 = host.closest && host.closest('.seat'); if (st0) st0.classList.add('has-crown');
+            host.appendChild(el);
+            const go = () => window.MOIRingVid && MOIRingVid.mount(el, BASE + c.vid, () => el.classList.add('on'));
+            if (window.MOIRingVid) go();
+            else { const s = document.createElement('script'); s.src = BASE + '../ringvid.js'; s.onload = go; (document.head || document.documentElement).appendChild(s); }
+            return el;
+        }
         const im = new Image(); im.alt = ''; im.draggable = false; im.decoding = 'async';
         /* লোড হলে তবেই দেখায় — নেট ধীর হলে/ফেল করলে কিছুই দেখায় না */
         im.onload = () => el.classList.add('on');

@@ -1,7 +1,17 @@
 /* shared/core/apk-update.js — শুধু APK-র ভেতরে চলে। নতুন আপডেট আছে কিনা দেখে, বোতাম চাপলে নামিয়ে বসায়। */
 (function(){
-  var C = window.Capacitor, P = C && C.Plugins && C.Plugins.CapacitorUpdater;
-  if (!P) return;
+  var C = window.Capacitor;
+  if (!C) return;
+  function plug(n){ try { return (C.Plugins && C.Plugins[n]) || C.registerPlugin(n); } catch(e){ return null; } }
+  var P = plug('CapacitorUpdater');
+  function dbg(t, ms){
+    try {
+      var d = document.getElementById('moiDbg');
+      if (!d){ d = document.createElement('div'); d.id = 'moiDbg'; d.style.cssText = 'position:fixed;left:8px;right:8px;bottom:6px;z-index:2147483647;background:rgba(0,0,0,.75);color:#9f9;font:11px monospace;padding:4px 8px;border-radius:8px;pointer-events:none'; (document.body || document.documentElement).appendChild(d); }
+      d.textContent = t; clearTimeout(d._t); d._t = setTimeout(function(){ d.remove(); }, ms || 6000);
+    } catch(e){}
+  }
+  if (!P){ dbg('আপডেট প্লাগইন পাওয়া যায়নি', 8000); return; }
   try { P.notifyAppReady(); } catch(e){}
   window.addEventListener('error', function(e){
     try {
@@ -31,7 +41,7 @@
   }
 
   function remote(u){
-    var H = C.Plugins.CapacitorHttp;
+    var H = plug('CapacitorHttp');
     if (H && H.get) return H.get({ url: u }).then(function(r){ return typeof r.data === 'string' ? JSON.parse(r.data) : r.data; });
     return fetch(u).then(function(r){ return r.json(); });
   }
@@ -40,8 +50,10 @@
       fetch('/build.json?t=' + Date.now()).then(function(r){ return r.json(); }),
       remote(BASE + 'version.json?t=' + Date.now())
     ]).then(function(a){
-      if (a[1] && a[1].v && (!a[0] || a[0].v !== a[1].v)) banner(a[1].v);
-    }).catch(function(){});
+      var l = a[0] && a[0].v, r = a[1] && a[1].v;
+      if (r && l !== r){ banner(r); dbg('আপডেট: ' + l + ' → ' + r, 4000); }
+      else dbg('অ্যাপ আপ-টু-ডেট (' + l + ')', 3000);
+    }).catch(function(e){ dbg('আপডেট চেক ব্যর্থ: ' + (e && e.message || e), 8000); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(check, 3000); });
   else setTimeout(check, 3000);

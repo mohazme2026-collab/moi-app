@@ -48,7 +48,9 @@
             add('meta', { name: 'apple-mobile-web-app-capable', content: 'yes' });
             add('link', { rel: 'apple-touch-icon', href: root + 'icons/icon-192.png' });
         }
-        if ('serviceWorker' in navigator) window.addEventListener('load', function(){ navigator.serviceWorker.register(root + 'sw.js').catch(function(){}); });
+        var NATIVE = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+        if (NATIVE) { var us = document.createElement('script'); us.src = root + 'shared/core/apk-update.js'; h.appendChild(us); }
+        else if ('serviceWorker' in navigator) window.addEventListener('load', function(){ navigator.serviceWorker.register(root + 'sw.js').catch(function(){}); });
     } catch(e){}
 })();
 

@@ -3,6 +3,13 @@
   var C = window.Capacitor, P = C && C.Plugins && C.Plugins.CapacitorUpdater;
   if (!P) return;
   try { P.notifyAppReady(); } catch(e){}
+  window.addEventListener('error', function(e){
+    try {
+      var d = document.getElementById('moiErr');
+      if (!d) { d = document.createElement('div'); d.id = 'moiErr'; d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#900;color:#fff;font:11px monospace;padding:6px;max-height:30vh;overflow:auto'; (document.body||document.documentElement).appendChild(d); }
+      d.textContent += (e.message || '') + ' @ ' + String(e.filename||'').split('/').slice(-2).join('/') + ':' + (e.lineno||'') + '\n';
+    } catch(x){}
+  });
   var BASE = 'https://github.com/mohazme2026-collab/moi-app/releases/download/live/';
   try { if (sessionStorage.getItem('moi_upd_chk')) return; sessionStorage.setItem('moi_upd_chk', '1'); } catch(e){}
 
@@ -23,10 +30,15 @@
     };
   }
 
+  function remote(u){
+    var H = C.Plugins.CapacitorHttp;
+    if (H && H.get) return H.get({ url: u }).then(function(r){ return typeof r.data === 'string' ? JSON.parse(r.data) : r.data; });
+    return fetch(u).then(function(r){ return r.json(); });
+  }
   function check(){
     Promise.all([
       fetch('/build.json?t=' + Date.now()).then(function(r){ return r.json(); }),
-      fetch(BASE + 'version.json?t=' + Date.now()).then(function(r){ return r.json(); })
+      remote(BASE + 'version.json?t=' + Date.now())
     ]).then(function(a){
       if (a[1] && a[1].v && (!a[0] || a[0].v !== a[1].v)) banner(a[1].v);
     }).catch(function(){});

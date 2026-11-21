@@ -3,10 +3,15 @@
   "appName": "MOI",
   "webDir": "moi_full",
   "backgroundColor": "#120a28",
-  "server": { "androidScheme": "https" },
+  "server": {
+    "androidScheme": "https"
+  },
   "plugins": {
-    "CapacitorHttp": { "enabled": true },
-    "CapacitorUpdater": { "autoUpdate": false },
-    "SplashScreen": { "launchShowDuration": 0 }
+    "CapacitorUpdater": {
+      "autoUpdate": false
+    },
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
   }
 }

@@ -85,8 +85,6 @@
         const p = prof(), a = active(), ok = !!a && a.level >= 1 || points() >= LEVELS[0].need;
         const av = (p && (p.photo || p.avatar)) || window.FALLBACK_IMG || '';
         const items = [
-            { n: 'SVIP1 Ring', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM, ring: true },
-            { n: 'SVIP1 Entry', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM, entry: '../shared/svip/levels/level1/entry_poster.webp' },
             { n: 'SVIP1 Chat', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM, chat: true },
             { n: 'SVIP1 Card', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM, card: true }
         ];

@@ -10,9 +10,9 @@
     const BASE = SRC.replace(/[^\/]*$/, '');
     const DAY = 86400000;
     const ITEMS = [
-        { id: 'ring_gold', slot: 'frame', tab: 'frame', name: 'Royal Gold Crown', sub: 'Winged ring · lightning', img: 'rings/ring_gold.svg', crown: 'gold1', prices: { 7: 100, 30: 1000 } },
+        { id: 'ring_gold', hidden: true, slot: 'frame', tab: 'frame', name: 'Royal Gold Crown', sub: 'Winged ring · lightning', img: 'rings/ring_gold.svg', crown: 'gold1', prices: { 7: 100, 30: 1000 } },
         /* এন্ট্রি এনিমেশন: img = স্টোর/ব্যাগে দেখানো স্থির ছবি; entry = shared/svip/entry.js এর EFFECTS এর আইডি */
-        { id: 'entry_eyes1', slot: 'entry', tab: 'entry', name: 'Blue Eyes Slash', sub: 'Room entry · with sound', img: 'entries/entry_eyes1_poster.webp', entry: 'eyes1', prices: { 7: 200, 30: 1200 } },
+        { id: 'entry_eyes1', hidden: true, slot: 'entry', tab: 'entry', name: 'Blue Eyes Slash', sub: 'Room entry · with sound', img: 'entries/entry_eyes1_poster.webp', entry: 'eyes1', prices: { 7: 200, 30: 1200 } },
         /* রুমের মেসেজ ব্যানার: chat = shared/svip/chat.js এর STYLES এর আইডি */
         { id: 'bubble_vip1', slot: 'bubble', tab: 'bubble', name: 'VIP Tiger Banner', sub: 'Room chat message banner', img: 'bubbles/bubble_vip.webp', chat: 'vipban', prices: { 7: 100, 30: 500 } },
         /* ইমোজি প্যাক: একবার কিনলে সারাজীবন (prices[0]); রুমের Reactions-এর শেষ ক্যাটাগরিতে যোগ হয় */

@@ -54,8 +54,8 @@
     function render(){
         const p = me(); if (!p) return;
         ['frame', 'entry', 'bubble', 'emoji'].forEach(tab => {
-            const items = MOIStore.ITEMS.filter(i => i.tab === tab);
-            $('pane-' + tab).innerHTML = '<div class="sc-grid">' + items.map(i => card(i, p)).join('') + '</div>';
+            const items = MOIStore.ITEMS.filter(i => i.tab === tab && !i.hidden);
+            $('pane-' + tab).innerHTML = items.length ? '<div class="sc-grid">' + items.map(i => card(i, p)).join('') + '</div>' : '<div class="st-soon">Coming soon</div>';
         });
         ['luckybox', 'wallpaper', 'special'].forEach(k => {
             const el = $('pane-' + k); if (el && !el.children.length) el.innerHTML = '<div class="st-soon">Coming soon</div>';

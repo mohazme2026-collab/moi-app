@@ -43,7 +43,7 @@
 
     function renderSlot(slot){
         const p = me(), pane = $('list-' + slot); if (!p || !window.MOIStore) return;
-        const mine = MOIStore.ITEMS.filter(i => i.slot === slot && MOIStore.isOwned(p.uid, i.id));
+        const mine = MOIStore.ITEMS.filter(i => i.slot === slot && !i.hidden && MOIStore.isOwned(p.uid, i.id));
         const on = MOIStore.equipped(p.uid, slot);
         pane.innerHTML = mine.length ? '<div class="bi-grid">' + mine.map(it =>
             '<button type="button" class="bi' + (on === it.id ? ' worn' : '') + '" data-id="' + it.id + '">' + pv(it, p) +

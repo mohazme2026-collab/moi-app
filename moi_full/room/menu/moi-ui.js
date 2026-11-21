@@ -25,7 +25,7 @@
         if (!pk || !row) return;
         pk.style.top = (row.offsetTop + row.offsetHeight - 2) + 'px';
     }
-    setInterval(placePk, 500); window.addEventListener('resize', placePk); placePk();
+    setInterval(function(){ if (!document.hidden) placePk(); }, 1500); window.addEventListener('resize', placePk); placePk();
 })();
 
 /* ── গিফট প্যানেলের বাইরে চাপলে বন্ধ ── */

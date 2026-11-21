@@ -116,6 +116,20 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
     /* ═══════════════ ডেটাবেস (মেমোরি + localStorage) ═══════════════ */
     let DB = { fs: {}, rt: {} };
     let lastRaw = null;
+    /* কোন অংশ বদলেছে — শুধু সেটুকুই সেভ হয় (collection ধরে আলাদা টুকরো) */
+    let dAll = true, dRt = true; const dCols = new Set();
+    const FS_PFX = 'moi_demo_fs_v4_', STAMP_KEY = 'moi_demo_fs_stamp', RT_KEY = 'moi_demo_rt_v3', FS3_KEY = 'moi_demo_fs_v3';
+    let lastStamp = null, lastRt = null;
+    const colOf = p => { const i = p.indexOf('/'); return i < 0 ? p : p.slice(0, i); };
+    const dFsAdd = p => { dCols.add(colOf(p)); };
+    function readFsParts(){
+        const fs = {}; let n = 0;
+        for (let i = 0; i < localStorage.length; i++){
+            const k = localStorage.key(i);
+            if (k && k.indexOf(FS_PFX) === 0){ Object.assign(fs, JSON.parse(localStorage.getItem(k))); n++; }
+        }
+        return n ? fs : null;
+    }
     const colIndex = new Map();               /* collectionPath → Set(docId) */
     let seeding = false;
 
@@ -136,24 +150,50 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
     function loadDB(){
         let fresh = true;
         try {
-            const raw = localStorage.getItem(DB_KEY); lastRaw = raw;
-            if (raw){ const d = JSON.parse(raw); if (d && d.fs && d.rt !== undefined){ DB = d; fresh = false; } }
+            const r = localStorage.getItem(RT_KEY), st = localStorage.getItem(STAMP_KEY);
+            const fs = (r && st) ? readFsParts() : null;
+            if (fs){ DB = { fs: fs, rt: JSON.parse(r) }; lastRt = r; lastStamp = st; dAll = dRt = false; fresh = false; }
+            else {
+                const f3 = localStorage.getItem(FS3_KEY), r3 = localStorage.getItem(RT_KEY);
+                if (f3 && r3){ DB = { fs: JSON.parse(f3), rt: JSON.parse(r3) }; fresh = false; dAll = dRt = true; }
+                else {
+                    const raw = localStorage.getItem(DB_KEY);
+                    if (raw){ const d = JSON.parse(raw); if (d && d.fs && d.rt !== undefined){ DB = d; fresh = false; dAll = dRt = true; } }
+                }
+            }
         } catch(e){}
         if (fresh){ DB = { fs: {}, rt: {} }; if (DEMO.seed) seedData(); persist(true); }
+        else if (dAll && dRt){ persist(true); try { localStorage.removeItem(DB_KEY); localStorage.removeItem(FS3_KEY); } catch(e){} }
         rebuildIndex();
     }
     let dirty = false, pTimer = null;
     function doPersist(){
         if (pTimer){ clearTimeout(pTimer); pTimer = null; }
         dirty = false;
-        try { const raw = JSON.stringify(DB); localStorage.setItem(DB_KEY, raw); lastRaw = raw; }
+        try {
+            if (dAll || dCols.size){
+                const groups = {};
+                const keys = Object.keys(DB.fs);
+                for (let i = 0; i < keys.length; i++){
+                    const c = colOf(keys[i]);
+                    if (!dAll && !dCols.has(c)) continue;
+                    (groups[c] || (groups[c] = {}))[keys[i]] = DB.fs[keys[i]];
+                }
+                if (dAll){ for (let i = localStorage.length - 1; i >= 0; i--){ const k = localStorage.key(i); if (k && k.indexOf(FS_PFX) === 0 && !(k.slice(FS_PFX.length) in groups)) localStorage.removeItem(k); } }
+                else dCols.forEach(c => { if (!(c in groups)) localStorage.removeItem(FS_PFX + c); });
+                Object.keys(groups).forEach(c => localStorage.setItem(FS_PFX + c, JSON.stringify(groups[c])));
+                lastStamp = String(Date.now()) + Math.random().toString(36).slice(2, 6); localStorage.setItem(STAMP_KEY, lastStamp);
+                dAll = false; dCols.clear();
+            }
+            if (dRt){ const r = JSON.stringify(DB.rt); localStorage.setItem(RT_KEY, r); lastRt = r; dRt = false; }
+        }
         catch(e){ console.warn('[demo-db] সেভ করা যায়নি (জায়গা ভরে গেছে?)', e && e.message); }
     }
     /* সাধারণ লেখা সঙ্গে সঙ্গে সেভ হয় (এক সাথে খোলা একাধিক পেজ/ট্যাব যেন একে অপরের ডেটা না মোছে)।
        শুধু শুরুর বড় সিড লেখার সময় একটু পরপর একবার সেভ — ফোনে স্মুথ থাকে */
     let bulkUntil = 0;
-    function persist(now){
-        dirty = true;
+    function persist(now, lite){
+        dirty = true; if (!lite) dAll = dRt = true;
         if (now){ doPersist(); return; }
         /* স্পিড: সব লেখা এক সাথে করে ৭০০ms-এ একবার সেভ (আগে প্রতিটা লেখায় ১ MB+ সেভ হতো — ফোন আটকে যেত) */
         if (!pTimer) pTimer = setTimeout(doPersist, Date.now() < bulkUntil ? 1000 : 2500);
@@ -165,11 +205,11 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
     function syncFromStorage(){
         if (dirty) return false;          /* আমার মেমোরির ডেটাই নতুন — এখনও সেভ হয়নি */
         try {
-            const raw = localStorage.getItem(DB_KEY);
-            if (raw !== lastRaw){
-                lastRaw = raw;
-                if (raw){ const d = JSON.parse(raw); if (d && d.fs){ DB = d; rebuildIndex(); return true; } }
-                else { DB = { fs: {}, rt: {} }; rebuildIndex(); return true; }
+            const st = localStorage.getItem(STAMP_KEY), r = localStorage.getItem(RT_KEY);
+            if (st !== lastStamp || r !== lastRt){
+                const ch = st !== lastStamp; lastStamp = st; lastRt = r;
+                if (st && r){ DB = { fs: ch ? (readFsParts() || {}) : DB.fs, rt: JSON.parse(r) }; if (ch) rebuildIndex(); return true; }
+                else if (!st && !r){ DB = { fs: {}, rt: {} }; rebuildIndex(); return true; }
             }
         } catch(e){}
         return false;
@@ -185,7 +225,7 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
             [...listeners].forEach(l => { try { if (listeners.has(l)) l.check(); } catch(e){ console.warn('[demo-db] listener', e); } });
         });
     }
-    function committed(){ persist(); emitAll(); }
+    function committed(){ persist(false, true); emitAll(); }
 
     /* ═══════════════ FIRESTORE ═══════════════ */
     const encVal = v => (v instanceof Date ? { __t: v.getTime() } : v instanceof Ts ? { __t: v.toMillis() } : v);
@@ -226,7 +266,7 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
             Object.keys(data || {}).forEach(k => { const r = applyValue(undefined, data[k], false); if (r !== undefined) doc[k] = r; });
         }
         if (!existing && !seeding && /^users\/[A-Za-z0-9]+$/.test(path)) demoOnUserCreate(doc);
-        DB.fs[path] = doc;
+        DB.fs[path] = doc; dFsAdd(path);
         if (!existing) indexAdd(path);
     }
     function fsUpdate(path, data){
@@ -244,9 +284,9 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
                 if (r === undefined) delete doc[k]; else doc[k] = r;
             }
         });
-        DB.fs[path] = doc;
+        DB.fs[path] = doc; dFsAdd(path);
     }
-    function fsDelete(path){ if (path in DB.fs){ delete DB.fs[path]; indexDel(path); } }
+    function fsDelete(path){ if (path in DB.fs){ delete DB.fs[path]; indexDel(path); dFsAdd(path); } }
 
     const reviveDeep = v => {
         if (Array.isArray(v)) return v.map(reviveDeep);
@@ -357,7 +397,7 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
         try {
             writes.forEach(w => { if (w[0] === 'set') fsSet(w[1], w[2], w[3]); else if (w[0] === 'update') fsUpdate(w[1], w[2]); else fsDelete(w[1]); });
         } catch(e){
-            touched.forEach(p => { if (backup[p] === undefined) fsDelete(p); else { const had = DB.fs[p] !== undefined; DB.fs[p] = backup[p]; if (!had) indexAdd(p); } });
+            dAll = true; touched.forEach(p => { if (backup[p] === undefined) fsDelete(p); else { const had = DB.fs[p] !== undefined; DB.fs[p] = backup[p]; if (!had) indexAdd(p); } });
             throw e;
         }
         committed();
@@ -380,7 +420,7 @@ console.log('[MOI] firebase-init.js loaded (DEMO MODE — no Firebase)');
         return v;
     }
     function rtSet(path, val){
-        const s = segs(path); const v = rtClean(val);
+        const s = segs(path); const v = rtClean(val); dRt = true;
         if (!s.length){ DB.rt = isObj(v) ? v : {}; return; }
         const chain = [DB.rt]; let n = DB.rt;
         for (let i = 0; i < s.length - 1; i++){

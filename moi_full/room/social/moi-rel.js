@@ -166,7 +166,7 @@
             }
         });
     }
-    setInterval(poll, 1500);
+    setInterval(function(){ if (!document.hidden) poll(); }, 3000);
     window.addEventListener('moi:sync', poll);
 
     /* ── সিটে CP: হার্ট + রিং ── */

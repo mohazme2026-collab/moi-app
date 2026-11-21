@@ -52,8 +52,9 @@ jobs:
       - name: SDK 35
         run: |
           sed -i 's/compileSdkVersion = 34/compileSdkVersion = 35/' android/variables.gradle
+          sed -i 's/minSdkVersion = 22/minSdkVersion = 23/' android/variables.gradle
           echo "android.suppressUnsupportedCompileSdk=35" >> android/gradle.properties
-          grep -n "compileSdk" android/variables.gradle
+          grep -n "compileSdk\|minSdk" android/variables.gradle
 
       - name: Version code
         run: |

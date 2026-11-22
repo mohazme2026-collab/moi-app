@@ -40,6 +40,8 @@ function seedProfiles(){
     ids.forEach((uid, i) => {
         /* SVIP: প্রায় ১৫% */
         if (i % 7 === 3 && !LS('moi_svip_level_' + uid)) LS('moi_svip_level_' + uid, { level: 1, until: 0 });
+        /* VIP১ বট: প্রায় ১৪% (ঈগল-ড্রাগন রিং) */
+        if (i % 7 === 5 && !LS('moi_vip_level_' + uid)) LS('moi_vip_level_' + uid, { level: 1, until: 0 });
         /* স্টোর: রিং / এন্ট্রি / বাবল / ইমোজি প্যাক — আলাদা আলাদা মিশ্রণ */
         if (!LS('moi_store_' + uid) && i % 3 !== 2){
             const st = { owned: {}, equip: {} }, k = i % 6;

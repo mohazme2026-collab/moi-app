@@ -74,4 +74,10 @@
     }
     (window.MOIReady || Promise.resolve()).then(() => { try { init(); } catch(e){ console.error('[VIP]', e); } });
     window.openVipLevel = n => { setLevel(n); goCard(n); };
+    /* VIP১ রিং প্রিভিউ */
+    try {
+        const pr = (window.MOIAuth && MOIAuth.profile) || {}, im = $('vipRingImg'), av = $('vipRingAv');
+        if (im) im.src = pr.photo || pr.avatar || window.FALLBACK_IMG || '';
+        if (av && window.MOICrown) MOICrown.attach(av, 'vip1');
+    } catch(e){}
 })();

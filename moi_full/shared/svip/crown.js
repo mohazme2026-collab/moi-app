@@ -19,6 +19,7 @@
         cobra1: { vid: '../../store/rings/cobra_jade.mp4', scale: 1.391, dx: -0.02, dy: -1.19 },
         wolf1: { vid: '../../store/rings/wolf_ice.mp4', scale: 1.484, dx: -0.04, dy: -2.24 },
         eagle1: { vid: '../../store/rings/eagle_lava.mp4', scale: 1.455, dx: -0.06, dy: -3.38 },
+        vip1: { vid: '../../store/rings/vip1_ring.mp4', scale: 1.384, ar: 1.3403, dx: -0.12, dy: -12.93 },
         gold1: { vid: '../../store/rings/ring_gold.mp4', scale: 2.15, dx: 0.7, dy: -4.0 }
     };
     const CSS = `.cv{position:absolute;left:50%;top:50%;pointer-events:none;z-index:7;transform:translate(-50%,-50%)}
@@ -48,7 +49,7 @@
         if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
         const w = Math.round(c.scale * 1000) / 10;
         const el = document.createElement('span'); el.className = 'cv'; el.dataset.id = id; el.setAttribute('aria-hidden', 'true');
-        el.style.cssText = 'width:' + w + '%;height:' + w + '%;margin-left:' + (c.dx * w / 100).toFixed(3) + '%;margin-top:' + (c.dy * w / 100).toFixed(3) + '%';
+        el.style.cssText = 'width:' + w + '%;height:' + (w * (c.ar || 1)).toFixed(2) + '%;margin-left:' + (c.dx * w / 100).toFixed(3) + '%;margin-top:' + (c.dy * w / 100).toFixed(3) + '%';
         if (c.vid){                              /* হালকা প্যাকড-আলফা MP4 রিং — ভিডিও একটাই চলে */
             const st0 = host.closest && host.closest('.seat'); if (st0) st0.classList.add('has-crown');
             host.appendChild(el);
@@ -76,6 +77,8 @@
         try {                                  /* SVIP চালু (রিচার্জে অ্যাক্টিভেট করা) থাকলে → svip1; মেয়াদ শেষ হলে নয় */
             const a = JSON.parse(localStorage.getItem('moi_svip_level_' + u.uid) || 'null');
             if (a && (!a.until || a.until > Date.now())) return 'svip1';
+            const b = JSON.parse(localStorage.getItem('moi_vip_level_' + u.uid) || 'null');
+            if (b && b.level >= 1 && (!b.until || b.until > Date.now())) return 'vip1';
         } catch(e){}
         return null;
     }

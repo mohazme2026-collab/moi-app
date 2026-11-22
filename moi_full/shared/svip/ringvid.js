@@ -9,8 +9,8 @@
     const pool = {};
     let raf = 0, last = 0;
 
-    function mkGL(W){
-        const c = document.createElement('canvas'); c.width = c.height = W;
+    function mkGL(W, H){
+        const c = document.createElement('canvas'); c.width = W; c.height = H;
         const gl = c.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false, depth: false, stencil: false, preserveDrawingBuffer: false });
         if (!gl) return null;
         const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return gl.getShaderParameter(o, gl.COMPILE_STATUS) ? o : null; };
@@ -26,7 +26,7 @@
         const tx = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tx);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.viewport(0, 0, W, W);
+        gl.viewport(0, 0, W, H);
         return { c: c, render: function(v){
             gl.bindTexture(gl.TEXTURE_2D, tx);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, v);
@@ -35,13 +35,13 @@
         } };
     }
     /* WebGL না চললে (পুরনো ফোন) — ধীর কিন্তু কাজ চলে */
-    function mk2D(W){
-        const out = document.createElement('canvas'); out.width = out.height = W;
-        const o = out.getContext('2d'), sc = document.createElement('canvas'); sc.width = W; sc.height = W * 2;
+    function mk2D(W, H){
+        const out = document.createElement('canvas'); out.width = W; out.height = H;
+        const o = out.getContext('2d'), sc = document.createElement('canvas'); sc.width = W; sc.height = H * 2;
         const s = sc.getContext('2d', { willReadFrequently: true });
         return { c: out, render: function(v){
-            s.drawImage(v, 0, 0, W, W * 2);
-            const d = s.getImageData(0, 0, W, W * 2).data, im = o.createImageData(W, W), q = im.data, n = W * W * 4;
+            s.drawImage(v, 0, 0, W, H * 2);
+            const d = s.getImageData(0, 0, W, H * 2).data, im = o.createImageData(W, H), q = im.data, n = W * H * 4;
             for (let i = 0; i < n; i += 4){
                 const a = d[n + i];
                 q[i + 3] = a;
@@ -74,11 +74,11 @@
             if (!S.cvs.size){ pause(S); continue; }
             any = true; play(S);
             if (S.v.readyState < 2 || !S.v.videoWidth) continue;
-            if (!S.r){ S.W = Math.min(320, S.v.videoWidth); S.r = mkGL(S.W) || mk2D(S.W); }
-            try { S.r.render(S.v); } catch(e){ S.r = mk2D(S.W); continue; }
+            if (!S.r){ S.W = Math.min(320, S.v.videoWidth); S.H = Math.round(S.W * (S.v.videoHeight / 2) / S.v.videoWidth); S.r = mkGL(S.W, S.H) || mk2D(S.W, S.H); }
+            try { S.r.render(S.v); } catch(e){ S.r = mk2D(S.W, S.H); continue; }
             S.cvs.forEach(function(c){
-                if (c.width !== S.W){ c.width = c.height = S.W; }
-                const x = c.getContext('2d'); x.clearRect(0, 0, S.W, S.W); x.drawImage(S.r.c, 0, 0);
+                if (c.width !== S.W || c.height !== S.H){ c.width = S.W; c.height = S.H; }
+                const x = c.getContext('2d'); x.clearRect(0, 0, S.W, S.H); x.drawImage(S.r.c, 0, 0);
                 if (c._first){ const f = c._first; c._first = null; f(); }
             });
         }
@@ -92,7 +92,7 @@
     function mount(host, url, onFirst){
         if (!host) return null;
         const S = src(url), c = document.createElement('canvas');
-        c.width = c.height = S.W; c._first = onFirst || null; c.setAttribute('aria-hidden', 'true');
+        c.width = S.W; c.height = S.H || S.W; c._first = onFirst || null; c.setAttribute('aria-hidden', 'true');
         host.appendChild(c); S.cvs.add(c); go();
         return c;
     }

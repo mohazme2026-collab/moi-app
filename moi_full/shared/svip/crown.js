@@ -9,8 +9,16 @@
     const SRC = (document.currentScript && document.currentScript.src) || '';
     const BASE = SRC.replace(/[^\/]*$/, '') + 'levels/';
     const CROWNS = {
-        svip1: { img: 'level1/crown.webp', scale: 1.8, dx: -0.49, dy: 1.07 },
+        svip1: { vid: '../../store/rings/svip1_dragon.mp4', scale: 1.516, dx: -0.02, dy: -6.12 },
         /* স্টোরের রিং (animated SVG) — ছবি shared/store/rings/ এ; ring-এর মাঝখান ছবির কেন্দ্র থেকে ২.১% নিচে, তাই dy = -2.14 */
+        wg1: { vid: '../../store/rings/wings_gold.mp4', scale: 1.48, dx: 0.06, dy: -8.3 },
+        wv1: { vid: '../../store/rings/wings_violet.mp4', scale: 1.533, dx: -0.0, dy: -7.94 },
+        lion1: { vid: '../../store/rings/lion_amethyst.mp4', scale: 1.522, dx: 0.05, dy: -4.85 },
+        phx1: { vid: '../../store/rings/phoenix_frost.mp4', scale: 1.548, dx: -0.04, dy: -7.54 },
+        heart1: { vid: '../../store/rings/heart_rose.mp4', scale: 1.379, dx: -0.02, dy: -2.32 },
+        cobra1: { vid: '../../store/rings/cobra_jade.mp4', scale: 1.391, dx: -0.02, dy: -1.19 },
+        wolf1: { vid: '../../store/rings/wolf_ice.mp4', scale: 1.484, dx: -0.04, dy: -2.24 },
+        eagle1: { vid: '../../store/rings/eagle_lava.mp4', scale: 1.455, dx: -0.06, dy: -3.38 },
         gold1: { vid: '../../store/rings/ring_gold.mp4', scale: 2.15, dx: 0.7, dy: -4.0 }
     };
     const CSS = `.cv{position:absolute;left:50%;top:50%;pointer-events:none;z-index:7;transform:translate(-50%,-50%)}

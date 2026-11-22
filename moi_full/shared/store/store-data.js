@@ -11,6 +11,14 @@
     const DAY = 86400000;
     const ITEMS = [
         { id: 'ring_gold', slot: 'frame', tab: 'frame', name: 'Royal Gold Crown', sub: 'Winged ring · lightning', img: 'rings/ring_gold.webp', crown: 'gold1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_wings_gold', slot: 'frame', tab: 'frame', name: 'Golden Wings', sub: 'Crown & wings · gold shimmer', img: 'rings/wings_gold.webp', crown: 'wg1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_wings_violet', slot: 'frame', tab: 'frame', name: 'Violet Wings', sub: 'Silver crown · violet glow', img: 'rings/wings_violet.webp', crown: 'wv1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_lion', slot: 'frame', tab: 'frame', name: 'Amethyst Lions', sub: 'Roaring lions · crystal', img: 'rings/lion_amethyst.webp', crown: 'lion1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_phoenix', slot: 'frame', tab: 'frame', name: 'Frost Phoenix', sub: 'Turquoise flame wings', img: 'rings/phoenix_frost.webp', crown: 'phx1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_heart', slot: 'frame', tab: 'frame', name: 'Rose Hearts', sub: 'Hearts, roses & pearls', img: 'rings/heart_rose.webp', crown: 'heart1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_cobra', slot: 'frame', tab: 'frame', name: 'Jade Cobras', sub: 'Emerald cobras', img: 'rings/cobra_jade.webp', crown: 'cobra1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_wolf', slot: 'frame', tab: 'frame', name: 'Ice Wolves', sub: 'Howling frost wolves', img: 'rings/wolf_ice.webp', crown: 'wolf1', prices: { 7: 1000, 30: 2000 } },
+        { id: 'ring_eagle', slot: 'frame', tab: 'frame', name: 'Lava Eagles', sub: 'Obsidian & lava', img: 'rings/eagle_lava.webp', crown: 'eagle1', prices: { 7: 1000, 30: 2000 } },
         /* এন্ট্রি এনিমেশন: img = স্টোর/ব্যাগে দেখানো স্থির ছবি; entry = shared/svip/entry.js এর EFFECTS এর আইডি */
         { id: 'entry_eyes1', hidden: true, slot: 'entry', tab: 'entry', name: 'Blue Eyes Slash', sub: 'Room entry · with sound', img: 'entries/entry_eyes1_poster.webp', entry: 'eyes1', prices: { 7: 200, 30: 1200 } },
         /* রুমের মেসেজ ব্যানার: chat = shared/svip/chat.js এর STYLES এর আইডি */

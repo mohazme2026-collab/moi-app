@@ -61,12 +61,12 @@
       go.disabled = true; no.style.display = 'none'; go.textContent = 'নামছে…'; bar.style.display = 'block'; fill.style.width = '4%';
       t.textContent = 'আপডেট নামছে, অ্যাপ বন্ধ করবেন না…';
       var fail = function(m){
-        go.disabled = false; no.style.display = ''; go.textContent = 'আবার চেষ্টা'; bar.style.display = 'none';
+        go.disabled = false; no.style.display = ''; no.textContent = 'APK নামান'; no.onclick = function(){ try { window.open(BASE + 'MOI.apk', '_system'); } catch(x){ location.href = BASE + 'MOI.apk'; } }; go.textContent = 'আবার চেষ্টা'; bar.style.display = 'none';
         t.textContent = 'আপডেট হয়নি, ইন্টারনেট দেখে আবার চেষ্টা করুন।'; dbg('আপডেট ব্যর্থ: ' + m, 12000);
       };
       var guard = setTimeout(function(){ fail('সময় শেষ (২ মিনিট)'); }, 120000);
       try { P.addListener('download', function(e){ var pc = e && e.percent != null ? e.percent : 0; fill.style.width = Math.max(4, Math.min(100, pc)) + '%'; go.textContent = 'নামছে ' + pc + '%'; }); } catch(x){}
-      try { P.addListener('downloadFailed', function(){ clearTimeout(guard); fail('নামানো যায়নি'); }); } catch(x){}
+      try { P.addListener('downloadFailed', function(e){ clearTimeout(guard); var m = ''; try { m = JSON.stringify(e); } catch(x){} fail('নামানো যায়নি ' + m); }); } catch(x){}
       P.download({ url: BASE + 'bundle.zip', version: v }).then(function(info){
         clearTimeout(guard);
         fill.style.width = '100%'; go.textContent = 'বসছে…'; t.textContent = 'প্রায় শেষ…';

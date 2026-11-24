@@ -82,3 +82,28 @@
 .bc-rk{flex:0 0 auto;width:34px;height:44px;margin:-6px 0;background:url(../../room/rocket/rocket-s.webp) center/contain no-repeat;filter:drop-shadow(0 0 8px rgba(255,200,60,.95));animation:bcRk .7s ease-in-out infinite alternate}
 @keyframes bcRk{from{transform:translateY(2px) rotate(-6deg)}to{transform:translateY(-3px) rotate(6deg)}}
 .bc-rkt{flex:0 0 auto;font:italic 900 15px/1 Poppins,system-ui,sans-serif;background:linear-gradient(180deg,#fff7c2,#ffd23a 55%,#d98300);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.5px #7a4300;filter:drop-shadow(0 2px 0 rgba(90,40,0,.8))}
+
+/* ═══ ছবির প্যানেল (গেম / গিফট / লাকি বক্স) ═══ */
+#bcLayer{top:calc(env(safe-area-inset-top,0px) + 6px)}
+.bcp{position:absolute;top:0;width:min(92vw,380px);pointer-events:auto;cursor:pointer;container-type:inline-size;transform:translateX(125%);opacity:0;-webkit-tap-highlight-color:transparent;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
+.bcp.in{animation:bcIn .6s cubic-bezier(.2,.9,.25,1.1) forwards}
+.bcp.out{animation:bcOut .45s cubic-bezier(.55,0,.85,.4) forwards}
+.bcp-in{position:relative;width:100%}
+.bcp-c{position:absolute;inset:0}
+.bcp-img{display:block;width:100%;height:auto;position:relative;pointer-events:none}
+.bcp-s{position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff;font-family:Poppins,"Hind Siliguri",system-ui,sans-serif}
+.bcp-s.av{border-radius:50%}
+.bcp-s img{width:100%;height:100%;object-fit:cover;display:block}
+.bcp-s.ic img{border-radius:14%}
+.bcp-s.nm,.bcp-s.sb{background:rgba(14,8,34,.92);border-radius:99px;padding:0 4%;justify-content:center}
+.bcp-s.nm span{font:800 3.5cqw/1 inherit;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bcp-s.sb span{font:700 3cqw/1 inherit;font-family:inherit;color:#ffe27a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bcp-s.pl{background:rgba(14,8,40,.94);border-radius:99px;gap:.5cqw;padding:0 1.5%}
+.bcp-s.pl b{font:800 2.5cqw/1 inherit;font-family:inherit;color:#ffe27a;white-space:nowrap}
+.bcp-s.pl.big b{font-size:5.4cqw}
+.bcp-game .bcp-s.pl b{font-size:2.3cqw}
+.bcp-s.pl .bcp-gem{height:80%!important}
+.bcp-gem{width:auto!important;height:92%!important;object-fit:contain!important;flex:none}
+.bcp-s.gf{background:radial-gradient(circle at 50% 40%,rgba(255,190,230,.5),rgba(70,10,60,.9));border-radius:12%;overflow:visible}
+.bcp-s.gf .bc-gico{font-size:9.5cqw;line-height:1}
+.bcp-s.gf .qt{position:absolute;right:-4%;bottom:-6%;font:800 3.4cqw/1 inherit;font-family:inherit;font-style:normal;background:#ff3d7f;border:.4cqw solid #fff;border-radius:99px;padding:.5cqw 1.2cqw}

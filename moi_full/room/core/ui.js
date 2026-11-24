@@ -290,35 +290,88 @@ window.saveRoomProfile = async () => {
     toastMsg('✅ রুম প্রোফাইল আপডেট হয়েছে');
 };
 
-/* ═══ Exit menu (Keep / Exit) ═══ */
-window.toggleExitMenu = (event) => {
-    if (event) event.stopPropagation();
-    const m = $('exitMenu');
-    if (!m) return;
-    m.classList.toggle('show');
-};
-
-document.addEventListener('click', (e) => {
-    const m = $('exitMenu');
-    if (m && m.classList.contains('show')){
-        if (!e.target.closest('.exit-wrapper')) m.classList.remove('show');
+/* ═══ বের হওয়ার প্যানেল: ছোট করুন / ছেড়ে যান + অনলাইন রুম ═══ */
+(function(){
+    const ge = (id) => document.getElementById(id);
+    const esc2 = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    function build(){
+        if (ge('xpPanel')) return;
+        const w = document.createElement('div');
+        w.innerHTML =
+            '<div class="xp-back" id="xpBack"></div>' +
+            '<div class="xp-panel" id="xpPanel">' +
+                '<div class="xp-acts">' +
+                    '<button class="xp-act" id="xpMin"><span class="ci"><i class="fa-solid fa-down-left-and-up-right-to-center"></i></span>ছোট করুন</button>' +
+                    '<button class="xp-act off" id="xpOff"><span class="ci"><i class="fa-solid fa-power-off"></i></span>ছেড়ে যান</button>' +
+                '</div>' +
+                '<div class="xp-sec"><i></i>অনলাইন রুম</div>' +
+                '<div class="xp-list" id="xpList"></div>' +
+            '</div>' +
+            '<div class="xp-dlg" id="xpDlg"><div class="xp-box"><div class="t">রুম ছেড়ে যাবেন?</div><div class="s">ছেড়ে গেলে আপনি রুম থেকে বের হয়ে হোম পেজে যাবেন।</div><div class="r"><button class="no" id="xpNo">না</button><button class="yes" id="xpYes">ছেড়ে যান</button></div></div></div>';
+        while (w.firstChild) document.body.appendChild(w.firstChild);
+        ge('xpBack').onclick = closePanel;
+        ge('xpMin').onclick = () => { closePanel(); window.keepRoom(); };
+        ge('xpOff').onclick = () => { ge('xpDlg').classList.add('show'); };
+        ge('xpNo').onclick = () => ge('xpDlg').classList.remove('show');
+        ge('xpYes').onclick = () => { ge('xpDlg').classList.remove('show'); closePanel(); window.exitRoom(true); };
+        ge('xpList').addEventListener('click', (e) => {
+            const c = e.target.closest('[data-rid]'); if (!c) return;
+            const id = c.dataset.rid; if (id === ROOM_ID){ closePanel(); return; }
+            leaveSilently(); location.href = 'index.html?room=' + encodeURIComponent(id);
+        });
     }
-});
-
-window.keepRoom = () => {
-    $('exitMenu').classList.remove('show');
-    toastMsg('📌 রুম ব্যাকগ্রাউন্ডে রাখা হয়েছে');
-    setTimeout(() => {
+    function rooms(){
+        let all = {}; try { all = ls_get('moi_demo_rooms', {}) || {}; } catch(e){}
+        const cnt = (id) => { try { return (window.MOISync && MOISync.roomCount) ? MOISync.roomCount(id) : 0; } catch(e){ return 0; } };
+        return Object.keys(all).map(id => all[id]).filter(r => r && r.name && r.id !== ROOM_ID)
+            .map(r => ({ id: r.id, name: r.name, logo: r.logo || '', owner: (r.owner && r.owner.name) || r.ownerName || '', n: cnt(r.id) }))
+            .sort((a, b) => b.n - a.n).slice(0, 24);
+    }
+    function fill(){
+        const L = rooms();
+        ge('xpList').innerHTML = L.length ? L.map(r => {
+            const im = r.logo || (window.roomArt ? roomArt(r.id, r.name) : '');
+            return '<button class="xp-card" data-rid="' + esc2(r.id) + '"><div class="im"><img src="' + esc2(im) + '" alt=""><span class="ct"><i class="fa-solid fa-user" style="font-size:9px"></i>' + r.n + '</span></div><div class="nm">' + esc2(r.name) + '</div><div class="ow">' + esc2(r.owner || '—') + '</div></button>';
+        }).join('') : '<div class="xp-empty">এখন কোনো অনলাইন রুম নেই</div>';
+    }
+    function openPanel(){ build(); fill(); ge('xpBack').classList.add('show'); ge('xpPanel').classList.add('show'); }
+    function closePanel(){ const b = ge('xpBack'), p = ge('xpPanel'); if (b) b.classList.remove('show'); if (p) p.classList.remove('show'); }
+    window.toggleExitMenu = (event) => {
+        if (event) event.stopPropagation();
+        const p = ge('xpPanel'); (p && p.classList.contains('show')) ? closePanel() : openPanel();
+    };
+    window.xpIsOpen = () => { const p = ge('xpPanel'); return !!(p && p.classList.contains('show')); };
+    window.xpClose = closePanel;
+    function leaveSilently(){ try { if (window.MOIMin) MOIMin.clear(); } catch(e){} if (typeof presenceLeave === 'function') presenceLeave(); }
+    /* ছোট করা: রুমে থেকেই হোম পেজে যাওয়া — উপস্থিতি থাকে, ভাসমান লোগো দেখা যায় */
+    window.keepRoom = () => {
+        try { MOIMin.set({ id: ROOM_ID, name: state.roomName, logo: state.roomLogo || '' }); } catch(e){}
         location.href = '../home/index.html';
-    }, 600);
-};
+    };
+    window.exitRoom = (confirmed) => {
+        if (confirmed !== true){ build(); ge('xpDlg').classList.add('show'); return; }
+        leaveSilently();
+        location.href = '../home/index.html';
+    };
 
-window.exitRoom = () => {
-    $('exitMenu').classList.remove('show');
-    if (!confirm('রুম থেকে বের হতে চান?')) return;
-    if (typeof presenceLeave === 'function') presenceLeave();
-    location.href = '../home/index.html';
-};
+    /* ফোনের ব্যাক বাটন: অ্যাপ বন্ধ না করে রুম ছোট করবে (প্যানেল খোলা থাকলে আগে প্যানেল বন্ধ) */
+    try {
+        history.pushState({ moiRoom: 1 }, '');
+        window.addEventListener('popstate', () => {
+            if (window.xpIsOpen && xpIsOpen()){ xpClose(); history.pushState({ moiRoom: 1 }, ''); return; }
+            window.keepRoom();
+        });
+    } catch(e){}
+    /* এই রুমে ফিরলে ভাসমান লোগো বন্ধ; অন্য রুমে ঢুকলে আগের রুম থেকে বের */
+    try {
+        const m = window.MOIMin && MOIMin.get();
+        if (m && m.id !== ROOM_ID){
+            const FB = window.MOIFB, u = window.myProfile && myProfile.uid;
+            if (FB && u){ FB.rtdb.ref(FB.LIVE + '/roomPresence/' + m.id + '/' + u).remove(); FB.rtdb.ref(FB.LIVE + '/rooms/' + m.id + '/listeners/' + u).remove(); }
+        }
+        if (window.MOIMin) MOIMin.clear();
+    } catch(e){}
+})();
 
 /* ═══ Chat sheet (iframe) ═══ */
 window.openChatSheet = (uid, name) => {

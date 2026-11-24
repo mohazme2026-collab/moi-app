@@ -33,6 +33,7 @@
         $('vipGrid').innerHTML =
             '<div class="vg"><div class="vg-art"><div class="vg-av"><img alt="" src="' + photo + '" draggable="false"></div></div><div class="vg-n">VIP1 Ring</div></div>' +
             '<div class="vg"><div class="vg-art"><div style="width:62%">' + (window.MOICard ? MOICard.preview('vip1') : '') + '</div></div><div class="vg-n">VIP1 Card</div></div>' +
+            '<div class="vg wide"><div class="vg-art" style="width:84%;aspect-ratio:auto;padding:16px 0 2px">' + (window.MOIChatFx ? MOIChatFx.preview('vip1', 'অসাধারণ লাগছে 🔥') : '') + '</div><div class="vg-n">VIP1 Comment</div></div>' +
             '<div class="vg wide"><div class="vg-art">' + strip + '</div><div class="vg-n">VIP1 Entry</div></div>';
         if (window.MOICrown) document.querySelectorAll('.vg-av').forEach(h => MOICrown.attach(h, 'vip1'));
     }

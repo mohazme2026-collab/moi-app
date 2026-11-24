@@ -42,7 +42,7 @@
             ts: Date.now()
         };
         /* গিফটের ছবি (Lottie লিংক), গিফটের নাম ও যে পেয়েছে তার তথ্য — শুধু থাকলেই বসে */
-        ['giftId', 'giftName', 'giftUrl', 'giftFilter', 'toName', 'toPhoto'].forEach(k => { if (ev[k]) rec[k] = String(ev[k]); });
+        ['giftId', 'giftName', 'giftUrl', 'giftFilter', 'toName', 'toPhoto', 'gameKey'].forEach(k => { if (ev[k]) rec[k] = String(ev[k]); });
         if (ev.toCount) rec.toCount = Number(ev.toCount) || 1;
         if (ev.round) rec.round = Number(ev.round) || 0;
         try { await FB().rtdb.ref(path()).push(rec); } catch(e){ return false; }
@@ -82,7 +82,7 @@
         });
     }
     function lucky(box){ publish({ type: 'lucky', amount: (box && (box.pool || box.total)) || 0 }); }
-    function game(reward, roomId){ if (reward >= CONFIG.MIN_GAME) publish({ type: 'game', amount: reward, roomId: roomId }); }
+    function game(reward, roomId){ if (reward >= CONFIG.MIN_GAME){ var m = /\/(game2|game|gedi|horse|jackpot|ludo|rocket|slot)\//.exec(location.pathname); publish({ type: 'game', amount: reward, roomId: roomId, gameKey: m ? m[1] : 'game' }); } }
 
     /* চেক করার জন্য: কনসোলে MOIBroadcast.test('gift' | 'lucky' | 'game' | 'bigwin') */
     function test(kind){

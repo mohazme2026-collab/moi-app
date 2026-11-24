@@ -1,6 +1,8 @@
 /* shared/broadcast-ui.js — পপআপ দেখানো: লাইনে সাজানো, ডান থেকে ঢুকে বাম দিয়ে বেরোয়, টিপলে "রুমে যাবেন?" বক্স */
 (function(){
     'use strict';
+    const SRC = (document.currentScript && document.currentScript.src) || location.href;
+    const PANELS = new URL('panels/', SRC).href, ICONS = new URL('../gameicons/', SRC).href, GEMIMG = new URL('../../room/gifts/lb/gem_badge.png', SRC).href;
     if (window.top !== window || !window.MOIBroadcast || window.__bcUi) return;
     window.__bcUi = true;
     const BC = window.MOIBroadcast;
@@ -56,7 +58,36 @@
     function who(ev, sub){
         return '<span class="bc-txt"><b class="bc-name">' + esc(ev.name || 'User') + '</b><span class="bc-sub">' + sub + '</span></span>';
     }
+
+    /* ═══ ৩টা ছবির প্যানেল (গেম / গিফট / লাকি বক্স) — ফাঁকা জায়গাগুলো % মাপে; ভেতরে ছবি/নাম/ডায়মন্ড বসে ═══ */
+    const GEO = {
+        game:  { ar: 0.1885, ring: [4.64, 11.54, 14.5, 75.9], bar1: [24.55, 21.03, 38.86, 27.95], bar2: [23.39, 57.95, 40.31, 23.33], sq: [68.05, 17.18, 12.76, 65.13], pill: [82.46, 46.67, 13.87, 19.23] },
+        gift:  { ar: 0.2829, ring: [8.4, 20.81, 18.37, 62.25], pill: [39.91, 78.86, 19.98, 14.93], sq: [41.2, 19.97, 17.37, 53.36], ring2: [72.99, 20.81, 18.41, 62.25] },
+        lucky: { ar: 0.2437, ring: [6.12, 20.72, 15.92, 62.55], pill: [44.66, 39.44, 44.17, 31.47] }
+    };
+    const slot = (g, cls, inner) => '<div class="bcp-s ' + cls + '" style="left:' + g[0] + '%;top:' + g[1] + '%;width:' + g[2] + '%;height:' + g[3] + '%">' + inner + '</div>';
+    const avImg = (src, nm) => '<img src="' + esc(src || PH(nm)) + '" onerror="this.onerror=null;this.src=\'' + PH(nm) + '\'">';
+    const gemAmt = (n) => '<img class="bcp-gem" src="' + GEMIMG + '" alt=""><b>' + fmt(n) + '</b>';
+    function panel(ev){
+        const k = ev.type === 'lucky' ? 'lucky' : (ev.type === 'game' ? 'game' : 'gift'), g = GEO[k];
+        let c = slot(g.ring, 'av', avImg(ev.photo, ev.name));
+        if (k === 'game'){
+            const key = /^(game2?|gedi|horse|jackpot|ludo|rocket|slot)$/.test(ev.gameKey || '') ? ev.gameKey : 'game';
+            c += slot(g.bar1, 'nm', '<span>' + esc(ev.name || 'User') + '</span>');
+            c += slot(g.bar2, 'sb', '<span>' + (ev.round ? 'Round ' + esc(ev.round) + ' · ' : '') + 'জিতেছেন 🎉</span>');
+            c += slot(g.sq, 'ic', '<img src="' + ICONS + key + '.webp" alt="">');
+            c += slot(g.pill, 'pl', gemAmt(ev.amount));
+        } else if (k === 'gift'){
+            c += slot(g.ring2, 'av', avImg(ev.toPhoto, ev.toName));
+            c += slot(g.sq, 'gf', '<span class="bc-gico">' + esc(ev.icon || '🎁') + '</span><i class="qt">&times;' + (ev.qty || 1) + '</i>');
+            c += slot(g.pill, 'pl', gemAmt(ev.amount));
+        } else {
+            c += slot(g.pill, 'pl big', gemAmt(ev.amount));
+        }
+        return '<div class="bcp-in"><div class="bcp-c">' + c + '</div><img class="bcp-img" src="' + PANELS + k + '.webp" alt=""></div>';
+    }
     function html(ev){
+        if (ev.type === 'game' || ev.type === 'lucky' || ev.type === 'gift' || !ev.type) return panel(ev);
         const av = '<div class="bc-av"><img src="' + esc(ev.photo || PH(ev.name)) + '" onerror="this.onerror=null;this.src=\'' + PH(ev.name) + '\'"></div>';
         if (ev.type === 'game'){
             return '<div class="bc-in">' + SP + av + who(ev, ev.round ? 'Round ' + ev.round : 'Game 🎮') + '<span class="bc-win">WIN</span><span class="bc-logo"></span><span class="bc-amtbox">' + GEM + '<span class="bc-amt">' + fmt(ev.amount) + '</span></span></div>';
@@ -72,9 +103,8 @@
         return '<div class="bc-in">' + SP + av + who(ev, to) + toAv + '<span class="bc-gico">' + esc(ev.icon || '🎁') + '</span><span class="bc-x">&times;</span><span class="bc-qty">' + (ev.qty || 1) + '</span></div>';
     }
     function cls(ev){
-        if (ev.type === 'game') return 'bc bc-game' + (ev.amount >= BC.CONFIG.RED_GAME ? ' red' : '');
         if (ev.type === 'rocket') return 'bc bc-rocket';
-        return ev.type === 'lucky' ? 'bc bc-green' : 'bc bc-gift';
+        return 'bcp bcp-' + (ev.type === 'lucky' ? 'lucky' : (ev.type === 'game' ? 'game' : 'gift'));
     }
 
     function next(){

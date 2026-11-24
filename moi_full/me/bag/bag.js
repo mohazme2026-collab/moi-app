@@ -76,6 +76,38 @@
         upd(); requestAnimationFrame(() => back.classList.add('on'));
     }
     ['frame', 'entry', 'bubble'].forEach(k => $('list-' + k).addEventListener('click', e => { const b = e.target.closest('.bi'); if (b) openSheet(b.dataset.id); }));
+
+    /* ═══ VIP / SVIP ট্যাব: কিনলে বা লেভেল পূরণ হলে সুবিধার জিনিসগুলো এখানে আসে; প্রতিটা চালু/বন্ধ করা যায় ═══ */
+    const SV = '../../shared/svip/levels/', RG = '../../shared/store/rings/';
+    const TIERS = {
+        vip:  { lv: u => MOIPerks.vipLevelOf(u),  ring: RG + 'vip1_ring.webp',   entry: SV + 'vip1/entry_head.webp',   card: SV + 'vip1/card_art.webp',   chat: 'vip1',  name: 'VIP1',  empty: 'VIP কিনলে সুবিধাগুলো এখানে আসবে' },
+        svip: { lv: u => MOIPerks.levelOf(u),     ring: RG + 'svip1_dragon.webp', entry: SV + 'level1/entry_strip.webp', card: SV + 'level1/card_art.webp', chat: 'svip1', name: 'SVIP1', empty: 'SVIP লেভেল পূরণ হলে সুবিধাগুলো এখানে আসবে' }
+    };
+    const KINDS = [['crown', 'Ring'], ['chat', 'Comment'], ['entry', 'Entry'], ['card', 'Card']];
+    function perkPv(t, kind, p){
+        if (kind === 'crown') return '<div class="bi-pv"><span class="bi-av"><img alt="" src="' + esc(p.photo || ph(p.name)) + '"></span><img class="bi-ring" alt="" src="' + t.ring + '"></div>';
+        if (kind === 'chat') return '<div class="bi-pv pk-c">' + (window.MOIChatFx ? MOIChatFx.preview(t.chat, 'Hello 🔥') : '') + '</div>';
+        if (kind === 'entry') return '<div class="bi-pv pk-e"><img alt="" src="' + t.entry + '"></div>';
+        return '<div class="bi-pv pk-k"><img alt="" src="' + t.card + '"></div>';
+    }
+    function renderPerks(){
+        const p = me(); if (!p || !window.MOIPerks) return;
+        Object.keys(TIERS).forEach(tier => {
+            const t = TIERS[tier], pane = $('list-' + tier);
+            if (!t.lv(p.uid)){ pane.innerHTML = '<div class="pk-none">' + t.empty + '</div>'; return; }
+            pane.innerHTML = '<div class="bi-grid pk-grid">' + KINDS.map(k => {
+                const off = MOIPerks.isOff(p.uid, tier, k[0]);
+                return '<button type="button" class="bi' + (off ? '' : ' worn') + '" data-tier="' + tier + '" data-kind="' + k[0] + '">' + perkPv(t, k[0], p) + '<b>' + t.name + ' ' + k[1] + '</b><small>' + (off ? 'Tap to use' : 'In use · tap to remove') + '</small>' + (off ? '' : '<i class="bi-tag">In use</i>') + '</button>';
+            }).join('') + '</div>';
+        });
+    }
+    ['vip', 'svip'].forEach(k => $('list-' + k).addEventListener('click', e => {
+        const b = e.target.closest('.bi'); if (!b) return; const p = me(); if (!p) return;
+        const off = MOIPerks.isOff(p.uid, b.dataset.tier, b.dataset.kind);
+        MOIPerks.setOff(p.uid, b.dataset.tier, b.dataset.kind, !off);
+        toast(off ? 'Now active' : 'Removed'); renderPerks();
+    }));
+    window.addEventListener('moi:perks', renderPerks);
     window.addEventListener('moi:store', renderFrames);
-    (window.MOIReady || Promise.resolve()).then(() => { try { renderFrames(); } catch(e){ console.error('[Bag]', e); } });
+    (window.MOIReady || Promise.resolve()).then(() => { try { renderFrames(); renderPerks(); } catch(e){ console.error('[Bag]', e); } });
 })();

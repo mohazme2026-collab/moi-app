@@ -4,6 +4,8 @@
     const BASE = (function(){ const s = document.currentScript; return s ? s.src.replace(/[^\/]*$/, '') : '../shared/'; })() + 'levels/';
     const STYLES = {
         svip1: { frame: 'level1/chat_frame.webp', crest: 'level1/chat_crest.webp' },
+        /* VIP১: পাতলা ড্রাগন ফ্রেম — মুকুট/VIP লোগো ছবির ভেতরেই */
+        vip1: { frame: 'vip1/chat_frame.webp', slice: '82 125 40 125', bw: '26px 40px 13px 40px', pad: '3px 0 3px', min: '250px' },
         /* স্টোরের ব্যানার (শুধু ফ্রেম, মাথার লোগো ছবির ভেতরেই): slice = ছবির কোণার মাপ, bw = পর্দায় দেখানোর মাপ */
         vipban: { frame: '../../store/bubbles/bubble_vip.webp', slice: '150 215 108 215', bw: '39px 56px 28px 56px', pad: '1px 2px 6px', min: '282px', color: '#150a45', shadow: '0 1px 0 rgba(255,255,255,.6)', nameGap: '4px' }
     };

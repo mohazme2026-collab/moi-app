@@ -74,12 +74,7 @@
         if (!u) return null;
         if (window.MOIStore && u.uid){ const r = MOIStore.crownFor(u.uid); if (r && CROWNS[r]) return r; }   /* ব্যাগ থেকে পরানো স্টোর-রিং সবার আগে */
         if (u.crown && CROWNS[u.crown]) return u.crown;
-        try {                                  /* SVIP চালু (রিচার্জে অ্যাক্টিভেট করা) থাকলে → svip1; মেয়াদ শেষ হলে নয় */
-            const a = JSON.parse(localStorage.getItem('moi_svip_level_' + u.uid) || 'null');
-            if (a && (!a.until || a.until > Date.now())) return 'svip1';
-            const b = JSON.parse(localStorage.getItem('moi_vip_level_' + u.uid) || 'null');
-            if (b && b.level >= 1 && (!b.until || b.until > Date.now())) return 'vip1';
-        } catch(e){}
+        if (window.MOIPerks && u.uid){ const pk = MOIPerks.perksOf(u.uid); return pk && pk.crown && CROWNS[pk.crown] ? pk.crown : null; }   /* SVIP/VIP মুকুট — ব্যাগে বন্ধ থাকলে নয় */
         return null;
     }
     function attachUser(host, u){ const id = crownOf(u); if (id) return attach(host, id); detach(host); return null; }

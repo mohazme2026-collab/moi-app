@@ -277,6 +277,7 @@ function renderDisc(rooms){
     if (!p) return;
     const uid = window.user && window.user.uid;
     const cur = uid ? (rooms || allRooms()).find(r => r.uids.indexOf(uid) > -1) : null;
+    p.hidden = true; p.dataset.id = ''; return;   /* এখন ভাসমান লোগো (shared/ui/minroom.js) এই কাজ করে */
     if (!cur){ p.hidden = true; p.dataset.id = ''; return; }
     p.hidden = false;
     p.dataset.id = cur.id;

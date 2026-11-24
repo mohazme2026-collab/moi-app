@@ -35,6 +35,8 @@
     <button class="bg-tab" type="button" role="tab" data-tab="bubble">Messages Bubble</button>
     <button class="bg-tab" type="button" role="tab" data-tab="roomframe">Room frame</button>
     <button class="bg-tab" type="button" role="tab" data-tab="roomtags">Room Tags</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="vip">VIP</button>
+    <button class="bg-tab" type="button" role="tab" data-tab="svip">SVIP</button>
   </nav>
 
   <!-- প্রতিটা ট্যাবের জিনিসের জায়গা: কিছু বসালে নিচের "List is empty" নিজে থেকেই সরে যাবে -->
@@ -47,6 +49,8 @@
     <div class="bg-pane" id="list-bubble"></div>
     <div class="bg-pane" id="list-roomframe"></div>
     <div class="bg-pane" id="list-roomtags"></div>
+    <div class="bg-pane" id="list-vip"></div>
+    <div class="bg-pane" id="list-svip"></div>
 
     <!-- খালি থাকলে এটা দেখায় (বাক্সের গায়ে MOI) -->
     <div class="bg-empty" id="bgEmpty">
@@ -96,6 +100,8 @@
 <script src="../../shared/core/db-storage.js"></script>
 <script src="../../shared/core/auth.js"></script>
 <script src="../../shared/store/store-data.js"></script>
+<script src="../../shared/svip/perks.js"></script>
+<script src="../../shared/svip/chat.js"></script>
 <script src="../../shared/svip/entry.js"></script>
 <script src="bag.js"></script>
 </body>

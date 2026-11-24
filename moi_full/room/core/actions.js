@@ -78,7 +78,7 @@ function armSeatDisconnect(i){
         _seatDisc.remove();
     } catch(e){}
 }
-window.addEventListener('pagehide', presenceLeave);
+window.addEventListener('pagehide', () => { try { if (window.MOIMin && MOIMin.get()) return; } catch(e){} presenceLeave(); });
 function isBannedHere(){
     const r = getRoomInfo(ROOM_ID) || {};
     return Array.isArray(r.bannedUsers) && myProfile && r.bannedUsers.includes(myProfile.uid);

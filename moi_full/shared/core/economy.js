@@ -17,6 +17,7 @@ console.log('[MOI] economy.js loaded (client mode)');
         /* Host: মাসের টার্গেট (need = এ মাসে পাওয়া 💎, reward = পূরণ হলে টাকা) ও এক্সচেঞ্জ রেট (১ টাকা = RATE 💎) */
         ROCKET: { TARGET: 1000, DURATION: 10000, RESULT_MS: 8000, KEEP_MS: 40000, WIN_CHANCE: 0.65, CAP_MIN: 5, CAP_MAX: 10, PRIZES: [ { v: 3, w: 50 }, { v: 5, w: 35 }, { v: 10, w: 15 } ] },
         HOST: { RATE: 2, TARGETS: [ { need: 5, reward: 2 }, { need: 20, reward: 8 }, { need: 50, reward: 20 }, { need: 100, reward: 45 }, { need: 150, reward: 100 }, { need: 250, reward: 170 }, { need: 500, reward: 350 }, { need: 1000, reward: 750 }, { need: 2500, reward: 2000 }, { need: 5000, reward: 4500 } ] },
+        VIP: { 1: 240000 },   /* VIP কেনার দাম (ডায়মন্ড, ৩০ দিন) — me/vip/vip.js এর সাথে একই রাখুন */
         STORE: { ring_wings_gold: { 7: 1000, 30: 2000 }, ring_wings_violet: { 7: 1000, 30: 2000 }, ring_lion: { 7: 1000, 30: 2000 }, ring_phoenix: { 7: 1000, 30: 2000 }, ring_heart: { 7: 1000, 30: 2000 }, ring_cobra: { 7: 1000, 30: 2000 }, ring_wolf: { 7: 1000, 30: 2000 }, ring_eagle: { 7: 1000, 30: 2000 }, ring_gold: { 7: 1000, 30: 2000 }, entry_eyes1: { 7: 200, 30: 1200 }, bubble_vip1: { 7: 100, 30: 500 }, emoji_memes: { 0: 1000 } },   /* দিন 0 = একবার কিনলে সারাজীবন */   /* স্টোরের জিনিস: আইডি → { দিন: ডায়মন্ড } (shared/store/store-data.js এর সাথে একই রাখুন) */
         BADGES: ['official_host', 'top_gifter', 'verified', 'early_bird', 'moderator'],
         CHECKIN: [20, 30, 40, 60, 80, 100, 250],
@@ -676,6 +677,19 @@ console.log('[MOI] economy.js loaded (client mode)');
         });
     };
 
+
+    /* ═══════════ VIP কেনা/রিনিউ: ডায়মন্ড কাটে (মেয়াদ ক্লায়েন্টে বসে) ═══════════ */
+    H.buyVip = async (data, uid) => {
+        const lv = Number(data.level) || 1, price = C.VIP && C.VIP[lv];
+        if (!price) fail('INVALID');
+        return db().runTransaction(async t => {
+            const uS = await t.get(userRef(uid)); if (!uS.exists) fail('NOT_FOUND');
+            const u = uS.data(); assertActive(u);
+            if ((u.diamonds || 0) < price) fail('INSUFFICIENT_DIAMONDS');
+            const balance = applyDelta(t, uid, u, { dia: -price, xp: 10, title: 'VIP' + lv + ' · 30 days', txType: 'spend' }).diamonds;
+            return { ok: true, balance, price };
+        });
+    };
 
     /* ═══════════ Host: মাসের টার্গেট, টাকা, এক্সচেঞ্জ, সেল, রেকর্ড ═══════════
        userState/<uid>/items/host = { v:{ month, dia, claimed:[টার্গেট নম্বর], money, rec:[…] } }

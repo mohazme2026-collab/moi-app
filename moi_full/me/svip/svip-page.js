@@ -85,15 +85,18 @@
         const p = prof(), a = active(), ok = !!a && a.level >= 1 || points() >= LEVELS[0].need;
         const av = (p && (p.photo || p.avatar)) || window.FALLBACK_IMG || '';
         const items = [
-            { n: 'SVIP1 Ring', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM },
-            { n: 'SVIP1 Chat', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM, chat: true },
-            { n: 'SVIP1 Card', s: ok ? 'Unlocked' : 'Recharge ' + fmt(LEVELS[0].need) + ' ' + GEM, card: true }
+            { n: 'SVIP1 Ring' },
+            { n: 'SVIP1 Chat', chat: true },
+            { n: 'SVIP1 Card', card: true },
+            { n: 'SVIP1 Entry', entry: true }
         ];
+        const SG = { w: 1058, h: 169, cx: 118.1, cy: 81.4, r: 55.7 };
+        const stripPrev = () => '<div class="sv-strip"><img class="sv-strip-av" alt="" src="' + av + '" style="left:' + ((SG.cx - SG.r) / SG.w * 100).toFixed(2) + '%;top:' + ((SG.cy - SG.r) / SG.h * 100).toFixed(2) + '%;width:' + (SG.r * 2 / SG.w * 100).toFixed(2) + '%;height:' + (SG.r * 2 / SG.h * 100).toFixed(2) + '%"><img class="sv-strip-bg" alt="" draggable="false" src="../shared/svip/levels/level1/entry_strip.webp"></div>';
         g.innerHTML = items.map(it =>
-            '<div class="sv-it' + (ok ? ' ok' : '') + '"><div class="sv-it-art">' +
-            (it.card && window.MOICard ? '<div style="width:100%">' + MOICard.preview('svip1') + '</div>' : it.chat && window.MOIChatFx ? '<div style="width:100%;padding:0 4px">' + MOIChatFx.preview('svip1', 'Hello') + '</div>' : it.entry ? '<img class="sv-it-fx" src="' + it.entry + '" alt="" draggable="false" style="width:100%;height:100%;object-fit:contain">'
+            '<div class="sv-it' + (ok ? ' ok' : '') + '"><div class="sv-it-art' + (it.entry ? ' wide' : '') + '">' +
+            (it.card && window.MOICard ? '<div style="width:62%">' + MOICard.preview('svip1') + '</div>' : it.chat && window.MOIChatFx ? '<div style="width:100%;padding:0 4px">' + MOIChatFx.preview('svip1', 'Hello') + '</div>' : it.entry ? stripPrev()
                       : '<div class="sv-it-av"><img src="' + av + '" alt="" draggable="false"></div>') + '</div>' +
-            '<div class="sv-it-n">' + it.n + '</div><div class="sv-it-s">' + it.s + '</div></div>').join('');
+            '<div class="sv-it-n">' + it.n + '</div></div>').join('');
         if (window.MOICrown) g.querySelectorAll('.sv-it-av').forEach(h => MOICrown.attach(h, 'svip1'));
     }
     function syncMe(){                       /* Me পেজের কার্ডে লেভেলের নাম */

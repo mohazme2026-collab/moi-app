@@ -341,7 +341,7 @@ function openStore(){
         <p class="mx-muted center" style="margin-top:12px">ফ্রেম Me, Home ও রুমে আপনার ছবির চারপাশে দেখাবে।</p>`);
 }
 /* ইউজারের পরিচয়-চিহ্ন (রোল, মুকুট, অফিসিয়াল ব্যাজ) — সব পেজে একই */
-const ROLE_CHIP = { developer:['DEV','#ff4d6d'], superadmin:['SUPER ADMIN','#f5b301'], distributor:['DISTRIBUTOR','#22c55e'], admin:['ADMIN','#38bdf8'], vip:['VIP','#c084fc'] };
+const ROLE_CHIP = { developer:['DEV','#ff4d6d'], superadmin:['SUPER ADMIN','#f5b301'], distributor:['DISTRIBUTOR','#22c55e'], admin:['ADMIN','#38bdf8'] };
 const BADGE_ICON = { official_host:'🎙️', top_gifter:'🎁', verified:'✅', early_bird:'🐦', moderator:'🛡️' };
 function identityHTML(u){
     if (!u) return '';

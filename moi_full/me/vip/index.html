@@ -21,49 +21,26 @@
     <span class="vip-top-space"></span>
   </header>
 
-  <!-- VIP১ – VIP৭ ট্যাব -->
-  <nav class="vip-tabs" id="vipTabs">
-    <button class="vip-tab on" type="button" data-lv="1">VIP1</button>
-    <button class="vip-tab" type="button" data-lv="2">VIP2</button>
-    <button class="vip-tab" type="button" data-lv="3">VIP3</button>
-    <button class="vip-tab" type="button" data-lv="4">VIP4</button>
-    <button class="vip-tab" type="button" data-lv="5">VIP5</button>
-    <button class="vip-tab" type="button" data-lv="6">VIP6</button>
-    <button class="vip-tab" type="button" data-lv="7">VIP7</button>
-  </nav>
-
-  <!-- মাঝের কার্ড (ডানে-বাঁয়ে সরানো যায়): বাঁয়ে ছবি ও নাম, ডানে ব্যাজের ফাঁকা জায়গা -->
-  <section class="vip-cards" id="vipCards">
-    <div class="vip-card" data-lv="1"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-1"></div></div>
-    <div class="vip-card" data-lv="2"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-2"></div></div>
-    <div class="vip-card" data-lv="3"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-3"></div></div>
-    <div class="vip-card" data-lv="4"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-4"></div></div>
-    <div class="vip-card" data-lv="5"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-5"></div></div>
-    <div class="vip-card" data-lv="6"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-6"></div></div>
-    <div class="vip-card" data-lv="7"><img class="vc-av" alt=""><span class="vc-name"></span><div class="vc-badge" id="badge-7"></div></div>
+  <!-- ড্রাগন কার্ড: ইউজারের ছবি ও নাম -->
+  <section class="vip-head">
+    <div class="vh" id="vipHead">
+      <img class="vh-av" id="vhAv" alt="">
+      <img class="vh-bg" alt="" draggable="false" src="../../shared/svip/levels/vip1/entry_head.webp">
+      <span class="vh-nm" id="vhNm"></span>
+    </div>
+    <div class="vip-left" id="vipLeft"></div>
   </section>
 
-  <!-- বড় বক্স: VIP Privileges (ভিতরের সুবিধাগুলো এখন ফাঁকা — পরে #items-১ … #items-৭ ঘরে বসবে) -->
+  <!-- সুবিধার বক্স -->
   <section class="vip-panel">
     <div class="vip-ribbon"><span>VIP Privileges</span></div>
-    <div class="vip-count" id="vipCount"></div>
-    <div class="vip-items on" id="items-1"><div id="vipRingBox" style="display:flex;flex-direction:column;align-items:center;padding:26px 0 8px"><div id="vipRingAv" style="position:relative;width:34%;aspect-ratio:1;border-radius:50%;background:#1b1230"><img id="vipRingImg" alt="" draggable="false" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block"></div><div style="margin-top:34px;color:#fff;font:600 14px system-ui">VIP1 Ring</div></div></div>
-    <div class="vip-items" id="items-2"></div>
-    <div class="vip-items" id="items-3"></div>
-    <div class="vip-items" id="items-4"></div>
-    <div class="vip-items" id="items-5"></div>
-    <div class="vip-items" id="items-6"></div>
-    <div class="vip-items" id="items-7"></div>
+    <div class="vip-grid" id="vipGrid"></div>
   </section>
 
-  <!-- নিচের বার: দাম + কেনার বাটন -->
+  <!-- নিচের বার: ডায়মন্ডে দাম + কেনার বাটন -->
   <footer class="vip-bar">
-    <span class="vip-hot">HOT <b>Sale</b></span>
-    <div class="vip-prices">
-      <div><span id="vipCost">240000</span> <i class="coin"></i> Renewal cost</div>
-      <div><span id="vipReturn">240000</span> <i class="coin"></i> Return</div>
-    </div>
-    <button class="vip-renew" id="vipRenew" type="button">RENEW</button>
+    <div class="vip-price"><svg class="gem" viewBox="0 0 512 512" aria-hidden="true"><path fill="url(#vGemG)" d="M116.7 33.8c4.5-6.1 11.700-9.800 19.300-9.800h240c7.600 0 14.800 3.600 19.300 9.800l112 152c6.800 9.200 6.100 21.900-1.500 30.400l-232 256c-4.500 5-11 7.900-17.800 7.900s-13.200-2.900-17.800-7.900l-232-256c-7.700-8.500-8.300-21.200-1.500-30.400z"/><defs><linearGradient id="vGemG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#9be8ff"/><stop offset=".7" stop-color="#36b4ff"/><stop offset="1" stop-color="#1a6fe0"/></linearGradient></defs></svg><span id="vipCost">240,000</span><small>/ 30 days</small></div>
+    <button class="vip-buy" id="vipBuy" type="button">BUY</button>
   </footer>
 
 </main>
@@ -80,6 +57,8 @@
 <script src="../../shared/core/auth.js"></script>
 <script src="../../shared/svip/ringvid.js"></script>
 <script src="../../shared/svip/crown.js"></script>
+<script src="../../shared/svip/perks.js"></script>
+<script src="../../shared/svip/card.js"></script>
 <script src="vip.js"></script>
 </body>
 </html>

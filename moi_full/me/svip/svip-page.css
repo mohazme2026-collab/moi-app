@@ -60,7 +60,7 @@ html.sv-lock,html.sv-lock body{overflow:hidden}
 .sv-rib::before{content:"";position:absolute;inset:2px;background:linear-gradient(180deg,#1c140d,#0d0a07);clip-path:inherit}
 .sv-rib span{position:relative;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:700;font-size:25px;color:#d9a948}
 .sv-pcount{text-align:center;font-size:19px;color:#e8dcc0;margin-bottom:18px}
-.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 6px}
+.sv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 10px}
 .sv-pv{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
 .sv-pc{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;color:#e5b857;background:radial-gradient(circle at 50% 35%,#2c2218,#0b0907);box-shadow:0 0 0 1.5px rgba(201,152,58,.55)}
 .sv-pc svg{width:38px;height:38px}
@@ -154,3 +154,12 @@ html.sv-lock,html.sv-lock body{overflow:hidden}
 .sv-it-s{font-size:10.5px;color:#cdbbea;margin-top:3px;display:flex;align-items:center;gap:3px;justify-content:center}
 .sv-it.ok .sv-it-s{color:#7dffb0;font-weight:700}
 .sv-it-s .sv-gem{width:11px;height:11px}
+
+/* সুবিধার বক্স ২×২ — ডায়মন্ডের সংখ্যা নেই */
+.sv-it-art{aspect-ratio:4/3!important}
+.sv-it-art.wide{aspect-ratio:4/3}
+.sv-it-av{width:52%!important}
+.sv-strip{position:relative;width:96%}
+.sv-strip-bg{display:block;width:100%;height:auto;position:relative}
+.sv-strip-av{position:absolute;border-radius:50%;object-fit:cover}
+.sv-it-n{font-size:14px!important;margin-top:6px!important}

@@ -1,86 +1,59 @@
-/* me/vip/vip.css — VIP পেজ: স্টেজ-লাইট ব্যাকগ্রাউন্ড, VIP১–৭ ট্যাব, কার্ড, বড় বক্স, নিচে কেনার বার */
+/* me/vip/vip.css — VIP পেজ (ড্রাগন থিম): ড্রাগন ব্যাকগ্রাউন্ড, ওপরে কার্ড, সুবিধার বক্স, নিচে ডায়মন্ডের দাম */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:#07050b;color:#fff;overflow:hidden}
+body{font-family:Poppins,"Hind Siliguri",system-ui,-apple-system,"Segoe UI",sans-serif;background:#0a0204;color:#fff;overflow:hidden}
 button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
-/* ব্যাকগ্রাউন্ড: স্টেজ লাইট + দুই পাশে আলোর স্ট্রিপ + LED ডট */
-.vip-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(70% 32% at 50% 24%,rgba(255,62,62,.5),transparent 72%),
-    radial-gradient(40% 26% at 12% 18%,rgba(255,170,60,.28),transparent 70%),
-    radial-gradient(40% 26% at 88% 18%,rgba(255,170,60,.28),transparent 70%),
-    linear-gradient(180deg,#1a0820 0%,#0c0612 38%,#07050b 100%)}
-.vip-bg::before,.vip-bg::after{content:"";position:absolute;top:0;height:44%;width:26px;
-  background:repeating-linear-gradient(180deg,#ffd45a 0 7px,transparent 7px 20px);opacity:.75;filter:blur(.4px);
-  -webkit-mask:linear-gradient(180deg,#000 30%,transparent);mask:linear-gradient(180deg,#000 30%,transparent)}
-.vip-bg::before{left:0;transform:skewY(10deg)}
-.vip-bg::after{right:0;transform:skewY(-10deg)}
-
+.vip-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:#0a0204 url(art/bg.webp) center/cover no-repeat}
 .vip-page{position:relative;z-index:1;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
 
-/* উপরের বার */
 .vip-top{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;height:62px;padding:8px 18px 0}
 .vip-back,.vip-top-space{width:42px;height:42px}
-.vip-back{display:grid;place-items:center;border-radius:50%;color:#f6dc9a;background:rgba(20,12,16,.7);border:1.5px solid #c9a24a;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+.vip-back{display:grid;place-items:center;border-radius:50%;color:#f6dc9a;background:rgba(30,8,8,.72);border:1.5px solid #c9a24a;box-shadow:0 3px 10px rgba(0,0,0,.5)}
 .vip-back svg{width:22px;height:22px}
 .vip-back:active{transform:scale(.9)}
-.vip-title{font-size:32px;font-weight:600;letter-spacing:1px;color:#e9b46a;text-shadow:0 0 18px rgba(255,160,80,.55)}
+.vip-title{font-family:"Playfair Display",Georgia,serif;font-size:32px;font-weight:700;letter-spacing:1px;color:#e9b46a;text-shadow:0 0 18px rgba(255,120,40,.6),0 2px 6px #000}
 
-/* ট্যাব */
-.vip-tabs{flex:0 0 auto;display:flex;align-items:center;gap:6px;overflow-x:auto;white-space:nowrap;padding:14px 14px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.vip-tabs::-webkit-scrollbar{display:none}
-.vip-tab{flex:0 0 auto;min-width:78px;height:40px;padding:0 18px;border-radius:20px;font-family:"Playfair Display",Georgia,serif;font-size:25px;font-weight:700;line-height:38px;color:rgba(255,255,255,.88);text-shadow:0 2px 6px rgba(0,0,0,.6);border:2px solid transparent;transition:color .2s,background .2s}
-.vip-tab.on{color:#f6dc9a;background:linear-gradient(180deg,#2c1a52,#14082c);border-color:#d4aa4e;box-shadow:0 0 0 1px rgba(0,0,0,.6),0 4px 14px rgba(0,0,0,.5)}
+/* ওপরের ড্রাগন কার্ড */
+.vip-head{flex:0 0 auto;padding:14px 12px 0;display:flex;flex-direction:column;align-items:center}
+.vh{position:relative;width:100%;max-width:480px}
+.vh-bg{display:block;width:100%;height:auto;position:relative;pointer-events:none}
+/* ছবির গোল ঘর ও নামের ঘর: ছবির মাপের শতকরা হারে (1079×351) */
+.vh-av{position:absolute;left:7.7%;top:37.9%;width:15.3%;aspect-ratio:1;border-radius:50%;object-fit:cover;background:#2a1010}
+.vh-nm{position:absolute;left:26.7%;width:51.2%;top:53.6%;height:24.2%;display:flex;align-items:center;justify-content:center;padding:0 12px;font-size:clamp(15px,4.6vw,22px);font-weight:800;color:#fff;text-shadow:0 2px 4px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:2}
+.vip-left{margin-top:4px;font-size:12px;font-weight:700;color:#ffd9a0;text-shadow:0 1px 4px #000;min-height:16px}
 
-/* কার্ড (পাশের কার্ডের একটু অংশ দেখা যায়) */
-.vip-cards{flex:0 0 auto;display:flex;gap:10px;overflow-x:auto;padding:6px 9% 4px;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.vip-cards::-webkit-scrollbar{display:none}
-.vip-card{position:relative;flex:0 0 100%;scroll-snap-align:center;height:min(30vw,148px);min-height:118px;border-radius:20px;overflow:hidden;
-  background:linear-gradient(135deg,#05060c,#0e1220 55%,#05060c);border:1.6px solid #b8923f;box-shadow:0 8px 24px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.05)}
-.vip-card::before,.vip-card::after{content:"";position:absolute;left:-12%;right:-12%;height:90%;border-radius:50%;pointer-events:none}
-.vip-card::before{top:-62%;border-bottom:2px solid rgba(235,195,110,.85);transform:rotate(-7deg)}
-.vip-card::after{bottom:-62%;border-top:2px solid rgba(235,195,110,.85);transform:rotate(-7deg)}
-.vc-av{position:absolute;left:5%;top:50%;transform:translateY(-50%);width:68px;height:68px;border-radius:50%;object-fit:cover;border:2.5px solid #e2b13a;background:#2a2433;z-index:2}
-.vc-name{position:absolute;left:calc(5% + 80px);top:26%;max-width:34%;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:2}
-.vc-badge{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:34%;aspect-ratio:1;z-index:2}
-
-/* বড় বক্স */
-.vip-panel{position:relative;flex:1 1 auto;min-height:150px;margin:34px 16px 0;border-radius:26px 26px 0 0;
-  background:linear-gradient(180deg,rgba(40,38,52,.85),rgba(14,13,20,.92));border:1.5px solid rgba(190,190,205,.35);border-bottom:0;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 -6px 30px rgba(0,0,0,.4);display:flex;flex-direction:column}
-.vip-panel::before,.vip-panel::after{content:"";position:absolute;top:-4px;width:26px;height:14px;border-radius:7px;background:linear-gradient(135deg,#5b8cff,#2a3fa0);box-shadow:0 0 8px rgba(80,120,255,.6)}
-.vip-panel::before{left:6px;transform:rotate(-14deg)}
-.vip-panel::after{right:6px;transform:rotate(14deg)}
+/* সুবিধার বক্স */
+.vip-panel{position:relative;flex:1 1 auto;min-height:150px;margin:38px 16px 0;border-radius:26px 26px 0 0;
+  background:linear-gradient(180deg,rgba(18,6,8,.88),rgba(8,3,5,.94));border:1.5px solid rgba(190,120,50,.7);border-bottom:0;
+  box-shadow:inset 0 1px 0 rgba(255,200,120,.15),0 -6px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;min-height:0}
 .vip-ribbon{position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:3;padding:9px 44px 11px;white-space:nowrap;
-  background:linear-gradient(180deg,#2c1a5a,#160a33);border:2px solid #c9a24a;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.18)}
+  background:linear-gradient(180deg,#5a1010,#2a0606);border:2px solid #c9a24a;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.18)}
 .vip-ribbon span{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-weight:800;font-size:28px;letter-spacing:.5px;
   background:linear-gradient(180deg,#fff0c4,#e7b64e 55%,#b9780b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.vip-count{flex:0 0 auto;text-align:center;padding-top:36px;min-height:62px;font-size:24px;font-weight:500;color:rgba(255,255,255,.85)}
-/* সুবিধার জায়গা — এখন ফাঁকা */
-.vip-items{display:none;flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:6px 14px 14px;-webkit-overflow-scrolling:touch}
-.vip-items.on{display:block}
+.vip-grid{flex:1 1 auto;min-height:0;overflow-y:auto;padding:46px 14px 20px;display:grid;grid-template-columns:repeat(2,1fr);gap:26px 10px;align-content:start;-webkit-overflow-scrolling:touch}
+.vg{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.vg-art{position:relative;width:100%;aspect-ratio:4/3;display:grid;place-items:center}
+.vg-n{font-size:14px;font-weight:700;color:#f6e7bf;margin-top:6px}
+.vg-av{position:relative;width:52%;aspect-ratio:1;border-radius:50%;background:#1b0a0a}
+.vg-av>img:first-child{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.vg-strip{position:relative;width:96%}
+.vg-strip .bg{display:block;width:100%;height:auto;position:relative}
+.vg-strip .av{position:absolute;border-radius:50%;object-fit:cover}
 
 /* নিচের বার */
 .vip-bar{position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));
-  background:linear-gradient(180deg,#0c0a10,#050408);border-top:1.5px solid rgba(201,162,74,.45)}
-.vip-hot{position:absolute;left:12px;top:-30px;display:inline-flex;align-items:baseline;gap:4px;padding:4px 14px 5px 12px;border-radius:14px 14px 14px 4px;
-  background:linear-gradient(135deg,#ff9a1f,#e0231b);font-weight:800;font-size:14px;letter-spacing:.5px;box-shadow:0 4px 12px rgba(255,90,30,.5)}
-.vip-hot b{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:19px}
-.vip-prices{font-size:17px;line-height:1.55;color:rgba(255,255,255,.92)}
-.vip-prices>div{display:flex;align-items:center;gap:6px;white-space:nowrap}
-.coin{display:inline-block;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b0,#f6c445 55%,#b9780b);border:1.5px solid #fff0b0;box-shadow:0 0 6px rgba(246,196,69,.6)}
-.vip-renew{flex:0 0 42%;height:52px;border-radius:14px;font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:27px;letter-spacing:1px;color:#f6dc9a;
-  background:linear-gradient(180deg,#3a2470,#1a0e3e);border:2.5px solid #d4aa4e;box-shadow:0 0 0 1.5px rgba(0,0,0,.7),0 6px 18px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);text-shadow:0 2px 4px rgba(0,0,0,.7);transition:transform .15s}
-.vip-renew:active{transform:scale(.95)}
+  background:linear-gradient(180deg,#0c0405,#050203);border-top:1.5px solid rgba(201,162,74,.5)}
+.vip-price{display:flex;align-items:center;gap:8px;font-size:26px;font-weight:800;color:#fff;white-space:nowrap}
+.vip-price .gem{width:30px;height:30px}
+.vip-price small{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);margin-left:2px}
+.vip-buy{flex:0 0 42%;height:52px;border-radius:14px;font-family:"Playfair Display",Georgia,serif;font-weight:800;font-size:27px;letter-spacing:1px;color:#f6dc9a;
+  background:linear-gradient(180deg,#7a1414,#3a0808);border:2.5px solid #d4aa4e;box-shadow:0 0 0 1.5px rgba(0,0,0,.7),0 6px 18px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.2);text-shadow:0 2px 4px rgba(0,0,0,.7);transition:transform .15s}
+.vip-buy:active{transform:scale(.95)}
+.vip-buy:disabled{opacity:.6}
 
-/* ছোট বার্তা */
-.vip-toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,16px);padding:10px 16px;border-radius:14px;background:rgba(20,16,40,.95);color:#fff;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:20}
+.vip-toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,16px);padding:10px 16px;border-radius:14px;background:rgba(30,8,8,.95);color:#fff;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:20}
 .vip-toast.show{opacity:1;transform:translate(-50%,0)}
-
-@media (max-height:700px){
-  .vip-top{height:52px}.vip-title{font-size:26px}
-  .vip-tab{font-size:21px;height:34px;line-height:32px}
-  .vip-card{min-height:100px}
-  .vip-count{padding-top:30px;min-height:48px;font-size:20px}
-}
+@media (max-height:700px){.vip-top{height:52px}.vip-title{font-size:26px}.vip-panel{margin-top:30px}}
+.vg.wide{grid-column:1/-1}
+.vg.wide .vg-art{width:62%}

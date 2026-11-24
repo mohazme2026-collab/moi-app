@@ -8,6 +8,10 @@
     const PERKS = {
         1: { crown: 'svip1', entry: 'svip1', chat: 'svip1', card: 'svip1' }
     };
+    /* VIP১ সুবিধা (SVIP না থাকলে এগুলো) */
+    const VPERKS = {
+        1: { crown: 'vip1', entry: 'vip1', card: 'vip1' }
+    };
     function levelOf(uid){
         try {
             const a = JSON.parse(localStorage.getItem('moi_svip_level_' + uid) || 'null');
@@ -15,10 +19,20 @@
         } catch(e){}
         return 0;
     }
+    function vipLevelOf(uid){
+        try {
+            const a = JSON.parse(localStorage.getItem('moi_vip_level_' + uid) || 'null');
+            if (a && (!a.until || a.until > Date.now())) return a.level || 1;
+        } catch(e){}
+        return 0;
+    }
     function perksOf(uid){
         let l = levelOf(uid);
         while (l > 0 && !PERKS[l]) l--;          /* সেই লেভেলের সুবিধা এখনও না থাকলে নিচেরটা */
-        return l ? Object.assign({ level: l }, PERKS[l]) : null;
+        if (l) return Object.assign({ level: l }, PERKS[l]);
+        let v = vipLevelOf(uid);
+        while (v > 0 && !VPERKS[v]) v--;
+        return v ? Object.assign({ level: v, vip: true }, VPERKS[v]) : null;
     }
-    window.MOIPerks = { PERKS, levelOf, perksOf };
+    window.MOIPerks = { PERKS, VPERKS, levelOf, vipLevelOf, perksOf };
 })();

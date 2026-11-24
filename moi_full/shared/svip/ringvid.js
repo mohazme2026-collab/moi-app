@@ -96,6 +96,8 @@
         host.appendChild(c); S.cvs.add(c); go();
         return c;
     }
+    function restart(url){ const S = src(url); try { S.v.currentTime = 0; } catch(e){} }
+    function preload(url){ src(url); }
     function unmount(c){ if (!c) return; for (const u in pool) pool[u].cvs.delete(c); if (c.parentNode) c.parentNode.removeChild(c); }
-    window.MOIRingVid = { mount: mount, unmount: unmount };
+    window.MOIRingVid = { mount: mount, unmount: unmount, restart: restart, preload: preload };
 })();

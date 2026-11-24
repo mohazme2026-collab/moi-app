@@ -6,7 +6,9 @@
 (function(){
     const BASE = (function(){ const s = document.currentScript; return s ? s.src.replace(/[^\/]*$/, '') : '../shared/svip/'; })() + 'levels/';
     const STYLES = {
-        svip1: { art: 'level1/card_art.webp', ar: 1106 / 1422, bg: ['#020c06', '#06180c'], glow: '90,255,110' }
+        svip1: { art: 'level1/card_art.webp', ar: 1024 / 1536, bg: ['#0c0418', '#1a0b33'], glow: '170,100,255' },
+        /* VIP১: ড্রাগন কার্ড + ভিতরে ধোঁয়ার ভিডিও (প্যাকড-আলফা MP4) */
+        vip1: { art: 'vip1/card_art.webp', ar: 720 / 1080, bg: ['#0a0204', '#1a0508'], glow: '255,80,40', smoke: 'vip1/smoke.mp4' }
     };
     function css(){
         if (document.getElementById('moi-card-css')) return;
@@ -28,15 +30,17 @@
 @keyframes cdxFlick{0%,100%{opacity:0;transform:translateY(0)}30%{opacity:.34;transform:translateY(-1.5px)}60%{opacity:.12;transform:translateY(-.5px)}80%{opacity:.4;transform:translateY(-2px)}}
 @keyframes cdxGlint{0%,18%{background-position:130% 0}58%,100%{background-position:-60% 0}}
 @keyframes cdxSp{0%{transform:translateY(0) scale(.4);opacity:0}15%{opacity:1}100%{transform:translateY(-80px) scale(1);opacity:0}}
+.cdx .cdx-smk{position:absolute;inset:0;opacity:.75}
+.cdx .cdx-smk canvas{width:100%;height:100%;object-fit:cover;display:block}
 @media (prefers-reduced-motion:reduce){.cdx *{animation:none!important}}
-.cdx-prev{position:relative;width:100%;aspect-ratio:1106/820;overflow:hidden;border-radius:8px;background:#06180c}
-.cdx-prev .cdx{position:relative;top:0;aspect-ratio:1106/1422}
+.cdx-prev{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:8px;background:#1a0b33}
+.cdx-prev .cdx{position:relative;top:0}
 .cdx-prev .cdx::after{display:none}
 .cdx-prev .cdx{-webkit-mask-image:none;mask-image:none}
 `;
         document.head.appendChild(st);
     }
-    function build(id){
+    function build(id, noSmoke){
         const s = STYLES[id]; if (!s) return null;
         const url = BASE + s.art;
         const d = document.createElement('div'); d.className = 'cdx'; d.style.aspectRatio = s.ar;
@@ -47,6 +51,7 @@
             sp += '<i class="cdx-sp" style="left:' + x.toFixed(1) + '%;top:' + (22 + Math.random() * 30).toFixed(1) + '%;animation-delay:' + (Math.random() * 3.4).toFixed(2) + 's;animation-duration:' + (2.6 + Math.random() * 2).toFixed(1) + 's"></i>';
         }
         d.innerHTML = '<div class="cdx-glow"></div><div class="cdx-sway"><img class="cdx-art" alt="" draggable="false" src="' + url + '"><img class="cdx-fl" alt="" draggable="false" src="' + url + '"><i class="cdx-gl"></i></div>' + sp;
+        if (s.smoke && !noSmoke && window.MOIRingVid){ const sm = document.createElement('div'); sm.className = 'cdx-smk'; d.appendChild(sm); try { MOIRingVid.mount(sm, BASE + s.smoke); } catch(e){} }
         return d;
     }
     function styleOf(uid, u){
@@ -72,6 +77,6 @@
         if (window.ResizeObserver && cov){ if (host._cdxRO) host._cdxRO.disconnect(); host._cdxRO = new ResizeObserver(place); host._cdxRO.observe(cov); }
         if (host.scrollTo) host.scrollTo(0, 0);
     }
-    function preview(id){ css(); const d = build(id || 'svip1'); if (!d) return ''; const w = document.createElement('div'); w.className = 'cdx-prev'; w.appendChild(d); const o = document.createElement('div'); o.appendChild(w); return o.innerHTML; }
+    function preview(id){ css(); const d = build(id || 'svip1', true); if (!d) return ''; const w = document.createElement('div'); w.className = 'cdx-prev'; w.appendChild(d); const o = document.createElement('div'); o.appendChild(w); return o.innerHTML; }
     window.MOICard = { apply, preview, STYLES };
 })();

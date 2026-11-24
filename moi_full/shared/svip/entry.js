@@ -4,7 +4,11 @@
 (function(){
     const BASE = (function(){ const s = document.currentScript; return s ? s.src.replace(/[^\/]*$/, '') : '../shared/'; })() + 'levels/';
     const EFFECTS = {
-        svip1: { img: 'level1/entry.webp', dur: 12800, card: 3200, ring: '#ffb02e', ring2: '#ff5a1f', plate: ['#7a2bd6', '#3b1180'] },
+        /* স্ট্রিপ-কার্ড এন্ট্রি: ডান থেকে ঢোকে, থামে, বাঁয়ে বেরিয়ে যায়। geo = ছবির পিক্সেল মাপ (hole কেন্দ্র/ব্যাসার্ধ, নামের ঘর) */
+        svip1: { kind: 'strip', strip: 'level1/entry_strip.webp', h: 62, stretch: { L: 530, R: 107 },
+                 geo: { w: 1058, h: 169, cx: 118.1, cy: 81.4, r: 55.7, barT: 53, barB: 135 } },
+        vip1: { kind: 'strip', strip: 'vip1/entry_head.webp', w: 330, smoke: 'vip1/smoke.mp4', smokeMs: 5800,
+                geo: { w: 1079, h: 351, cx: 166.1, cy: 216, r: 82.8, barL: 288, barR: 841, barT: 188, barB: 273 } },
         /* স্টোরের এন্ট্রি: রুমের মাঝখানে (pos:'center'), সাউন্ড সহ। ফাইল shared/store/entries/ এ */
         eyes1: { img: '../../store/entries/entry_eyes1.webp', sound: '../../store/entries/entry_eyes1.mp3', dur: 8400, card: 3000, pos: 'center', ring: '#4fc3ff', ring2: '#1d6bff', plate: ['#1456c8', '#0a2a6b'] }
     };
@@ -33,8 +37,77 @@
     }
     function esc(t){ return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
+    /* ═══ স্ট্রিপ-কার্ড এন্ট্রি (SVIP১ / VIP১) ═══ */
+    function stripCss(){
+        if (document.getElementById('moi-strip-css')) return;
+        const s = document.createElement('style'); s.id = 'moi-strip-css';
+        s.textContent = '#moiStrip{position:fixed;left:0;right:0;bottom:150px;z-index:99990;pointer-events:none;display:flex;justify-content:center;overflow:visible}' +
+            '#moiStrip .es{position:relative;display:inline-block;will-change:transform}' +
+            '#moiStrip .es-av{position:absolute;border-radius:50%;object-fit:cover;background:#222}' +
+            '#moiStrip .es-bg{position:relative;box-sizing:border-box;border-style:solid;border-top:0;border-bottom:0;border-image-repeat:stretch}' +
+            '#moiStrip .es-nm{display:block;box-sizing:border-box;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;font:800 13px system-ui,sans-serif;text-shadow:0 1px 3px #000,0 0 6px #000}' +
+            '#moiStrip .es-img{display:block;width:100%;height:100%}' +
+            '#moiStrip .es-fix .es-nm{position:absolute}' +
+            '#moiSmoke{position:fixed;inset:0;z-index:99980;pointer-events:none;opacity:0;transition:opacity .35s}' +
+            '#moiSmoke.on{opacity:1}#moiSmoke canvas{width:100%;height:100%;object-fit:cover;display:block}';
+        document.head.appendChild(s);
+    }
+    function buildStrip(fx, ev){
+        const g = fx.geo, wrap = document.createElement('div'); wrap.className = 'es';
+        const photo = esc(ev.photo || window.FALLBACK_IMG || ''), name = esc(ev.name || 'MOI');
+        let k, H;
+        if (fx.stretch){                                   /* নামের ঘর নামের মাপ অনুযায়ী বাড়ে/কমে */
+            H = fx.h; k = H / g.h;
+            const rr = g.r * 0.97 * k;
+            wrap.innerHTML = '<img class="es-av" alt="" src="' + photo + '" style="left:' + (g.cx * k - rr).toFixed(1) + 'px;top:' + (g.cy * k - rr).toFixed(1) + 'px;width:' + (rr * 2).toFixed(1) + 'px;height:' + (rr * 2).toFixed(1) + 'px">' +
+                '<div class="es-bg" style="height:' + H + 'px;padding-top:' + (g.barT * k).toFixed(1) + 'px;border-width:0 ' + (fx.stretch.R * k).toFixed(1) + 'px 0 ' + (fx.stretch.L * k).toFixed(1) + 'px;border-image-source:url(' + BASE + fx.strip + ');border-image-slice:0 ' + fx.stretch.R + ' 0 ' + fx.stretch.L + ' fill">' +
+                '<span class="es-nm" style="height:' + ((g.barB - g.barT) * k).toFixed(1) + 'px;line-height:' + ((g.barB - g.barT) * k).toFixed(1) + 'px;min-width:40px;max-width:170px;padding:0 10px">' + name + '</span></div>';
+        } else {                                           /* ফিক্সড মাপ (ড্রাগন কার্ড) */
+            k = fx.w / g.w; H = g.h * k;
+            const rr = g.r * 0.97 * k;
+            wrap.className = 'es es-fix'; wrap.style.width = fx.w + 'px'; wrap.style.height = H.toFixed(1) + 'px';
+            wrap.innerHTML = '<img class="es-av" alt="" src="' + photo + '" style="left:' + (g.cx * k - rr).toFixed(1) + 'px;top:' + (g.cy * k - rr).toFixed(1) + 'px;width:' + (rr * 2).toFixed(1) + 'px;height:' + (rr * 2).toFixed(1) + 'px">' +
+                '<img class="es-img" alt="" draggable="false" style="position:relative" src="' + BASE + fx.strip + '">' +
+                '<span class="es-nm" style="left:' + (g.barL * k + 10).toFixed(1) + 'px;width:' + ((g.barR - g.barL) * k - 20).toFixed(1) + 'px;top:' + (g.barT * k).toFixed(1) + 'px;height:' + ((g.barB - g.barT) * k).toFixed(1) + 'px;line-height:' + ((g.barB - g.barT) * k).toFixed(1) + 'px">' + name + '</span>';
+        }
+        return wrap;
+    }
+    function playStrip(ev, done){
+        const fx = EFFECTS[ev.fx]; stripCss();
+        let root = document.getElementById('moiStrip');
+        if (!root){ root = document.createElement('div'); root.id = 'moiStrip'; document.body.appendChild(root); }
+        root.innerHTML = '';
+        let smoke = null, cvs = null, over = false;
+        const timers = [];
+        function finish(){ if (over) return; over = true; timers.forEach(clearTimeout); if (cvs && window.MOIRingVid) MOIRingVid.unmount(cvs); if (smoke) smoke.remove(); root.innerHTML = ''; done(); }
+        function slide(){
+            const el = buildStrip(fx, ev); root.appendChild(el);
+            const run = () => {
+                const a = el.animate([{ transform: 'translateX(110vw)' }, { transform: 'translateX(0)' }], { duration: 650, easing: 'cubic-bezier(.2,.9,.3,1)', fill: 'forwards' });
+                a.onfinish = () => timers.push(setTimeout(() => {
+                    const b = el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-110vw)' }], { duration: 900, easing: 'ease-in', fill: 'forwards' });
+                    b.onfinish = finish;
+                }, 1700));
+            };
+            const im = el.querySelector('.es-img') || null;
+            el.style.visibility = 'hidden'; requestAnimationFrame(() => { el.style.visibility = ''; run(); });
+        }
+        if (fx.smoke && window.MOIRingVid){
+            smoke = document.createElement('div'); smoke.id = 'moiSmoke'; document.body.appendChild(smoke);
+            const url = BASE + fx.smoke; let started = false;
+            const begin = () => {
+                if (started) return; started = true; smoke.classList.add('on');
+                timers.push(setTimeout(() => { smoke.classList.remove('on'); timers.push(setTimeout(() => { if (cvs) MOIRingVid.unmount(cvs); cvs = null; if (smoke){ smoke.remove(); smoke = null; } slide(); }, 350)); }, fx.smokeMs));
+            };
+            MOIRingVid.restart(url);
+            cvs = MOIRingVid.mount(smoke, url, begin);
+            timers.push(setTimeout(begin, 2500));            /* ভিডিও না এলেও আটকে না থাকে */
+        } else slide();
+        timers.push(setTimeout(finish, 20000));
+    }
     function play(ev, done){
         const fx = EFFECTS[ev.fx]; if (!fx){ done(); return; }
+        if (fx.kind === 'strip'){ playStrip(ev, done); return; }
         css();
         let root = document.getElementById('moiEntry');
         if (!root){ root = document.createElement('div'); root.id = 'moiEntry'; document.body.appendChild(root); }
@@ -75,6 +148,8 @@
         setTimeout(() => b.remove(), 2900);
     }
     function enqueue(ev){
+        const f0 = EFFECTS[ev.fx];
+        if (f0 && f0.kind === 'strip'){ if (queue.length >= 3) return; queue.push(ev); pump(); return; }
         if (LITE){ liteBanner(ev); return; }
         if (queue.length >= 3) return;
         queue.push(ev); pump();
@@ -93,9 +168,17 @@
             FB().rtdb.ref(FB().LIVE + '/rooms/' + ROOM + '/entries').push({ uid: p.uid, name: p.name || '', photo: p.photo || p.avatar || '', fx: fxId, ts: Date.now() }).catch(() => {});
         } catch(e){ console.warn('entry announce', e); }
     }
+    /* ডেমো: রুমে ঢোকার একটু পরে একজন VIP বট আর একজন SVIP বট ঢোকে, যাতে এন্ট্রি দেখা যায় (আসল ব্যাকএন্ডে এটা বাদ) */
+    function demoVisitors(){
+        try {
+            if (window._entryDemo || !window.DEMO || !DEMO.USERS || !window.MOIPerks) return; window._entryDemo = 1;
+            const U = DEMO.USERS, pick = vip => Object.keys(U).find(u => { const pk = MOIPerks.perksOf(u); return pk && pk.entry && EFFECTS[pk.entry] && !!pk.vip === vip && U[u] && U[u].name; });
+            [[pick(true), 7000], [pick(false), 21000]].forEach(a => { if (!a[0]) return; setTimeout(() => { const u = U[a[0]], pk = MOIPerks.perksOf(a[0]); enqueue({ uid: a[0], name: u.name, photo: u.photo, fx: pk.entry, ts: Date.now() }); }, a[1]); });
+        } catch(e){}
+    }
     function listen(roomId){
         try {
-            ROOM = roomId; if (!FB() || window._entryOn) return; window._entryOn = true;
+            ROOM = roomId; demoVisitors(); if (!FB() || window._entryOn) return; window._entryOn = true;
             const since = Date.now() - 3000;
             FB().rtdb.ref(FB().LIVE + '/rooms/' + roomId + '/entries').orderByChild('ts').startAt(since).on('child_added', snap => {
                 const v = snap.val(); if (!v || seen[snap.key]) return; seen[snap.key] = 1;

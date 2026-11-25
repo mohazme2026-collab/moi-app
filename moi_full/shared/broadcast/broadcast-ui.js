@@ -2,7 +2,8 @@
 (function(){
     'use strict';
     const SRC = (document.currentScript && document.currentScript.src) || location.href;
-    const PANELS = new URL('panels/', SRC).href, ICONS = new URL('../gameicons/', SRC).href, GEMIMG = new URL('../../room/gifts/lb/gem_badge.png', SRC).href;
+    function gIco(ev){ return ev.giftId ? '<img src="' + GIFTIMG + encodeURIComponent(ev.giftId) + '.webp" alt="" style="width:100%;height:100%;object-fit:contain" onerror="this.replaceWith(document.createTextNode(\'🎁\'))">' : esc(ev.icon || '🎁'); }
+    const PANELS = new URL('panels/', SRC).href, ICONS = new URL('../gameicons/', SRC).href, GIFTIMG = new URL('../../room/gifts/img/', SRC).href, GEMIMG = new URL('../../room/gifts/lb/gem_badge.png', SRC).href;
     if (window.top !== window || !window.MOIBroadcast || window.__bcUi) return;
     window.__bcUi = true;
     const BC = window.MOIBroadcast;
@@ -79,7 +80,7 @@
             c += slot(g.pill, 'pl', gemAmt(ev.amount));
         } else if (k === 'gift'){
             c += slot(g.ring2, 'av', avImg(ev.toPhoto, ev.toName));
-            c += slot(g.sq, 'gf', '<span class="bc-gico">' + esc(ev.icon || '🎁') + '</span><i class="qt">&times;' + (ev.qty || 1) + '</i>');
+            c += slot(g.sq, 'gf', '<span class="bc-gico">' + gIco(ev) + '</span>');
             c += slot(g.pill, 'pl', gemAmt(ev.amount));
         } else {
             c += slot(g.pill, 'pl big', gemAmt(ev.amount));
@@ -100,7 +101,7 @@
         }
         const to = ev.toName ? '&rarr; ' + esc(ev.toName) + ((ev.toCount || 1) > 1 ? ' +' + (ev.toCount - 1) : '') : esc(ev.giftName || 'Gift');
         const toAv = ev.toName ? '<img class="bc-to" src="' + esc(ev.toPhoto || PH(ev.toName)) + '" onerror="this.onerror=null;this.src=\'' + PH(ev.toName) + '\'">' : '';
-        return '<div class="bc-in">' + SP + av + who(ev, to) + toAv + '<span class="bc-gico">' + esc(ev.icon || '🎁') + '</span><span class="bc-x">&times;</span><span class="bc-qty">' + (ev.qty || 1) + '</span></div>';
+        return '<div class="bc-in">' + SP + av + who(ev, to) + toAv + '<span class="bc-gico">' + gIco(ev) + '</span></div>';
     }
     function cls(ev){
         if (ev.type === 'rocket') return 'bc bc-rocket';

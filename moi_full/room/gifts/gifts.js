@@ -18,8 +18,22 @@ var GIFT_URL_TREASURE    = (MOI_EXT+'gift_662cd6fd.json');
 var GIFT_LITE = true;
 var GIFT_IMG_BASE = (function(){try{return new URL('./img/',document.currentScript.src).href}catch(e){return 'img/'}})();
 var GIFT_EMOJI = { rose: '🌹' };
-var _ROSE = { id:'rose', name:'রোজ', price:2, img:'rose.webp', type:'sticker', scale:1, anim:'standard' };
-var GIFT_CATALOG = { hot: [_ROSE], recent: [_ROSE], activity: [], svip: [] };
+var GIFT_ALL = [
+    { id:'kiss', name:'চুমু', price:1, img:'kiss.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'rose', name:'রোজ', price:2, img:'rose.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'choco', name:'চকলেট বক্স', price:5, img:'choco.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'bell', name:'সোনালি ঘণ্টা', price:5, img:'bell.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'teddy', name:'টেডি বিয়ার', price:10, img:'teddy.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'key', name:'ভালোবাসার চাবি', price:10, img:'key.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'bells', name:'জোড়া ঘণ্টা', price:10, img:'bells.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'teddyhat', name:'রোজ টেডি', price:20, img:'teddyhat.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'teddyring', name:'রাজকীয় টেডি', price:20, img:'teddyring.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'ringbox', name:'আংটির বাক্স', price:20, img:'ringbox.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'trophy', name:'সোনার ট্রফি', price:20, img:'trophy.webp', type:'sticker', scale:1, anim:'standard' },
+    { id:'chest', name:'ডায়মন্ড বক্স', price:20, img:'chest.webp', type:'sticker', scale:1, anim:'standard' }
+];
+var _ROSE = GIFT_ALL.filter(function(g){ return g.id === 'rose'; })[0];
+var GIFT_CATALOG = { hot: GIFT_ALL, recent: GIFT_ALL, activity: [], svip: [] };
 
 var _giftCat = 'hot';
 var _selectedGift = null;

@@ -26,7 +26,18 @@ var MOI_EXT=(function(){try{return new URL('../assets/ext/',document.currentScri
 
     /* গিফটের তালিকা — room/gifts.js এর সাথে একই লিংক ও দাম */
     const GIFTS = [
-        { id: 'rose', name: 'রোজ', price: 2, url: '', filter: '', w: 1, q: [1, 1, 3, 5, 10, 50] }
+        { id: 'kiss', name: 'চুমু', price: 1, url: '', filter: '', w: 30, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'rose', name: 'রোজ', price: 2, url: '', filter: '', w: 30, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'choco', name: 'চকলেট বক্স', price: 5, url: '', filter: '', w: 12, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'bell', name: 'সোনালি ঘণ্টা', price: 5, url: '', filter: '', w: 10, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'teddy', name: 'টেডি বিয়ার', price: 10, url: '', filter: '', w: 8, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'key', name: 'ভালোবাসার চাবি', price: 10, url: '', filter: '', w: 6, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'bells', name: 'জোড়া ঘণ্টা', price: 10, url: '', filter: '', w: 5, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'teddyhat', name: 'রোজ টেডি', price: 20, url: '', filter: '', w: 3, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'teddyring', name: 'রাজকীয় টেডি', price: 20, url: '', filter: '', w: 2, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'ringbox', name: 'আংটির বাক্স', price: 20, url: '', filter: '', w: 2, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'trophy', name: 'সোনার ট্রফি', price: 20, url: '', filter: '', w: 2, q: [1, 1, 2, 3, 5, 10] },
+        { id: 'chest', name: 'ডায়মন্ড বক্স', price: 20, url: '', filter: '', w: 1, q: [1, 1, 2, 3, 5, 10] }
     ];
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));

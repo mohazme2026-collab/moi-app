@@ -64,7 +64,7 @@ function roomSim(){
     const away = [], spare = D.SPARE.slice();
     const seatedNow = () => (state.seats || []).map((s, i) => s && s.uid ? { i, s } : null).filter(Boolean).filter(x => x.s.uid !== meUid());
     const audNow = () => (state.listeners || []).filter(l => l.uid !== meUid() && !(state.seats || []).some(s => s && s.uid === l.uid) && U(l.uid));
-    const GIFTS = [['rose', 2, 100]];
+    const GIFTS = [['kiss', 1, 30], ['rose', 2, 30], ['choco', 5, 12], ['bell', 5, 10], ['teddy', 10, 8], ['key', 10, 6], ['bells', 10, 5], ['teddyhat', 20, 3], ['teddyring', 20, 2], ['ringbox', 20, 2], ['trophy', 20, 2], ['chest', 20, 1]];
     const pickGift = () => { const tot = GIFTS.reduce((a, g) => a + g[2], 0); let r = Math.random() * tot; for (const g of GIFTS){ r -= g[2]; if (r <= 0) return g; } return GIFTS[0]; };
     const nm = id => { try { const g = giftFindById(id); return (g && g.name) || id; } catch(e){ return id; } };
     const act = a => { try { if (typeof showActivity === 'function') showActivity(Object.assign({ ts: Date.now() }, a)); } catch(e){} };

@@ -11,7 +11,7 @@ console.log('[MOI] economy.js loaded (client mode)');
 
     /* ═══ দাম ও সংখ্যার ছক (functions/catalog.js এর সাথে এক) ═══ */
     const C = {
-        GIFTS: { rose: 2 },
+        GIFTS: {kiss: 1, rose: 2, choco: 5, bell: 5, teddy: 10, key: 10, bells: 10, teddyhat: 20, teddyring: 20, ringbox: 20, trophy: 20, chest: 20},
         CHAT_GIFTS: { 10: 10, 50: 50, 100: 100, 500: 500, 1000: 1000 },
         FRAMES: { basic: 0, aurora: 500, flame: 1200, ocean: 2000, royal: 3500, galaxy: 6000 },
         /* Host: মাসের টার্গেট (need = এ মাসে পাওয়া 💎, reward = পূরণ হলে টাকা) ও এক্সচেঞ্জ রেট (১ টাকা = RATE 💎) */

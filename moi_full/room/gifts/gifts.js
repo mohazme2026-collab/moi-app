@@ -16,31 +16,10 @@ var GIFT_URL_TREASURE    = (MOI_EXT+'gift_662cd6fd.json');
 
 /* ══ হালকা মোড: true হলে lottie অ্যানিমেশন লোডই হয় না (ফাস্ট রুম)। পরে হালকা MP4 এলে false করে দেখানো যাবে ══ */
 var GIFT_LITE = true;
-var GIFT_EMOJI = { diamond: '💎', diamond_v2: '💎', diamond_v3: '💎', cake: '🎂', rose: '🌹', kiss: '💋', present: '🎁', treasure: '📦', poop: '💩' };
-var GIFT_CATALOG = {
-    hot: [
-        { id:'diamond',    name:'ডায়মন্ড',           price:5,  url:GIFT_URL_DIAMOND_OLD, filter:[], scale:1.0,  anim:'standard' },
-        { id:'diamond_v2', name:'ডায়মন্ড স্পেশাল',  price:1,  url:GIFT_URL_DIAMOND_NEW, filter:['BG','Back Glow','Back Glow 2'], scale:1.0, anim:'standard' },
-        { id:'diamond_v3', name:'ডায়মন্ড প্লাটিনাম', price:10, url:GIFT_URL_DIAMOND_OLD, filter:['Pillow','Layer 1','shadow'], scale:1.0, anim:'standard' },
-        { id:'cake',       name:'কেক',              price:10, url:GIFT_URL_CAKE,        filter:[], scale:1.35, anim:'standard' },
-        { id:'rose',       name:'ফুল',              price:1,  url:GIFT_URL_ROSE,        filter:[], scale:1.2,  anim:'standard' },
-        { id:'kiss',       name:'চুমু',              price:1,  url:GIFT_URL_KISS,        filter:[], scale:1.2,  anim:'standard' },
-        { id:'present',    name:'প্রেজেন্ট পটি',     price:5,  url:GIFT_URL_PRESENT,     filter:[], scale:1.2,  anim:'standard' },
-        { id:'treasure',   name:'গোল্ড বক্স',        price:15, url:GIFT_URL_TREASURE,    filter:[], scale:0.9,  anim:'standard' },
-        { id:'poop',       name:'পটি',              price:2,  url:GIFT_URL_POOP,        filter:[], scale:0.6,  anim:'sticky' }
-    ],
-    recent: [
-        { id:'rose',       name:'ফুল',              price:1,  url:GIFT_URL_ROSE,        filter:[], scale:1.2,  anim:'standard' },
-        { id:'kiss',       name:'চুমু',              price:1,  url:GIFT_URL_KISS,        filter:[], scale:1.2,  anim:'standard' },
-        { id:'present',    name:'প্রেজেন্ট পটি',     price:5,  url:GIFT_URL_PRESENT,     filter:[], scale:1.2,  anim:'standard' },
-        { id:'poop',       name:'পটি',              price:2,  url:GIFT_URL_POOP,        filter:[], scale:0.6,  anim:'sticky' }
-    ],
-    activity: [
-        { id:'treasure',   name:'গোল্ড বক্স',        price:15, url:GIFT_URL_TREASURE,    filter:[], scale:0.9,  anim:'standard' },
-        { id:'cake',       name:'কেক',              price:10, url:GIFT_URL_CAKE,        filter:[], scale:1.35, anim:'standard' }
-    ],
-    svip: []
-};
+var GIFT_IMG_BASE = (function(){try{return new URL('./img/',document.currentScript.src).href}catch(e){return 'img/'}})();
+var GIFT_EMOJI = { rose: '🌹' };
+var _ROSE = { id:'rose', name:'রোজ', price:2, img:'rose.webp', type:'sticker', scale:1, anim:'standard' };
+var GIFT_CATALOG = { hot: [_ROSE], recent: [_ROSE], activity: [], svip: [] };
 
 var _giftCat = 'hot';
 var _selectedGift = null;
@@ -154,6 +133,7 @@ function giftRenderGrid(){
 }
 
 async function giftRenderThumb(el, gift){
+    if (gift.img){ el.innerHTML = '<img src="' + GIFT_IMG_BASE + gift.img + '" alt="" style="width:46px;height:46px;object-fit:contain">'; return; }
     if (GIFT_LITE){ el.innerHTML = '<div class="gift-emoji" style="font-size:34px;line-height:1">' + (GIFT_EMOJI[gift.id] || '🎁') + '</div>'; return; }
     var json = await giftLoadJSON(gift.url, gift.filter);
     if (!json || !window.lottie){ el.innerHTML = '<div style="font-size:32px">💎</div>'; return; }
@@ -367,32 +347,35 @@ window.sendGift = async function(){
 function giftPlayLite(gift, targets, qty){
     var layer = document.getElementById('giftAnimLayer'), app = document.querySelector('.app-container');
     if (!layer || !app) return;
-    var ar = app.getBoundingClientRect(), cx = ar.width / 2, cy = ar.height / 2, em = GIFT_EMOJI[gift.id] || '🎁';
+    if (!document.querySelector('.seat')) return;
+    var ar = app.getBoundingClientRect(), cx = ar.width / 2, cy = ar.height * .56;
+    function pt(uid){ var a = document.querySelector('.seat[data-uid="' + uid + '"] .seat-avatar'); if (!a) return null; var r = a.getBoundingClientRect(); return { x: r.left - ar.left + r.width / 2, y: r.top - ar.top + r.height / 2 }; }
+    var from = pt(myProfile.uid) || { x: cx, y: ar.height * .85 };
     layer.classList.add('active');
-    var pos = targets.map(function(t){
-        var a = document.querySelector('.seat[data-uid="' + t.uid + '"] .seat-avatar'); if (!a) return null;
-        var r = a.getBoundingClientRect(); return { name: t.name, x: r.left - ar.left + r.width / 2, y: r.top - ar.top + r.height / 2 };
-    }).filter(Boolean);
-    if (!pos.length) pos = [{ name: (targets[0] && targets[0].name) || '', x: cx, y: ar.height * .62 }];
+    var pos = targets.map(function(t){ var p = pt(t.uid); return p ? { name: t.name, x: p.x, y: p.y } : null; }).filter(Boolean);
+    if (!pos.length) pos = [{ name: (targets[0] && targets[0].name) || '', x: cx, y: ar.height * .3 }];
+    var url = gift.img ? GIFT_IMG_BASE + gift.img : '', BIG = Math.round(Math.min(ar.width * .5, 220)), SM = 54;
     pos.forEach(function(p, i){
-        var el = document.createElement('div');
-        el.textContent = em; el.style.cssText = 'position:absolute;left:' + cx + 'px;top:' + cy + 'px;font-size:' + Math.round(54 * (gift.scale || 1)) + 'px;line-height:1;will-change:transform,opacity;pointer-events:none';
+        var el = document.createElement('img'); el.src = url; el.alt = '';
+        el.style.cssText = 'position:absolute;left:0;top:0;width:' + BIG + 'px;height:' + BIG + 'px;object-fit:contain;will-change:transform,opacity;pointer-events:none';
         layer.appendChild(el);
-        var dx = p.x - cx, dy = p.y - cy;
+        var k = SM / BIG;
+        function T(x, y, sc){ return 'translate(' + (x - BIG / 2) + 'px,' + (y - BIG / 2) + 'px) scale(' + sc + ')'; }
         el.animate([
-            { transform: 'translate(-50%,-50%) scale(.2)', opacity: 0 },
-            { transform: 'translate(-50%,-50%) scale(1.3)', opacity: 1, offset: .25 },
-            { transform: 'translate(-50%,-50%) scale(1.3)', opacity: 1, offset: .5 },
-            { transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px)) scale(.5)', opacity: .9, offset: .9 },
-            { transform: 'translate(calc(-50% + ' + dx + 'px),calc(-50% + ' + dy + 'px)) scale(.3)', opacity: 0 }
-        ], { duration: 1400, delay: i * 90, easing: 'cubic-bezier(.4,.05,.3,1)', fill: 'both' });
-        setTimeout(function(){ try { giftShowFloatCombo(p.x, p.y - 30, '×' + qty, layer); } catch(e){} }, 1200 + i * 90);
+            { transform: T(from.x, from.y, k), opacity: 0 },
+            { transform: T(from.x, from.y, k), opacity: 1, offset: .05 },
+            { transform: T(cx, cy, 1), opacity: 1, offset: .35 },
+            { transform: T(cx, cy, 1), opacity: 1, offset: .62 },
+            { transform: T(p.x, p.y, k), opacity: 1, offset: .92 },
+            { transform: T(p.x, p.y, k * .6), opacity: 0 }
+        ], { duration: 2200, easing: 'cubic-bezier(.4,.05,.3,1)', fill: 'both' });
     });
-    setTimeout(function(){ giftShowAnnounce(gift, pos[0], qty, pos.length); }, 500);
-    setTimeout(function(){ layer.classList.remove('active'); layer.innerHTML = ''; }, 2800 + pos.length * 90);
+    setTimeout(function(){ giftShowAnnounce(gift, pos[0], qty, pos.length); }, 300);
+    setTimeout(function(){ layer.classList.remove('active'); layer.innerHTML = ''; }, 2400);
 }
 
 async function giftPlayAnimation(gift, targets, qty){
+    if (window.roomAnimOK && !window.roomAnimOK()) return;
     if (GIFT_LITE) return giftPlayLite(gift, targets, qty);
     var style = gift.anim || 'standard';
     if (style === 'sticky'){
@@ -687,7 +670,7 @@ function giftShowAnnounce(gift, target, qty, count){
     ann.className = 'gift-room-announce';
     var nameText = count === 1 ? target.name : (count + ' জন');
     ann.innerHTML = '<img src="' + esc(myProfile.avatar || GUEST_AVATAR) + '" alt="">' +
-                    '<span>💎 ' + esc(gift.name) + ' × ' + qty + ' → ' + esc(nameText) + '</span>';
+                    '<span>' + esc(gift.name) + (qty > 1 ? ' × ' + qty : '') + ' → ' + esc(nameText) + '</span>';
     app.appendChild(ann);
     setTimeout(function(){ ann.remove(); }, 3600);
 }

@@ -54,9 +54,6 @@ function initUser(){
         moiId: fresh.moiId || stored.moiId || ''
     };
 
-    document.getElementById('myAvatar').src = window.me.photo;
-    document.getElementById('myName').textContent = window.me.name;
-    document.getElementById('myUid').textContent = '🆔 ' + (window.me.moiId || window.me.uid.slice(0,8));
     return true;
 }
 

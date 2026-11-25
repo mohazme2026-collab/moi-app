@@ -33,7 +33,8 @@ function railCap(r){
     return `<span class="live-cap">${r.listeners > 0 ? '<span class="eq"><i></i><i></i><i></i></span>' : HIC.userSm}${formatCount(r.listeners)}</span>`;
 }
 function railCard(r, badge, extra){
-    return `<div class="rc ${badge === 'crown' ? 'mine' : ''}"><button class="rc-img" data-id="${esc(r.id)}">${coverImg(r)}${badge === 'crown' ? `<span class="bdg crown">${HIC.crown}</span>` : badge === 'join' ? `<span class="bdg join">${HIC.check}</span>` : ''}${extra || ''}${railCap(r)}</button><div class="rc-name">${esc(r.name)}</div></div>`;
+    const RB = { crown: 'owner', admin: 'admin', join: 'member' };
+    return `<div class="rc ${badge === 'crown' ? 'mine' : ''}"><button class="rc-img" data-id="${esc(r.id)}">${coverImg(r)}${RB[badge] ? `<img class="rbdg" src="../shared/ui/roles/${RB[badge]}.webp" alt="">` : ''}${extra || ''}${railCap(r)}</button><div class="rc-name">${esc(r.name)}</div></div>`;
 }
 
 /* ═══ রেল আঁকা ═══ */
@@ -55,8 +56,10 @@ function renderMyRail(){
     const followed = getFollowedRoomIds();
     const joined = new Set(followed);
     try { getJoinedRooms().forEach(id => joined.add(id)); } catch (e) {}
+    rooms.forEach(r => { if (r.ownerUid !== uid && (r.admins || []).includes(uid)) joined.add(r.id); });
     const joinedList = [...joined].map(id => byId[id]).filter(r => r && r.ownerUid !== uid).slice(0, 12);
-    joinedList.forEach(r => { h += railCard(r, 'join'); });
+    joinedList.filter(r => (r.admins || []).includes(uid)).forEach(r => { h += railCard(r, 'admin'); });
+    joinedList.filter(r => !(r.admins || []).includes(uid)).forEach(r => { h += railCard(r, 'join'); });
 
     /* ৩) পছন্দ করার মতো অন্য রুম (❤ = ফলো, ✕ = সরান) */
     const dismissed = new Set(getDismissed());
@@ -108,3 +111,47 @@ window.renderMyRail = renderMyRail;
 window.initMyRail = initMyRail;
 window.loadMyRoom = loadMyRoom;
 window.renderBannerEmpty = renderBannerEmpty;
+
+/* ═══ "আমার রুম" পেজ — শুধু "যোগদান করেছেন" ট্যাব, ৩টা সেকশন ═══ */
+function myRoomsData(){
+    const uid = window.user.uid, rooms = allRooms(), byId = {}; rooms.forEach(r => { byId[r.id] = r; });
+    const owner = rooms.filter(r => r.ownerUid === uid);
+    const admin = rooms.filter(r => r.ownerUid !== uid && (r.admins || []).includes(uid));
+    const taken = new Set(admin.map(r => r.id));
+    const joined = new Set(getFollowedRoomIds());
+    try { getJoinedRooms().forEach(id => joined.add(id)); } catch (e) {}
+    const mem = [...joined].map(id => byId[id]).filter(r => r && r.ownerUid !== uid && !taken.has(r.id));
+    return { owner, admin, mem };
+}
+function myRoomRow(r, role, leave){
+    return `<div class="mr-row" data-id="${esc(r.id)}"><span class="mr-av">${coverImg(r)}</span><span class="mr-t"><b>${esc(r.name)}</b><small>ID: ${esc(String(r.roomId || r.id))}</small></span><img class="mr-rb" src="../shared/ui/roles/${role}.webp" alt="">${leave ? `<button class="mr-leave" data-leave="${esc(r.id)}">বেরিয়ে যান</button>` : ''}</div>`;
+}
+function renderMyRoomsPage(){
+    const box = document.getElementById('mrBody'); if (!box) return;
+    const d = myRoomsData(), n = d.owner.length + d.admin.length + d.mem.length;
+    document.getElementById('mrTab').textContent = 'যোগদান করেছেন ' + n;
+    const sec = (t, l, role, lv) => l.length ? `<h3>${t}</h3>` + l.map(r => myRoomRow(r, role, lv)).join('') : '';
+    box.innerHTML = sec('রুমের মালিক', d.owner, 'owner') + sec('অ্যাডমিন', d.admin, 'admin') + sec('যোগদান করেছে', d.mem, 'member', true) || '<div class="mr-empty">এখনো কোনো রুম নেই</div>';
+}
+function openMyRooms(){
+    let o = document.getElementById('mrPage');
+    if (!o){
+        o = document.createElement('div'); o.id = 'mrPage'; o.className = 'mr-page';
+        o.innerHTML = '<div class="mr-top"><button id="mrBack" aria-label="ফিরুন">‹</button><span>আমার রুম</span></div><div class="mr-tabs"><b id="mrTab"></b></div><div class="mr-body" id="mrBody"></div>';
+        document.body.appendChild(o);
+        o.addEventListener('click', (e) => {
+            if (e.target.closest('#mrBack')){ o.classList.remove('on'); renderMyRail(); return; }
+            const lv = e.target.closest('[data-leave]');
+            if (lv){
+                const id = lv.dataset.leave;
+                setFollowed(getFollowedRoomIds().filter(x => x !== id));
+                try { ls_set(KEY.joinedRooms, [...getJoinedRooms()].filter(x => x !== id)); } catch (er) {}
+                renderMyRoomsPage(); return;
+            }
+            const row = e.target.closest('.mr-row'); if (row) enterRoom(row.dataset.id);
+        });
+    }
+    renderMyRoomsPage(); o.classList.add('on');
+}
+window.openMyRooms = openMyRooms;
+document.addEventListener('click', (e) => { if (e.target.closest('#myRoomsMore')) openMyRooms(); });

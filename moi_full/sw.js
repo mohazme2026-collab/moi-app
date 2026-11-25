@@ -2,7 +2,7 @@
    • ছবি/ফন্ট/অ্যানিমেশন/অডিও (বদলায় না): ক্যাশ থেকে সাথে সাথে।
    • HTML/JS/CSS: ক্যাশ থেকে সাথে সাথে দেখায় + পেছনে নতুন কপি এনে রাখে (পরের বার নতুন)।
    • নতুন আপডেট দিলে নিচের BUILD বদলে দিলে পুরনো ক্যাশ পুরো মুছে যায়, প্রথম খোলাতেই নতুন ফাইল আসে। */
-var BUILD = 'moi-2026-11-22-l';
+var BUILD = 'moi-2026-11-22-m';
 var CODE = BUILD + '-code', STATIC = BUILD + '-static';
 self.addEventListener('install', function(){ self.skipWaiting(); });
 self.addEventListener('activate', function(e){

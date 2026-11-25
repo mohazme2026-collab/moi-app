@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="../shared/theme/theme.css">
 <link rel="stylesheet" href="../shared/features/features.css">
 <link rel="stylesheet" href="extras.css">
+<link rel="stylesheet" href="inbox.css">
 <link rel="stylesheet" href="../shared/theme/theme-light.css">
 </head>
 <body>
@@ -28,31 +29,23 @@
 </div>
 
 <div class="screen" id="mainScreen">
-    <div class="header">
-        <div class="my-profile">
-            <div class="my-av"><img id="myAvatar" src="" alt="Me"></div>
-            <div class="my-info">
-                <div class="mname" id="myName">—</div>
-                <div class="muid" id="myUid">—</div>
-            </div>
-        </div>
-        <div class="hdr-actions">
-            <div class="icon-btn" onclick="copyMyUid()" title="UID কপি"><i class="fa-solid fa-copy"></i></div>
-        </div>
+    <div class="mh"><h1>মেসেজ</h1></div>
+    <div class="mbtns">
+        <div class="mb" onclick="openSub('feed')"><img src="img/b1.png" alt=""><span>ফিড<br>মেসেজ</span><i class="mbd" id="bd_feed"></i></div>
+        <div class="mb" onclick="openSub('friends')"><img src="img/b2.png" alt=""><span>ফ্রেন্ড<br>রিকোয়েস্ট</span><i class="mbd" id="bd_friends"></i></div>
+        <div class="mb" onclick="openSub('assistant')"><img src="img/b3.png" alt=""><span>সিস্টেম<br>অ্যাসিস্ট্যান্ট</span><i class="mbd" id="bd_assistant"></i></div>
+        <div class="mb" onclick="openSub('notices')"><img src="img/b4.png" alt=""><span>সিস্টেম<br>নোটিফিকেশন</span><i class="mbd" id="bd_notices"></i></div>
     </div>
-
-    <div class="tabs">
-        <div class="tab active" data-tab="friends" onclick="switchTab('friends')">বন্ধু</div>
-        <div class="tab" data-tab="requests" onclick="switchTab('requests')">Requests<span class="tab-badge" id="reqBadge">0</span></div>
-    </div>
-
-    <div class="search-wrap" id="searchWrap">
-        <input type="text" id="searchInput" placeholder="🔍 বন্ধু খুঁজুন...">
-    </div>
+    <div class="mban" id="mBan">🔔 গুরুত্বপূর্ণ খবর মিস করবেন না!<b onclick="document.getElementById('mBan').remove();toast('নোটিফিকেশন চালু হয়েছে')">চালু করুন</b></div>
 
     <div class="list-area" id="listArea">
         <div class="empty"><div class="big">💬</div>লোড হচ্ছে...</div>
     </div>
+</div>
+
+<div class="chat-screen" id="subScreen">
+    <div class="chat-header"><div class="back-btn" onclick="closeSub()"><i class="fa-solid fa-arrow-left"></i></div><div class="chat-info"><div class="cn" id="subTitle">—</div></div><div class="sub-act" id="subAct"></div></div>
+    <div class="list-area" id="subBody"></div>
 </div>
 
 <div class="chat-screen" id="chatScreen">
@@ -143,6 +136,7 @@
 <script src="../shared/core/auth.js"></script>
 <script src="friends.js"></script>
 <script src="messages.js"></script>
+<script src="inbox.js"></script>
 <script src="emoji.js"></script>
 <script src="chat.js"></script>
 <script src="../shared/features/features.js"></script>

@@ -334,7 +334,19 @@ window.saveRoomProfile = async () => {
             return '<button class="xp-card" data-rid="' + esc2(r.id) + '"><div class="im"><img src="' + esc2(im) + '" alt=""><span class="ct"><i class="fa-solid fa-user" style="font-size:9px"></i>' + r.n + '</span></div><div class="nm">' + esc2(r.name) + '</div><div class="ow">' + esc2(r.owner || '—') + '</div></button>';
         }).join('') : '<div class="xp-empty">এখন কোনো অনলাইন রুম নেই</div>';
     }
-    function openPanel(){ build(); fill(); ge('xpBack').classList.add('show'); ge('xpPanel').classList.add('show'); }
+    let _xpW = false;
+    /* এন্ট্রি/গিফট/কমেন্ট ইত্যাদির অ্যানিমেশন শুধু মেইন রুম পেজে (সিট দেখা যাচ্ছে) — প্রোফাইল/লিস্ট/সেটিংস পেজ খোলা থাকলে নয় */
+    window.roomAnimOK = function(){
+        try {
+            if (document.hidden) return false;
+            if (document.querySelector('.modal-overlay.active, .ri-ov.on, .bottom-sheet.active, #xpPanel.show')) return false;
+            if (!document.querySelector('.seat')) return false;
+        } catch(e){}
+        return true;
+    };
+    function openPanel(){ build(); fill();
+        try { if (window.MOISync && MOISync.watch){ MOISync.watch('moi_room_counts'); MOISync.watch('moi_demo_rooms'); } } catch(e){}
+        if (!_xpW){ _xpW = true; window.addEventListener('moi:sync', (e) => { const k = (e.detail && e.detail.key) || ''; if ((k === 'moi_room_counts' || k === 'moi_demo_rooms') && window.xpIsOpen && xpIsOpen()) fill(); }); } ge('xpBack').classList.add('show'); ge('xpPanel').classList.add('show'); }
     function closePanel(){ const b = ge('xpBack'), p = ge('xpPanel'); if (b) b.classList.remove('show'); if (p) p.classList.remove('show'); }
     window.toggleExitMenu = (event) => {
         if (event) event.stopPropagation();

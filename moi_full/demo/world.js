@@ -126,9 +126,9 @@ function seedRoomLive(){
 
 /* ════════════ ২) রুমের ভিতরের চলমান কাজ ════════════ */
 const GIFTS = {
-    small: [['rose', 1, 1, 5], ['kiss', 1, 1, 5], ['diamond_v2', 1, 1, 10], ['present', 5, 1, 4]],
-    mid:   [['cake', 10, 3, 12], ['diamond', 5, 10, 20], ['present', 5, 10, 25], ['diamond_v3', 10, 5, 10]],
-    big:   [['treasure', 15, 30, 99], ['diamond_v3', 10, 60, 150], ['cake', 10, 50, 120]]
+    small: [['rose', 2, 1, 5]],
+    mid:   [['rose', 2, 5, 20]],
+    big:   [['rose', 2, 30, 99]]
 };
 const CODES = ['1f602', '1f60d', '1f62d', '2764_fe0f', '1f525', '1f44f', '1f44d', '2728', '1f389', '1f970', '1f60e', '1f64f'];
 const SONGS = ['Tum Hi Ho', 'Kun Faya Kun', 'Shape of You', 'Pasoori', 'Closer', 'Bondhu Tui', 'Perfect', 'Kalank', 'Despacito', 'Ei Mon Tomake'];

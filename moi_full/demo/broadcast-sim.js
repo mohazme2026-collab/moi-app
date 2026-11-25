@@ -26,13 +26,7 @@ var MOI_EXT=(function(){try{return new URL('../assets/ext/',document.currentScri
 
     /* গিফটের তালিকা — room/gifts.js এর সাথে একই লিংক ও দাম */
     const GIFTS = [
-        { id: 'rose', name: 'ফুল', price: 1, url: (MOI_EXT+'gift_1e3519dc.json'), filter: '', w: 26, q: [1, 1, 3, 5, 10] },
-        { id: 'kiss', name: 'চুমু', price: 1, url: (MOI_EXT+'gift_fc700648.json'), filter: '', w: 16, q: [1, 5, 10, 20] },
-        { id: 'present', name: 'প্রেজেন্ট পটি', price: 5, url: (MOI_EXT+'gift_250e346a.json'), filter: '', w: 14, q: [1, 5, 10] },
-        { id: 'diamond', name: 'ডায়মন্ড', price: 5, url: (MOI_EXT+'gift_27dfe25a.json'), filter: '', w: 12, q: [1, 5, 10, 20] },
-        { id: 'cake', name: 'কেক', price: 10, url: (MOI_EXT+'gift_70c509d6.json'), filter: '', w: 14, q: [1, 5, 10, 20] },
-        { id: 'treasure', name: 'গোল্ড বক্স', price: 15, url: (MOI_EXT+'gift_662cd6fd.json'), filter: '', w: 10, q: [1, 10, 20, 66] },
-        { id: 'diamond_v3', name: 'ডায়মন্ড প্লাটিনাম', price: 10, url: (MOI_EXT+'gift_27dfe25a.json'), filter: 'Pillow|Layer 1|shadow', w: 8, q: [1, 10, 66, 99] }
+        { id: 'rose', name: 'রোজ', price: 2, url: '', filter: '', w: 1, q: [1, 1, 3, 5, 10, 50] }
     ];
     const pick = a => a[Math.floor(Math.random() * a.length)];
     const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));

@@ -62,6 +62,8 @@ function allRooms(){
         ownerUid: (r.owner && r.owner.uid) || r.ownerUid || '',
         ownerName: (r.owner && r.owner.name) || r.ownerName || '',
         createdAt: r.createdAt || 0,
+        admins: Array.isArray(r.admins) ? r.admins : [],
+        roomId: r.roomId || '',
         pk: !!r.pkActive,
         xp: typeof r.xp === 'number' ? r.xp : undefined,
         frameUse: typeof r.frameUse === 'number' ? r.frameUse : undefined,
@@ -254,7 +256,7 @@ function renderCtry(rooms){
     const names = Object.keys(present).sort((a, b) => present[b] - present[a]);
     fl.textContent = feedCountry === 'all' ? '🌍' : getFlag(feedCountry);
     menu.innerHTML = `<button data-fc="all" class="${feedCountry === 'all' ? 'on' : ''}"><span class="fl">🌍</span>সব দেশ</button>` +
-        names.map(c => `<button data-fc="${esc(c)}" class="${feedCountry.toLowerCase() === c.toLowerCase() ? 'on' : ''}"><span class="fl">${getFlag(c)}</span>${esc(c)}<b>${present[c]}</b></button>`).join('');
+        names.map(c => `<button data-fc="${esc(c)}" class="${feedCountry.toLowerCase() === c.toLowerCase() ? 'on' : ''}"><span class="fl">${getFlag(c)}</span>${esc(c)}</button>`).join('');
 }
 
 /* ═══ আবিষ্কার ট্যাব — দেশ বেছে রুম দেখা ═══ */

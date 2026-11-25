@@ -2,7 +2,7 @@
 'use strict';
 
 /* রুমে পাঠানো গিফট (id → দাম 💎) — room/gifts.js এর GIFT_CATALOG এর সাথে মিলিয়ে রাখুন */
-exports.GIFTS = { diamond: 5, diamond_v2: 1, diamond_v3: 10, cake: 10, rose: 1, kiss: 1, present: 5, treasure: 15, poop: 2 };
+exports.GIFTS = { rose: 2 };
 
 /* চ্যাটে বন্ধুকে ছোট উপহার */
 exports.CHAT_GIFTS = { 10: 10, 50: 50, 100: 100, 500: 500, 1000: 1000 };

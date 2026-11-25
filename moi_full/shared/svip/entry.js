@@ -148,6 +148,7 @@
         setTimeout(() => b.remove(), 2900);
     }
     function enqueue(ev){
+        if (window.roomAnimOK && !window.roomAnimOK()) return;
         const f0 = EFFECTS[ev.fx];
         if (f0 && f0.kind === 'strip'){ if (queue.length >= 3) return; queue.push(ev); pump(); return; }
         if (LITE){ liteBanner(ev); return; }

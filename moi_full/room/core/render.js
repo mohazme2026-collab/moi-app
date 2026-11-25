@@ -220,9 +220,9 @@ function renderBranding(){
     $('room-name-display').textContent = state.roomName;
     $('room-logo-modal-container').innerHTML = brandInner();
     $('room-name-modal-display').textContent = state.roomName;
-    $('room-id-modal').textContent = 'ID:' + state.roomId;
+    { const nid = String(state.roomId).replace(/\D/g, '') || String(state.roomId); $('room-id-modal').innerHTML = '<span>ID: ' + esc(nid) + '</span><button class="rid-copy" aria-label="কপি" onclick="event.stopPropagation();try{navigator.clipboard.writeText(\'' + esc(nid) + '\')}catch(e){};toastMsg(\'ID কপি হয়েছে\')"><i class="fa-regular fa-copy"></i></button>'; }
     const oi = $('owner-info-modal');
-    if (state.owner && state.owner.name){
+    if (false){
         oi.style.display = 'flex';
         oi.innerHTML = `<img src="${esc(state.owner.avatar || GUEST_AVATAR)}"><div class="oi-text"><div class="oi-name">${esc(state.owner.name)}</div><div class="oi-uid">UID: ${esc(state.owner.uid)}</div></div><i class="fa-solid fa-crown oi-crown"></i>`;
     } else {
@@ -346,6 +346,9 @@ window.renderMembers = () => {
         u.uid.toLowerCase().includes(q)
     );
 
+    const RK = { owner: 0, admin: 1 };
+    const roleOf = u => (myProfile && u.uid === myProfile.uid) ? (state.myRole || 'member') : getRoleOf(u.uid);
+    list.sort((a, b) => (RK[roleOf(a)] ?? 2) - (RK[roleOf(b)] ?? 2));
     $('userList').innerHTML = list.length
         ? list.map(u => {
             const me = myProfile && u.uid === myProfile.uid;
@@ -353,7 +356,7 @@ window.renderMembers = () => {
             return `<div class="user-card" data-uid="${esc(u.uid)}" onclick="handleMemberTap('${esc(u.uid)}')">
                 <div class="user-avatar-box">
                     <img src="${u.avatar || GUEST_AVATAR}" class="user-avatar ${roleBorderClass(r)}">
-                    <div class="user-badge ${roleBadgeClass(r, me)}">${roleLabel(r, me)}</div>
+                    <img class="user-rbdg" src="../shared/ui/roles/${r === 'owner' ? 'owner' : r === 'admin' ? 'admin' : 'member'}.webp" alt="">
                 </div>
                 <div class="user-details">
                     <div class="user-name-row">${esc(u.name)}</div>

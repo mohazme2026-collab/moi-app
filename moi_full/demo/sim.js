@@ -64,7 +64,7 @@ function roomSim(){
     const away = [], spare = D.SPARE.slice();
     const seatedNow = () => (state.seats || []).map((s, i) => s && s.uid ? { i, s } : null).filter(Boolean).filter(x => x.s.uid !== meUid());
     const audNow = () => (state.listeners || []).filter(l => l.uid !== meUid() && !(state.seats || []).some(s => s && s.uid === l.uid) && U(l.uid));
-    const GIFTS = [['rose', 1, 22], ['kiss', 1, 16], ['present', 5, 12], ['diamond', 5, 12], ['cake', 10, 14], ['treasure', 15, 8], ['diamond_v3', 10, 10], ['diamond_v2', 1, 6]];
+    const GIFTS = [['rose', 2, 100]];
     const pickGift = () => { const tot = GIFTS.reduce((a, g) => a + g[2], 0); let r = Math.random() * tot; for (const g of GIFTS){ r -= g[2]; if (r <= 0) return g; } return GIFTS[0]; };
     const nm = id => { try { const g = giftFindById(id); return (g && g.name) || id; } catch(e){ return id; } };
     const act = a => { try { if (typeof showActivity === 'function') showActivity(Object.assign({ ts: Date.now() }, a)); } catch(e){} };
@@ -79,7 +79,7 @@ function roomSim(){
         const pool = audNow().map(l => l.uid).concat(seated.map(x => x.s.uid)); if (!pool.length) return;
         const target = pick(seated);
         const sender = pick(pool.filter(u => u !== target.s.uid)); if (!sender) return;
-        const gid = 'rose', unit = 1, qty = 1;      /* শুধু রোজ (ফুল) */
+        const gid = 'rose', unit = 2, qty = 1;      /* শুধু রোজ (ফুল) */
         const ts = Date.now(), tu = U(target.s.uid), su = U(sender);
         rtdb().ref(base() + '/liveGifts').push({ senderUid: sender, targetUids: [target.s.uid], giftId: gid, qty, ts });
         rtdb().ref(base() + '/giftStats/' + tu.uid).update({ uid: tu.uid, name: tu.name, avatar: tu.photo });

@@ -51,15 +51,13 @@ function saveFriendsData(){
 window.switchTab = (t) => {
     activeTab = t;
     document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === t));
-    document.getElementById('searchWrap').style.display = (t === 'friends') ? '' : 'none';
+    
     renderList();
 };
 
 function updateReqBadge(){
     const n = Object.keys(myRequests).length;
-    const b = document.getElementById('reqBadge');
-    b.textContent = n;
-    b.classList.toggle('show', n > 0);
+    if (window.updateInboxBadges) window.updateInboxBadges();
 }
 
 /* ═══ তালিকা রেন্ডার ═══ */
@@ -89,7 +87,7 @@ function renderList(){
     }
 
     /* বন্ধু tab */
-    const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+    const search = ((document.getElementById('searchInput')||{}).value || '').trim().toLowerCase();
     const friendUids = Object.keys(myFriends).filter(uid => !myBlocked[uid]);
 
     const friends = friendUids.map(uid => {
@@ -200,6 +198,7 @@ window.acceptRequest = (fromUid) => {
     if (!window.me || !fromUid) return;
 
     myFriends[fromUid] = true;
+    try { const h = ls_get('moi_fr_hist_' + window.me.uid, {}) || {}; const r = myRequests[fromUid] || {}; h[fromUid] = { fromUid, fromName: r.fromName || (allUsers[fromUid]||{}).name || 'User', fromPhoto: r.fromPhoto || (allUsers[fromUid]||{}).photo || '', status: 'agreed', ts: Date.now() }; ls_set('moi_fr_hist_' + window.me.uid, h); } catch(e){}
     delete myRequests[fromUid];
     saveFriendsData();
 

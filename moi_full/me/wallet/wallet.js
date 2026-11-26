@@ -105,6 +105,7 @@
 
     function openSheet(i){
         if (sheet) return; const s = SELLERS[i]; if (!s) return;
+        if (s.reg){ const d = String(s.phone || '').replace(/\D/g, ''), u = (s.link && /^https:\/\//.test(s.link)) ? s.link : (d ? 'https://wa.me/' + d : ''); if (u){ window.open(u, '_blank'); return; } }
         sheet = document.createElement('div'); sheet.className = 'wl-sheet';
         sheet.innerHTML = '<div class="bx"><div class="hd"><img src="' + esc(avatar(s, i)) + '" onerror="this.onerror=null;this.src=\'' + PH(s.name) + '\'" alt=""><div><b>' + esc(s.name) + '</b><small>ID:' + esc(s.id) + ' · ' + esc(s.phone) + '</small></div></div>' +
             '<div class="bub">Hi, I want to buy diamonds.</div><div class="soon">' + WA.replace('#0d2a1c', '#7ff0c9') + '<span>WhatsApp messaging is coming soon.<br>This is a demo panel — the update is on its way.</span></div>' +
@@ -117,8 +118,13 @@
     function closeSheetUi(){ if (pushed > 1){ try { history.back(); return; } catch(e){} } closeSheet(); }
     function closeSheet(){ if (!sheet) return; const el = sheet; sheet = null; el.classList.remove('in'); setTimeout(() => el.remove(), 220); }
 
+    function loadReg(){
+        try { const L = JSON.parse(localStorage.getItem('moi_staff_sellers') || '[]').filter(x => x.status !== 'off');
+              if (L.length) SELLERS.splice(0, SELLERS.length, ...L.map(x => ({ id: x.id, name: x.name, phone: x.phone, link: x.link, photo: x.photo, country: 'BD', reg: 1 }))); } catch(e){}
+    }
     function open(){
         if (!me()) return;
+        loadReg();
         if (!root) build();
         setBal();
         root.classList.add('show'); document.documentElement.classList.add('wl-lock');

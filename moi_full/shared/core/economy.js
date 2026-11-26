@@ -39,6 +39,8 @@ console.log('[MOI] economy.js loaded (client mode)');
         PERMISSION_DENIED: 'আপনার এই কাজের অনুমতি নেই',
         NOT_FOUND: 'খুঁজে পাওয়া যায়নি',
         BANNED: 'এই অ্যাকাউন্ট নিষিদ্ধ',
+        LIMIT_SEND: 'একবারে এর বেশি দেওয়ার সীমা নেই — ওনারের সেট করা সীমা পার হয়েছে',
+        LIMIT_DAY: 'আজকের দৈনিক সীমা শেষ',
         INVALID: 'ভুল অনুরোধ',
         ALREADY_OWNED: 'এটি আগেই আপনার কাছে আছে',
         NOT_READY: 'এখনও শর্ত পূরণ হয়নি',
@@ -534,6 +536,69 @@ console.log('[MOI] economy.js loaded (client mode)');
         });
         await notify(target, { icon: '💎', title: 'ডায়মন্ড যোগ হয়েছে', text: amount + ' 💎 পেয়েছেন' });
         return r;
+    };
+    /* ═══ স্টাফ প্যানেল (অফিশিয়াল/ওনার) ═══ */
+    const LIM_DEF = { perSend: 100000, perDay: 1000000 };
+    async function staffLimits(){ try { const s = await db().collection('settings').doc('staff').get(); return Object.assign({}, LIM_DEF, s.exists ? s.data() : {}); } catch(e){ return Object.assign({}, LIM_DEF); } }
+    /* অফিশিয়াল ডায়মন্ড দেয় (ইউজার বা সেলারকে) — রিচার্জ গণ্য হয় না; দৈনিক/প্রতিবারের সীমা ওনার ঠিক করে */
+    H.officialGive = async (data, uid) => {
+        const target = await findUser(data.target), amount = Math.floor(Number(data.amount));
+        if (!(amount >= 1) || target === uid) fail('INVALID');
+        const me = await getUserDoc(uid); assertActive(me);
+        if (!['developer', 'superadmin'].includes(me.role)) fail('PERMISSION_DENIED');
+        const tu = await getUserDoc(target); assertActive(tu, { allowGuest: true });
+        const day = new Date().toISOString().slice(0, 10), uref = db().collection('staffUsage').doc(uid + '_' + day);
+        if (me.role !== 'developer'){
+            const L = await staffLimits();
+            if (amount > L.perSend) fail('LIMIT_SEND');
+            const us = await uref.get(); const used = us.exists ? (us.data().total || 0) : 0;
+            if (used + amount > L.perDay) fail('LIMIT_DAY');
+        }
+        await userRef(target).update({ diamonds: FV.increment(amount) });
+        const us2 = await uref.get(); await uref.set({ total: (us2.exists ? (us2.data().total || 0) : 0) + amount, uid, day });
+        await db().collection('transactions').add({ type: 'official_give', title: 'Official gift', fromUid: uid, toUid: target, amount, participants: [uid, target], status: 'completed', note: String(data.note || '').slice(0, 80), createdAt: FV.serverTimestamp() });
+        await notify(target, { icon: '🎁', title: 'অফিশিয়াল থেকে ডায়মন্ড', text: amount + ' 💎 পেয়েছেন' });
+        return { ok: true, toName: tu.name, toRole: tu.role };
+    };
+    H.notifyUser = async (data, uid) => {
+        const target = await findUser(data.target), me = await getUserDoc(uid);
+        if (rank(me.role) < C.RANK.superadmin) fail('PERMISSION_DENIED');
+        await notify(target, { icon: '⚠️', title: 'সতর্কতা', text: String(data.text || '').slice(0, 200) });
+        return { ok: true };
+    };
+    H.getStaffLimits = async (data, uid) => { const me = await getUserDoc(uid); if (rank(me.role) < C.RANK.superadmin) fail('PERMISSION_DENIED'); return staffLimits(); };
+    H.setStaffLimits = async (data, uid) => {
+        const me = await getUserDoc(uid); if (me.role !== 'developer') fail('PERMISSION_DENIED');
+        const perSend = Math.floor(Number(data.perSend)), perDay = Math.floor(Number(data.perDay));
+        if (!(perSend >= 1 && perDay >= perSend)) fail('INVALID');
+        await db().collection('settings').doc('staff').set({ perSend, perDay });
+        return { ok: true };
+    };
+    /* সেলার বানানো/সরানো — অফিশিয়াল ও ওনার */
+    H.registerSeller = async (data, uid) => {
+        const target = await findUser(data.target);
+        const me = await getUserDoc(uid); assertActive(me);
+        if (!['developer', 'superadmin'].includes(me.role)) fail('PERMISSION_DENIED');
+        const tu = await getUserDoc(target); if (rank(tu.role) >= C.RANK.superadmin) fail('PERMISSION_DENIED');
+        await userRef(target).update({ role: 'distributor', isGuest: false });
+        await notify(target, { icon: '🛍️', title: 'আপনি সেলার হয়েছেন', text: 'সেলার প্যানেল চালু হয়েছে' });
+        return { ok: true, name: tu.name, moiId: tu.moiId, photo: tu.photo || '', uid: target };
+    };
+    H.removeSeller = async (data, uid) => {
+        const target = await findUser(data.target);
+        const me = await getUserDoc(uid); if (!['developer', 'superadmin'].includes(me.role)) fail('PERMISSION_DENIED');
+        const tu = await getUserDoc(target); if (tu.role !== 'distributor') fail('INVALID');
+        await userRef(target).update({ role: 'user' });
+        return { ok: true };
+    };
+    /* ওনার: অফিশিয়াল নিয়োগ/অপসারণ */
+    H.appointOfficial = async (data, uid) => {
+        const target = await findUser(data.target), on = data.on !== false;
+        const me = await getUserDoc(uid); if (me.role !== 'developer') fail('PERMISSION_DENIED');
+        const tu = await getUserDoc(target); if (tu.role === 'developer') fail('PERMISSION_DENIED');
+        await userRef(target).update({ role: on ? 'superadmin' : 'user', isGuest: false });
+        await notify(target, { icon: '🛡️', title: on ? 'আপনি অফিশিয়াল হয়েছেন' : 'অফিশিয়াল পদ সরানো হয়েছে', text: on ? 'অফিশিয়াল প্যানেল চালু হয়েছে' : '' });
+        return { ok: true, name: tu.name, moiId: tu.moiId, uid: target };
     };
     H.grantBadge = async (data, uid) => {
         const target = await findUser(data.target), badge = String(data.badge || ''), on = data.on !== false;

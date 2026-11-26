@@ -462,6 +462,7 @@ window.openUserProfile = (uid) => {
     let n = esc(u.name);
     n += ' ' + roleIconHTML(r, 16);      /* Owner কমলা, Admin সবুজ, User অ্যালুমিনিয়াম */
     if (window.MOI && MOI.identityHTML) n += ' ' + MOI.identityHTML(getUser(uid));
+    if (window.MOIStaffBadge) n += MOIStaffBadge(Object.assign({ uid }, getUser(uid) || {}), 22);
     $('profileName').innerHTML = n;
     $('profileUid').innerHTML = `<i class="fa-solid fa-id-badge" style="font-size:11px"></i> UID: ${esc(u.moiId || (getUser(uid) || {}).moiId || u.uid.slice(0, 12))}` + (window.MOILv ? ' ' + MOILv.badge((getUser(uid) || u).level, { h: 24 }) : '') + svipBadgeHTML(uid);
 

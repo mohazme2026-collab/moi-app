@@ -8,6 +8,9 @@
     const STYLES = {
         svip1: { art: 'level1/card_art.webp', ar: 1024 / 1536, bg: ['#0c0418', '#1a0b33'], glow: '170,100,255' },
         /* VIP১: ড্রাগন কার্ড + ভিতরে ধোঁয়ার ভিডিও (প্যাকড-আলফা MP4) */
+        st_seller: { art: 'staff/card_seller.webp', ar: 640 / 960, bg: ['#031a0e', '#0a2a18'], glow: '60,230,140' },
+        st_official: { art: 'staff/card_official.webp', ar: 640 / 960, bg: ['#1a0305', '#2a0a0c'], glow: '255,70,70' },
+        st_owner: { art: 'staff/card_owner.webp', ar: 640 / 576, bg: ['#0a0414', '#1a0b2e'], glow: '190,110,255' },
         vip1: { art: 'vip1/card_art.webp', ar: 720 / 1080, bg: ['#0a0204', '#1a0508'], glow: '255,80,40', smoke: 'vip1/smoke.mp4' }
     };
     function css(){
@@ -55,6 +58,7 @@
         return d;
     }
     function styleOf(uid, u){
+        const sr = window.MOIStaffRole && MOIStaffRole(Object.assign({ uid }, u || {})); if (sr && STYLES['st_' + sr]) return 'st_' + sr;
         if (u && u.card && STYLES[u.card]) return u.card;
         const pk = window.MOIPerks && uid ? MOIPerks.perksOf(uid) : null;
         return pk && pk.card && STYLES[pk.card] ? pk.card : null;

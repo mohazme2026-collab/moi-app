@@ -20,6 +20,7 @@
         const av = $('meAvatar'); av.src = p.photo || ph(p.name); av.onerror = () => { av.onerror = null; av.src = ph(p.name); };
         if (window.MOICrown){ const mv = document.querySelector('.me-av'); MOICrown.attachUser(mv, p); mv.classList.toggle('has-ring', !!mv.querySelector(':scope > .cv')); }   /* ব্যাগ থেকে পরা স্টোর-রিং বা SVIP মুকুট */
         $('meName').textContent = p.name || 'User';
+        if (window.MOIStaffBadge) $('meName').insertAdjacentHTML('beforeend', MOIStaffBadge(p, 22));
         $('meId').textContent = p.moiId || '——';
         const uid = p.uid;
         $('numFollowing').textContent = cnt(S().get('moi_follow_' + uid + '_following', {}));
@@ -59,6 +60,13 @@
         go('.row[data-k="level"]', 'level/index.html');
         go('.row[data-k="bag"]', 'bag/index.html');
         go('.row[data-k="control"]', 'control/index.html');
+        /* TEST: রোল বদলে স্টাফ প্যানেল খোলে (পরে মুছে ফেলা হবে) */
+        document.querySelectorAll('.tst button').forEach(b => b.addEventListener('click', async () => {
+            const r = b.dataset.t, role = { seller: 'distributor', official: 'superadmin', owner: 'developer', user: 'user' }[r], p = window.MOIAuth && MOIAuth.profile; if (!p) return;
+            try { await MOIFB.db.collection('users').doc(p.uid).update({ role, isGuest: false });
+                  const g = JSON.parse(localStorage.getItem('moi_staff_reg') || '{}'); if (role === 'user') delete g[p.uid]; else g[p.uid] = role; localStorage.setItem('moi_staff_reg', JSON.stringify(g)); } catch(e){ toast('রোল বদলানো যায়নি'); return; }
+            location.href = r === 'user' ? 'index.html?x=' + Date.now() : '../admin/staff/index.html?r=' + r;
+        }));
         go('.row[data-k="visitor"]', 'visitor/index.html');
         go('.row[data-k="feedback"]', 'feedback/index.html');
         /* সেটিংস আইকন: পরে নিজের পেজ বসবে — আপাতত থিম (ব্যাকগ্রাউন্ড রঙ) বদলানোর বক্স খোলে */

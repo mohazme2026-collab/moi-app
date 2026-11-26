@@ -6,7 +6,7 @@
         if (!window.me || ls_get(K('msgseed'), 0)) return;
         var us = Object.values(allUsers || {}).filter(function(u){ return u && u.uid && u.uid !== window.me.uid && u.name; }).slice(0, 3);
         ls_set(K('inbox_feed'), us.map(function(u, i){ return { uid: u.uid, name: u.name, photo: u.photo || u.avatar || GUEST_AVATAR, text: 'আপনার ফিডে লাইক দিয়েছে', ts: Date.now() - (i + 1) * 3600e3, seen: false }; }));
-        ls_set(K('inbox_sys'), [{ id: 'd1', title: 'ডেইলি লগইন', body: 'ডেইলি লগইন পুরস্কার +৪০ কয়েন', ts: Date.now() - 600e3, seen: false }]);
+        ls_set(K('inbox_sys'), (ls_get(K('inbox_sys'), []) || []).concat([{ id: 'd1', title: 'ডেইলি লগইন', body: 'ডেইলি লগইন পুরস্কার +৪০ কয়েন', ts: Date.now() - 600e3, seen: false }]));
         ls_set(K('inbox_notices'), [{ id: 'n1', title: 'MOI-তে স্বাগতম!', body: 'নতুন ফিচার ও ইভেন্টের খবর এখানে পাবেন।', go: 'GO>', ts: Date.now() - 86400e3, seen: false }]);
         ls_set(K('msgseed'), 1);
     }
@@ -32,9 +32,9 @@
             if (!h) h = empty('কোনো ফ্রেন্ড রিকোয়েস্ট নেই');
         } else if (cur === 'assistant'){
             var S = ls_get(K('inbox_sys'), []), last = '';
-            h = S.length ? S.map(function(x){ var d = dt(x.ts), hd = d !== last ? '<div class="sp-date">' + d + '</div>' : ''; last = d; return hd + '<div class="sp-card"><div class="h">' + esc(x.title) + '</div><div class="b">' + esc(x.body) + '</div></div>'; }).join('') : empty('কোনো মেসেজ নেই');
+            h = S.length ? S.map(function(x){ var d = dt(x.ts), hd = d !== last ? '<div class="sp-date">' + d + '</div>' : ''; last = d; return hd + '<div class="sp-card"><div class="h">' + (x.img ? '<img src="' + esc(x.img) + '" style="height:26px;vertical-align:middle;margin-right:6px">' : '') + esc(x.title) + (x.amt ? ' <b style="color:#2fe08a">+' + Number(x.amt).toLocaleString() + ' 💎</b>' : '') + '</div><div class="b">' + esc(x.body) + '</div></div>'; }).join('') : empty('কোনো মেসেজ নেই');
         } else {
-            var N = ls_get(K('inbox_notices'), []);
+            var N = (ls_get('moi_staff_notices', []) || []).concat(ls_get(K('inbox_notices'), []));
             h = N.length ? N.map(function(x){ return '<div class="sp-post"><div class="poster">🎉</div><div class="pb"><div class="h">' + esc(x.title) + '</div><div class="b">' + esc(x.body) + '</div><span class="go" onclick="toast(\'শীঘ্রই আসছে\')">' + esc(x.go || 'GO>') + '</span></div></div>'; }).join('') : empty('কোনো নোটিফিকেশন নেই');
         }
         body.innerHTML = h;

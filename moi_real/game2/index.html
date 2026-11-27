@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fruit Wheel</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="game2.css">
+</head>
+<body>
+<div id="vp"><div id="cv">
+  <!-- মঞ্চ (পিছনের ছবি) + ঘুরন্ত চাকা -->
+  <div id="disc"></div>
+  <img id="stage" src="img/stage.webp" alt="">
+  <svg id="vsvg" width="720" height="520" viewBox="0 0 720 520">
+    <defs><linearGradient id="gv" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".5" stop-color="#f5b82e"/><stop offset="1" stop-color="#b8730c"/></linearGradient></defs>
+    <g id="vg" stroke-linecap="round" fill="none">
+      <path d="M282 62 L352 224" stroke="#5a3207" stroke-width="15"/><path d="M438 62 L368 224" stroke="#5a3207" stroke-width="15"/>
+      <path d="M282 62 L352 224" stroke="url(#gv)" stroke-width="9"/><path d="M438 62 L368 224" stroke="url(#gv)" stroke-width="9"/>
+    </g>
+  </svg>
+  <div id="hubBg"></div><div id="hub"><span id="hubNum">9</span></div>
+
+  <!-- ওপরের বাটন -->
+  <img class="ib" id="bBack" src="img/back.webp" style="left:12px;top:22px" alt="">
+  <div id="round">Round:<span id="rn">1</span></div>
+  <div id="wifi"><img src="img/wifi_full.webp" alt=""><b id="ping">111ms</b></div>
+  <img class="ib" id="bSound" src="img/sound.webp" style="left:540px;top:22px" alt="">
+  <img class="ib" id="bMy" src="img/prof.webp" style="left:630px;top:22px" alt="">
+  <img class="ib" id="bHelp" src="img/help.webp" style="left:630px;top:104px" alt="">
+  <img class="ib" id="bHist" src="img/hist.webp" style="left:630px;top:186px" alt="">
+  <div id="trophy"><img src="img/trophy_full.webp" alt=""></div>
+
+  <!-- ইতিহাস-ফিতা -->
+  <div id="strip"><div id="stripIn"></div></div>
+  <img id="newb" src="img/new.webp" alt="">
+  <img id="repeat" src="img/repeat.webp" alt="">
+
+  <!-- ৩টা ঘর -->
+  <div id="boxes"></div>
+
+  <!-- নিচের সারি -->
+  <div id="me"><div id="avf"><img id="av" alt=""></div><div id="mname">—</div></div>
+  <div id="bal"><svg class="dm" viewBox="0 0 24 24"><use href="#dmI"/></svg><span id="balN">0</span><b>+</b></div>
+  <div id="chips"></div>
+
+  <div id="fly"></div>
+  <div id="toast"></div>
+  <div id="modal"><div id="mbox"></div></div>
+  <div id="loading"><div class="sp"></div></div>
+</div></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="dmI" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z" fill="#4fd8ff" stroke="#0b6fa8" stroke-width="1.2" stroke-linejoin="round"/><path d="M2 9h20M9 3l-2 6 5 12M15 3l2 6-5 12" fill="none" stroke="#e8fbff" stroke-width=".9" opacity=".75"/></symbol>
+</defs></svg>
+
+<script src="../shared/core/firebase-init.js"></script>
+<script src="../shared/core/sync.js"></script>
+<script src="../shared/core/sync-routes.js"></script>
+<script src="../shared/storage.js"></script>
+<script src="../shared/core/economy.js"></script>
+<script src="../shared/core/db-storage.js"></script>
+<script src="../shared/core/auth.js"></script>
+<script src="../shared/broadcast/broadcast-core.js"></script>
+<script src="game2.js"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
-  "appId": "com.moi.demo",
+  "appId": "com.moi.app",
   "appName": "MOI",
-  "webDir": "moi_full",
+  "webDir": "moi_real",
   "backgroundColor": "#120a28",
   "server": {
     "androidScheme": "https"

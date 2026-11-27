@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rocket</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="rocket.css">
+</head>
+<body>
+<div id="cv">
+  <!-- আকাশ (মঞ্চ) -->
+  <div id="stage">
+    <div id="bgw"><img id="bg" src="img/bg.webp" alt=""></div>
+    <div id="axis"></div>
+    <div id="list"></div>
+    <div id="fly"></div>
+    <div id="badge"><div id="mx">1.00x</div><div id="ml">Flight height</div></div>
+    <svg id="trail" width="720" height="1200"><path id="tp" d="" fill="none" stroke="#ffb02e" stroke-width="5" stroke-dasharray="14 14" stroke-linecap="round" opacity=".85"/></svg>
+    <div id="rk"><div id="flame"><i></i><i></i><i></i></div><img id="rki" src="img/rk_stand.webp" alt=""></div>
+    <img id="boom" src="img/boom_l.webp" alt="">
+    <div id="podium"></div>
+    <div id="cd"><b id="cdn">14s</b><i id="cdt">count down</i></div>
+    <div id="join">Join Now!</div>
+  </div>
+
+  <!-- ওপরের সারি -->
+  <div id="top">
+    <div id="bBack"><svg viewBox="0 0 40 30" width="40" height="30"><path d="M18 3 L4 15 L18 27 M4 15 H38" fill="none" stroke="#c8d6ee" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><b>ROCKET</b></div>
+    <div id="wifi"><svg viewBox="0 0 30 24" width="30" height="24"><path d="M2 8 Q15-5 28 8 M7 13 Q15 5 23 13 M12 18 Q15 15 18 18" fill="none" stroke="#e8d020" stroke-width="3" stroke-linecap="round"/><circle cx="15" cy="21" r="2.2" fill="#e8d020"/></svg><span id="ping">120ms</span></div>
+    <div id="bal"><span id="balN">0</span></div><div id="balP">+</div>
+    <div id="rnd">round: <span id="rn">0</span></div>
+    <div id="bRec" class="ib"><svg viewBox="0 0 40 40" width="40" height="40"><rect x="5" y="4" width="26" height="32" rx="4" fill="none" stroke="#b9c8e6" stroke-width="3.5"/><path d="M10 12h16M10 19h16M10 26h10" stroke="#b9c8e6" stroke-width="3" stroke-linecap="round"/><path d="M33 8l5 5L24 30l-7 2 2-7z" fill="#dfe8f8" stroke="#6a7fa8" stroke-width="1.5"/></svg></div>
+    <div id="bHelp" class="ib hq">?</div>
+    <div id="trophy"><img src="../game2/img/trophy_full.webp" alt=""><i id="tt">00:00</i></div>
+  </div>
+
+  <!-- ডানে সাউন্ড/নতুন -->
+  <div id="bSound"><svg viewBox="0 0 40 40" width="40" height="40"><path d="M6 15h8l9-8v26l-9-8H6z" fill="#e4f2ff"/><path d="M28 14q5 6 0 12M32 10q9 10 0 20" fill="none" stroke="#e4f2ff" stroke-width="3" stroke-linecap="round"/></svg></div>
+  <div id="newb">new</div>
+
+  <!-- নিচের প্যানেল -->
+  <div id="panel">
+    <div id="hist"><b>his:</b><div id="hrow"></div><div id="hall"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="none" stroke="#c9d7ee" stroke-width="2.4"/><path d="M12 12V2.5A9.5 9.5 0 0 1 21.5 12z" fill="#c9d7ee"/></svg><span>ALL</span></div></div>
+    <div id="fbox"><div id="fbar">
+      <div id="f_bet"><svg viewBox="0 0 30 36" width="34" height="40"><rect x="3" y="9" width="22" height="25" rx="4" fill="#fff"/><path d="M8 9V4h10l4 4v1" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><path d="M14 17c3 4 6 5 0 11-6-6-3-7 0-11z" fill="#17233f"/></svg><span id="fsum">0</span></div>
+      <div id="f_esc"><b id="escT">ESCAPE</b><span id="escV"></span></div>
+      <div id="f_wait"><svg viewBox="0 0 40 40" width="38" height="38"><circle cx="20" cy="20" r="15" fill="none" stroke="#e23b3b" stroke-width="4"/><path d="M9 31L31 9" stroke="#e23b3b" stroke-width="4"/><rect x="13" y="14" width="13" height="15" rx="3" fill="#fff"/></svg><span id="waitT">wait for next round</span></div>
+    </div><div id="fplus">+</div></div>
+    <div id="cans"></div>
+    <div id="auto">AUTO<br>SPEND</div>
+    <div id="aesc"><span>auto esc</span><div id="tg"><i></i></div><div id="av2">2.10x</div></div>
+  </div>
+
+  <div id="toast"></div>
+  <div id="modal"><div id="mbox"></div></div>
+  <div id="kp"><div id="kbox">
+    <div class="kx">×</div>
+    <div class="kt">Escape height:1.01-100.00</div><div id="kin">Enter an escape point:</div>
+    <div id="kg"></div>
+  </div></div>
+  <div id="loading"><div class="sp"></div></div>
+</div>
+
+<script src="../shared/core/firebase-init.js"></script>
+<script src="../shared/core/sync.js"></script>
+<script src="../shared/core/sync-routes.js"></script>
+<script src="../shared/storage.js"></script>
+<script src="../shared/core/economy.js"></script>
+<script src="../shared/core/db-storage.js"></script>
+<script src="../shared/core/auth.js"></script>
+<script src="../shared/broadcast/broadcast-core.js"></script>
+<script src="engine.js"></script>
+<script src="rocket.js"></script>
+</body>
+</html>

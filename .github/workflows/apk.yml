@@ -26,8 +26,18 @@ jobs:
 
       - name: Build number
         run: |
-          echo "{\"v\":\"build-${GITHUB_RUN_NUMBER}\"}" > moi_full/build.json
-          cat moi_full/build.json
+          echo "{\"v\":\"build-${GITHUB_RUN_NUMBER}\"}" > moi_real/build.json
+          cat moi_real/build.json
+
+      - name: Deploy Firebase rules
+        continue-on-error: true
+        working-directory: moi_real
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$SA" > /tmp/sa.json
+          GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json npx --yes firebase-tools@13 deploy --only firestore:rules,database --project moi-app-810b0 --non-interactive
+          rm -f /tmp/sa.json
 
       - name: Install
         run: npm install --no-audit --no-fund
@@ -44,7 +54,7 @@ jobs:
           rm -rf $RES/mipmap-anydpi-v26
           for d in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
             n=${d%%:*}; s=${d##*:}
-            convert moi_full/icons/icon-512.png -resize ${s}x${s} $RES/mipmap-$n/ic_launcher.png
+            convert moi_real/icons/icon-512.png -resize ${s}x${s} $RES/mipmap-$n/ic_launcher.png
             cp $RES/mipmap-$n/ic_launcher.png $RES/mipmap-$n/ic_launcher_round.png
             rm -f $RES/mipmap-$n/ic_launcher_foreground.png
           done
@@ -61,35 +71,51 @@ jobs:
           sed -i "s/versionCode 1/versionCode ${GITHUB_RUN_NUMBER}/; s/versionName \"1.0\"/versionName \"1.${GITHUB_RUN_NUMBER}\"/" android/app/build.gradle
           grep -n "versionCode\|versionName" android/app/build.gradle
 
-      - name: Fixed signing key
+      - name: Signing key (GitHub Secrets)
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
         run: |
+          echo "$KS_B64" | base64 -d > android/moi-release.keystore
+          keytool -list -v -keystore android/moi-release.keystore -storepass "$KS_PASS" -alias moi > ks.txt
+          SHA1=$(grep "SHA1:" ks.txt | head -1 | sed 's/.*SHA1: *//')
+          echo "Keystore SHA1 = $SHA1"
+          if [ "$SHA1" != "CE:73:40:69:06:F8:DB:84:98:2B:9B:70:C0:E4:39:16:7C:CD:5C:96" ]; then
+            echo "::error::সই-চাবির SHA1 Firebase-এ দেওয়া SHA1-এর সাথে মিলছে না"; exit 1
+          fi
+          cp google-services.json android/app/google-services.json
           cat >> android/app/build.gradle <<'EOG'
 
           android {
               signingConfigs {
-                  debug {
-                      storeFile file("$rootDir/../moi-test.keystore")
-                      storePassword 'android'
-                      keyAlias 'androiddebugkey'
-                      keyPassword 'android'
+                  release {
+                      storeFile file("$rootDir/moi-release.keystore")
+                      storePassword System.getenv("KS_PASS")
+                      keyAlias 'moi'
+                      keyPassword System.getenv("KS_PASS")
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
                   }
               }
           }
           EOG
-          mkdir -p ~/.android
-          cp moi-test.keystore ~/.android/debug.keystore
 
-      - name: Build APK
+      - name: Build APK (release)
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        env:
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: ./gradlew assembleRelease --no-daemon
 
       - name: Live update files
         run: |
-          unzip -p android/app/build/outputs/apk/debug/app-debug.apk META-INF/CERT.RSA | keytool -printcert | grep SHA1 || true
+          unzip -p android/app/build/outputs/apk/release/app-release.apk META-INF/*.RSA | keytool -printcert | grep SHA1 || true
           mkdir -p out
-          cp android/app/build/outputs/apk/debug/app-debug.apk out/MOI.apk
-          (cd moi_full && zip -qr ../out/bundle.zip .)
-          cp moi_full/build.json out/version.json
+          cp android/app/build/outputs/apk/release/app-release.apk out/MOI.apk
+          (cd moi_real && zip -qr ../out/bundle.zip .)
+          cp moi_real/build.json out/version.json
           ls -la out
 
       - name: Publish release

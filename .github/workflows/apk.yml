@@ -45,6 +45,7 @@ jobs:
       - name: Android project
         run: |
           npx cap add android
+          echo 'ext { rgcfaIncludeGoogle = true }' >> android/variables.gradle
           npx cap sync android
 
       - name: App icon

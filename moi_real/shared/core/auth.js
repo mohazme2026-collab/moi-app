@@ -164,6 +164,16 @@ console.log('[MOI] auth.js loaded');
             return this.whenReady();
         },
         async guest(){ await FB.auth.signInAnonymously(); return this.whenReady(); },
+        /* Email + Password: আগে লগইন, না থাকলে নতুন অ্যাকাউন্ট */
+        async email(em, pw){
+            try { await FB.auth.signInWithEmailAndPassword(em, pw); }
+            catch(e){
+                if (['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-login-credentials'].indexOf(e.code) < 0) throw e;
+                try { await FB.auth.createUserWithEmailAndPassword(em, pw); }
+                catch(e2){ if (e2.code === 'auth/email-already-in-use'){ const er = new Error('ভুল পাসওয়ার্ড'); er.code = 'auth/wrong-password'; throw er; } throw e2; }
+            }
+            return this.whenReady();
+        },
         /* Phone OTP: ১) phoneStart  ২) phoneConfirm */
         async phoneStart(e164, containerId){
             if (this._verifier){ try { this._verifier.clear(); } catch(e){} }

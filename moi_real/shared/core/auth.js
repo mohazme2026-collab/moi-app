@@ -137,6 +137,15 @@ console.log('[MOI] auth.js loaded');
             return u;
         },
         async google(){
+            /* APK (Android অ্যাপ): নেটিভ Google লগইন — ব্রাউজার রিডাইরেক্ট চলে না */
+            const C = window.Capacitor, NP = C && C.Plugins && C.Plugins.FirebaseAuthentication;
+            if (C && C.isNativePlatform && C.isNativePlatform() && NP){
+                const r = await NP.signInWithGoogle({ skipNativeAuth: true });
+                const tok = r && r.credential && r.credential.idToken;
+                if (!tok){ const er = new Error('Google টোকেন পাওয়া যায়নি'); er.code = 'auth/internal-error'; throw er; }
+                await FB.auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(tok));
+                return this.whenReady();
+            }
             const prov = new firebase.auth.GoogleAuthProvider();
             try { await FB.auth.signInWithPopup(prov); }
             catch(e){

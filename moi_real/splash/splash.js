@@ -4,9 +4,8 @@
 (function(){
     'use strict';
     var MIN = 3000, MAXWAIT = 9000;
-    var LOGIN = '../login/index.html', HOME = '../home/index.html', ROOM = '../room/index.html';
-    /* বিজ্ঞাপনের লেখা ও রুম — এখানেই বদলাবে। roomId ফাঁকা থাকলে বোতাম সরাসরি হোমে নেবে */
-    var AD = { title: 'ডায়মন্ড ও মুকুট অফার', sub: 'বিশেষ সুবিধা পেতে এখনই ঢুকুন', btn: 'রুমে ঢুকুন', roomId: '' };
+    var LOGIN = '../login/index.html', HOME = '../home/index.html';
+    var AD_SECONDS = 3;   /* বিজ্ঞাপন কত সেকেন্ড থাকবে */
 
     var $ = function(id){ return document.getElementById(id); };
     var done = false;
@@ -34,12 +33,18 @@
             showAd();
         }, wait);
     }
+    var BN = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
     function showAd(){
-        $('oTitle').textContent = AD.title; $('oSub').textContent = AD.sub; $('oBtn').textContent = AD.btn;
         $('v1').classList.remove('show'); $('v2').classList.add('show');
+        var left = AD_SECONDS, cnt = $('cnt'), prog = $('prog');
+        cnt.textContent = BN[left];
+        setTimeout(function(){ prog.style.strokeDashoffset = '94.25'; }, 50);   /* বৃত্ত ধীরে ধীরে খালি হবে */
+        var iv = setInterval(function(){
+            left--; if (left > 0) cnt.textContent = BN[left];
+            if (left <= 0){ clearInterval(iv); go(HOME); }
+        }, 1000);
     }
     $('skip').addEventListener('click', function(){ go(HOME); });
-    $('oBtn').addEventListener('click', function(){ go(AD.roomId ? ROOM + '?room=' + encodeURIComponent(AD.roomId) : HOME); });
 
     /* ফাইরবেস না পেলে বা দেরি হলে লগইন পেজ */
     setTimeout(function(){ if (result === null) go(LOGIN); }, MAXWAIT);

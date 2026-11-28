@@ -21,6 +21,8 @@
       d.textContent += (e.message || '') + ' @ ' + String(e.filename||'').split('/').slice(-2).join('/') + ':' + (e.lineno||'') + '\n';
     } catch(x){}
   });
+  /* আপডেটের কার্ড শুধু হোম পেজে দেখাবে — স্প্ল্যাশ ও লগইন পেজে নয় */
+  if (!/\/home\//.test(location.pathname)) return;
   var BASE = 'https://github.com/mohazme2026-collab/moi-app/releases/download/live/';
   var DONE = false; try { DONE = !!sessionStorage.getItem('moi_upd_chk'); } catch(e){}
   if (DONE) return;

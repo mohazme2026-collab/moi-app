@@ -1,0 +1,41 @@
+/* splash/splash.css — শুরুর পর্দা ও বিজ্ঞাপন পর্দা */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#0b0620;overflow:hidden}
+.view{position:fixed;inset:0;opacity:0;visibility:hidden;transition:opacity .45s ease;overflow:hidden;background:#0b0620}
+.view.show{opacity:1;visibility:visible}
+.pic{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 40%;animation:zoom 3.2s ease-out both}
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.05)}}
+
+/* আলোর ঝিলিক: তির্যক সাদা-সোনালি আলো ছবির ওপর দিয়ে যায় */
+.shine{position:absolute;inset:-20% -60%;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(115deg,transparent 42%,rgba(255,236,170,.0) 44%,rgba(255,244,200,.75) 50%,rgba(255,236,170,.0) 56%,transparent 58%);
+  transform:translateX(-70%);animation:sweep 1.5s ease-in-out .35s infinite}
+.shine.slow{animation-duration:2.6s;animation-delay:.8s;opacity:.7}
+@keyframes sweep{0%{transform:translateX(-70%)}60%,100%{transform:translateX(70%)}}
+
+/* লেখার জায়গায় সোনালি আলোর ঝলক */
+.flash{position:absolute;left:50%;top:21%;width:90%;height:14%;transform:translate(-50%,-50%);pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(closest-side,rgba(255,226,120,.85),rgba(255,200,60,.25) 55%,transparent 75%);
+  opacity:0;animation:flash 1.5s ease-in-out .5s infinite}
+@keyframes flash{0%,100%{opacity:0;transform:translate(-50%,-50%) scale(.85)}45%{opacity:.9;transform:translate(-50%,-50%) scale(1.08)}}
+
+/* মিটমিট তারা */
+.stars{position:absolute;inset:0;pointer-events:none}
+.stars i{position:absolute;width:16px;height:16px;opacity:0;animation:tw 1.6s ease-in-out infinite;
+  background:radial-gradient(closest-side,#fff,rgba(255,225,130,.9) 40%,transparent 70%);
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+
+/* বিজ্ঞাপন: তীর ও অফার */
+.skip{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;width:44px;height:44px;border-radius:50%;border:0;
+  background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);cursor:pointer}
+.skip:active{transform:scale(.92)}
+.offer{position:absolute;left:18px;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 26px);text-align:center;color:#fff;
+  padding:16px 16px 18px;border-radius:22px;background:linear-gradient(180deg,rgba(26,10,60,.55),rgba(11,6,32,.8));
+  border:1px solid rgba(245,197,66,.45);backdrop-filter:blur(8px)}
+.o-t{font:800 22px/1.25 system-ui,"Noto Sans Bengali",sans-serif;color:#ffd96a;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.o-s{font:500 14px/1.4 system-ui,"Noto Sans Bengali",sans-serif;color:#efe8ff;margin:6px 0 12px}
+.o-btn{width:100%;border:0;border-radius:16px;padding:14px;font:800 17px system-ui,"Noto Sans Bengali",sans-serif;color:#2a1600;cursor:pointer;
+  background:linear-gradient(180deg,#ffe58a,#f5b82e);box-shadow:0 6px 18px rgba(245,184,46,.45),inset 0 -3px 0 rgba(160,95,0,.35)}
+.o-btn:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.shine,.flash,.stars i,.pic{animation:none}}
